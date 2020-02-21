@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#00acff"
+        android:gravity="center_vertical" >
+        <Button
+            android:id="@+id/set_back"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="10dip"
+            android:onClick="onTalkerListback"
+            android:background="@drawable/ease_mm_title_back"/>
+        <com.hyphenate.easeui.widget.EaseTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleBarTitle="@string/talker_list" />
+    </RelativeLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        <RelativeLayout
+            android:id="@+id/Layout_list"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/em_btn_bottom_selector">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="100dp"
+                android:layout_centerVertical="true"
+                android:text="@string/attendance"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/attendance_count"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="80dp"
+                android:gravity="center"
+                android:text="10000"
+                android:textSize="12sp" />
+            <ImageView
+                android:id="@+id/attendance_hot"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/em_hot_show" />
+            <TextView
+                android:layout_marginTop="59dp"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FF4B5766" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/btn_white_normal"
+            android:orientation="vertical">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/talker_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"></android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

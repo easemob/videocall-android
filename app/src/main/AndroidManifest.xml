@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.src.videocall.easemobvideocall">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- 悬浮窗权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- bugly start -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <application
+        android:name=".DemoApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/em_logo_uidemo"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        //Target 28 ,默认会报 NoClassDefFoundError,因为此库被禁止使用，要继续使用 Apache HTTP 客户端，
+        //以 Android 9 及更高版本为目标的应用应该添加以下
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        //进入会议activity
+        <activity
+            android:name=".ui.ConferenceActivity"
+            android:label="@string/title_activity_conference"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        //个人she设置
+        <activity
+            android:name=".ui.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme" />
+
+        <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="easemob-demo#chatdemoui" />
+        <!-- 声明sdk所需的service -->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true"
+            tools:ignore="ExportedService" />
+        <service
+            android:name="com.hyphenate.chat.EMJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- 声明sdk所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".ui.TalkerListActivity"
+            android:label="@string/title_activity_talker_list"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.RoomSettingActivity"
+            android:label="@string/title_activity_room_setting"
+            android:theme="@style/AppTheme" />
+    </application>
+
+</manifest>
