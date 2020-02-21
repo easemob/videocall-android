@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eff2f6"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/systemlogo" />
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="@dimen/adaptive_40dp"
+            android:layout_below="@+id/logo_image"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="环信多人会议"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="30dp"
+        android:focusableInTouchMode="true"
+        android:layout_weight="1" >
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/rl_roomname"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:focusable="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp">
+            <EditText
+                android:id="@+id/roomname"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:background="@drawable/shape"
+                android:hint="@string/room_name"
+                android:inputType="text|textMultiLine"
+                android:paddingLeft="10dip"
+                android:singleLine="true"
+                android:textSize="18sp"
+                android:imeOptions="actionDone"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+                 android:id="@+id/rl_roompassword"
+                 android:layout_width="match_parent"
+                 android:layout_height="54dp"
+                 android:layout_below="@id/rl_roomname"
+                 android:layout_marginLeft="28dp"
+                 android:layout_marginRight="28dp"
+                 android:focusableInTouchMode="true"
+                 android:layout_marginTop="20dp">
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:background="@drawable/shape"
+                android:hint="@string/room_password"
+                android:inputType="textPassword"
+                android:paddingLeft="10dip"
+                android:singleLine="true"
+                android:textSize="18sp"
+                android:imeOptions="actionDone"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_roompassword"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/em_button_add_bg"
+                android:gravity="center"
+                android:onClick="addconference_anchor"
+                android:layout_gravity="center"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:text="@string/add_room_anchor"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+            <Button
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/em_button_add_bg"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:onClick="addconference_audience"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:text="@string/add_room_audience"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/set_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:background="@color/color_transparent"
+                android:gravity="center"
+                android:onClick="personalSetting"
+                android:text="设置"
+                android:textColor="#00AFEF"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

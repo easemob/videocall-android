@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--底层使用淡灰色填充色-->
+    <item
+        android:left="8dp"
+        android:right="8dp">
+        <shape>
+            <solid android:color="@color/gray_normal" />
+        </shape>
+    </item>
+
+    <!--上面一层距离底层的顶部1dp,类似marginTop,填充色为白色，这样就形成了一个带有蓝色顶部边线的白色背景的图-->
+    <item
+        android:bottom="1dp">
+        <shape>
+            <solid android:color="#eff2f6" />
+        </shape>
+    </item>
+</layer-list>

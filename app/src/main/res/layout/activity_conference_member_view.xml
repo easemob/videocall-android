@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp">
+    android:orientation="vertical">
+    <com.hyphenate.media.EMCallSurfaceView
+        android:id="@+id/item_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/call_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        android:src="@drawable/em_default_avatar" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:backgroundTint="@color/color_transparent"
+        android:background="@drawable/em_conference_member_cover">
+        <ImageView
+            android:id="@+id/icon_videoing"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="2dp"
+            android:src="@drawable/em_call_video_on" />
+        <ImageView
+            android:id="@+id/icon_speaking"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:padding="2dp"
+            android:src="@drawable/em_call_mic_on" />
+    </RelativeLayout>
+</RelativeLayout>
