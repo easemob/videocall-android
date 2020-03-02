@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -200,7 +201,10 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         avatarAdapter = new MemberAvatarAdapter();
         avatarAdapter.setData(streamList);
         avatarAdapter.setHasStableIds(true);
+
         horizontalRecyclerView.setAdapter(avatarAdapter);
+
+
 
         //增加时候开始订阅流回调
         avatarAdapter.setCallback(new OnItemGetSurfaceView() {
@@ -231,6 +235,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     }else {
                         EMLog.i(TAG,"OnItemGetSurfaceView add stream talker postion：" + position);
                         surfaceView.release();
+
+                        surfaceView.setZOrderOnTop(true);
+                        surfaceView.setZOrderMediaOverlay(true);
+                        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            surfaceView.setTranslationZ(1);
+                        }*/
                         subscribe(streamList.get(position), surfaceView);
                     }
                     ConferenceInfo.subscribestream.add(streamList.get(position).getStreamId());
@@ -634,6 +644,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         netInfoView = (ImageView)findViewById(R.id.netInfo);
         oppositeSurface = (EMCallSurfaceView) findViewById(R.id.opposite_surface);
         oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+
+        oppositeSurface.setZOrderMediaOverlay(false);
+        oppositeSurface.setZOrderOnTop(false);
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            oppositeSurface.setTranslationZ(0);
+        }*/
 
         avatarView = (ImageView) findViewById(R.id.img_call_avatar);
         EMClient.getInstance().conferenceManager().setLocalSurfaceView(oppositeSurface);

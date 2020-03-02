@@ -86,6 +86,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         return (mData == null || mData.isEmpty()) ? VIEW_TYPE_EMPTY : VIEW_TYPE_ITEM;
     }
 
+
     /**
      * 点击事件
      * @param v
@@ -249,6 +250,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             super(itemView);
             initView(itemView);
         }
+
 
         /**
          * 初始化控件

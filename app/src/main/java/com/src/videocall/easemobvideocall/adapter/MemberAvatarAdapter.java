@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.adapter;
 
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         this.callback = callback;
     }
 
+
     @Override
     public ViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.activity_conference_member_view, parent, false);
@@ -75,11 +77,22 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             video_view = (ImageView)findViewById(R.id.icon_videoing);
             icon_text = (TextView)findViewById(R.id.icon_text);
             surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                surfaceView.setTranslationZ(1);
+                audio_view.setTranslationZ(2);
+                video_view.setTranslationZ(2);
+                icon_text.setTranslationZ(2);
+            }*/
         }
 
         @Override
             public void setData(EMConferenceStream item, int position) {
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                audio_view.setTranslationZ(10);
+                video_view.setTranslationZ(10);
+                icon_text.setTranslationZ(10);
+            }
             EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             int currentIndex = ConferenceInfo.getInstance().getConferenceStreamList() .indexOf(ConferenceInfo.currentStream);
             if(ConferenceInfo.changeflag && currentIndex  == position) {

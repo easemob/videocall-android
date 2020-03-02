@@ -160,10 +160,17 @@
                 android:background="@color/color_transparent"
                 android:orientation="vertical"
                 android:visibility="gone">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never">
+                </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_surface_baseline"
