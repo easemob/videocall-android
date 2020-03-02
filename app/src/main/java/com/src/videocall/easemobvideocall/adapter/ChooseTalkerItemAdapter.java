@@ -23,7 +23,7 @@ import static android.view.View.VISIBLE;
 
 public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceStream> {
 
-
+    public static int chooseIndex = -1;
     public ChooseTalkerItemAdapter(){
 
     }
@@ -52,6 +52,11 @@ public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConfe
         @Override
         public void setData(EMConferenceStream item, int position){
             userId_view.setText(item.getUsername());
+            if(position == chooseIndex){
+                id_checkbox.setChecked(true);
+            }else{
+                id_checkbox.setChecked(false);
+            }
         }
     }
 }

@@ -294,6 +294,7 @@ public class LoginActivity extends AppCompatActivity {
                          ConferenceInfo.getInstance().setPassword(currentPassword);
                          ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
                          ConferenceInfo.getInstance().setConference(value);
+                         Log.d(TAG, "Get ConferenceId:"+ value.getConferenceId());
 
                          /*DemoApplication. conferenceInstance.setRoomname(currentRoomname);
                          DemoApplication.conferenceInstance.setPassword(currentPassword);

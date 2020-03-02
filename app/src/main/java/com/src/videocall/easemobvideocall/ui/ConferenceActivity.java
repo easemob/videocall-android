@@ -1050,7 +1050,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
      * 切换摄像头
      */
     private void changeCamera() {
-        takerListChooseDispaly("");
         EMLog.i(TAG,"videoSwitch  changeCamera");
         EMClient.getInstance().conferenceManager().switchCamera();
     }
@@ -1530,10 +1529,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                         //展示主播是否踢人界面
                         EMLog.i(TAG, " onAttributesUpdated： talker is full");
                         takerFullDialogDisplay(usreId);
+                        return;
                     } else {
                         //申请上麦是否同意提示框
                         EMLog.i(TAG, " onAttributesUpdated： talker request_tobe_speaker start");
                         requestTalkerDisplay(usreId);
+                        return;
                     }
                 } else if (option.equals(ConferenceAttributeOption.REQUEST_TOBE_AUDIENCE)) {  //申请下麦
                     EMLog.i(TAG, " onAttributesUpdated： talker request_tobe_audience");
@@ -1649,17 +1650,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             @Override
                             public void onSuccess(String value) {
                                 EMLog.i(TAG, " requestTalkerDisplay  request_tobe_speaker changeRole success, result: " + value);
-                                EMClient.getInstance().conferenceManager().deleteConferenceAttribute(usreId, new EMValueCallBack<Void>() {
-                                    @Override
-                                    public void onSuccess(Void value) {
-                                        EMLog.i(TAG, " requestTalkerDisplay  request_tobe_speaker delete role success, result: " + value);
-                                    }
-
-                                    @Override
-                                    public void onError(int error, String errorMsg) {
-                                        EMLog.i(TAG, " requestTalkerDisplay  request_tobe_speaker changeRole failed, error: " + error + " - " + errorMsg);
-                                    }
-                                });
                             }
                             @Override
                             public void onError(int error, String errorMsg) {
@@ -1723,15 +1713,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             @Override
             public void onItemClick(View view, int position) {
                 EMLog.i(TAG, "takerFullDialogDisplay choose position: " + position);
-                TextView userId_view = view.findViewById(R.id.chooseId_view);
-                RadioButton id_checkbox = view.findViewById(R.id.id_checkbox);
-                if(choosed_checkbox != null){
-                    choosed_checkbox.setChecked(false);
-                }
-                id_checkbox.setChecked(true);
+                ChooseTalkerItemAdapter.chooseIndex = position;
                 choose_userId = streamList.get(position).getUsername();
                 EMLog.i(TAG, "takerFullDialogDisplay choose userId: " + choose_userId);
-                choosed_checkbox = view.findViewById(R.id.id_checkbox);
+                adapter.notifyDataSetChanged();
+                adapter.updataData();
             }
         });
 
@@ -1747,7 +1733,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), choose_userId);
                 EMClient.getInstance().conferenceManager().grantRole(conference.getConferenceId()
                         , new EMConferenceMember(memName, null, null)
-                        , EMConferenceManager.EMConferenceRole.Audience, new EMValueCallBack<String>() {
+                        , EMConferenceManager.EMConferenceRole.Audience, new EMValueCallBack<String>(){
                             @Override
                             public void onSuccess(String value) {
                                 EMLog.i(TAG, "takerListChooseDispaly ok choose to offline userId " + choose_userId +"  success, result: " + value);
