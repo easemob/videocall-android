@@ -30,7 +30,6 @@ public class RoomSettingActivity extends AppCompatActivity implements View.OnCli
     TextView room_password;
     TextView room_admin;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +42,7 @@ public class RoomSettingActivity extends AppCompatActivity implements View.OnCli
         room_name.setText(ConferenceInfo.getInstance().getRoomname());
         room_password.setText(ConferenceInfo.getInstance().getPassword());
 
-        String[] admins = ConferenceInfo.getInstance().getConference().getAdmins();
-        String adminStr = "";
-        for (int i = 0; i < admins.length; i++) {
-            adminStr = admins[0];
-            adminStr = EasyUtils.useridFromJid(adminStr);
-        }
-        room_admin.setText(adminStr);
+        room_admin.setText(ConferenceInfo.getInstance().getAdmin());
 
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_roomlog);

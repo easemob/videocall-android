@@ -65,7 +65,6 @@
         <activity
             android:name=".ui.ConferenceActivity"
             android:label="@string/title_activity_conference"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />

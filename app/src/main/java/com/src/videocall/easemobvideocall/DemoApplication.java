@@ -26,6 +26,8 @@ public class DemoApplication extends Application {
 	// login user name
 	public final String PREF_USERNAME = "username";
 
+	static public ConferenceInfo conferenceInstance;
+
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs
 	 */
@@ -41,6 +43,7 @@ public class DemoApplication extends Application {
 		//init demo helper
         DemoHelper.getInstance().init(applicationContext);
 
+		conferenceInstance = ConferenceInfo.getInstance();
 	}
 	public static DemoApplication getInstance() {
 		return instance;

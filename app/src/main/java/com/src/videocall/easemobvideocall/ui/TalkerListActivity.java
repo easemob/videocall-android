@@ -8,6 +8,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,6 +41,12 @@ public class TalkerListActivity extends AppCompatActivity {
     private EMConference currentConference;
 
     private List<EMConferenceStream> streamList;
+
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,5 +89,41 @@ public class TalkerListActivity extends AppCompatActivity {
     public void onTalkerListback(View view){
         streamList.remove(ConferenceInfo.getInstance().getLocalStream());
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            finish();
+            return true;
+       }
+       return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //继承了Activity的onTouchEvent方法，直接监听点击事件
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            x1 = event.getX();
+            y1 = event.getY();
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            //当手指离开的时候
+            x2 = event.getX();
+            y2 = event.getY();
+            if(y1 - y2 > 50) {
+                //Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
+            } else if(y2 - y1 > 50) {
+                //Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
+            } else if(x1 - x2 > 50) {
+               // Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
+            } else if(x2 - x1 > 50) {
+                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                finish();
+            }
+        }
+        return super.onTouchEvent(event);
     }
 }

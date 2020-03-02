@@ -12,22 +12,37 @@ import android.widget.TextView;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.hyphenate.util.EMLog;
 import com.src.videocall.easemobvideocall.R;
+import com.src.videocall.easemobvideocall.ui.ConferenceActivity;
 import com.src.videocall.easemobvideocall.ui.ConferenceMemberView;
+import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 import com.superrtc.sdk.VideoView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceStream> {
 
+    private final String TAG = this.getClass().getSimpleName();
+
+    private  OnItemGetSurfaceView callback = null;
+    private List<EMConferenceStream> streamList;
+
     public MemberAvatarAdapter() {
+        streamList = ConferenceInfo.getInstance().getConferenceStreamList();
+    }
+
+
+    public void setCallback(OnItemGetSurfaceView callback){
+        this.callback = callback;
     }
 
     @Override
@@ -36,55 +51,97 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         return new AvatarViewHolder(view);
     }
 
+    @Override
+    public long getItemId(int position){
+        return  position;
+    }
+
     private class AvatarViewHolder extends ViewHolder<EMConferenceStream> {
         private EMCallSurfaceView surfaceView;
         private ImageView avatar_view;
         private ImageView video_view;
         private ImageView audio_view;
-        private boolean flag = false;
+        private TextView  icon_text;
+
         public AvatarViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
         @Override
         public void initView(View itemView) {
-            surfaceView = (EMCallSurfaceView)findViewById(R.id.item_surface_view);
+            surfaceView = (EMCallSurfaceView)findViewById(R.id.surface_view_listItem);
             avatar_view = (ImageView)findViewById(R.id.call_avatar);
             audio_view = (ImageView)findViewById(R.id.icon_speaking);
             video_view = (ImageView)findViewById(R.id.icon_videoing);
+            icon_text = (TextView)findViewById(R.id.icon_text);
             surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         }
 
         @Override
-        public void setData(EMConferenceStream item, int position){
-            //订阅流
-            //if(!flag){
-                avatar_view.setVisibility(GONE);
-                EMClient.getInstance().conferenceManager().subscribe(item, surfaceView, new EMValueCallBack<String>() {
-                    @Override
-                    public void onSuccess(String value) {
-                    }
-                    @Override
-                    public void onError(int error, String errorMsg) {
+            public void setData(EMConferenceStream item, int position) {
 
+            EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
+            int currentIndex = ConferenceInfo.getInstance().getConferenceStreamList() .indexOf(ConferenceInfo.currentStream);
+            if(ConferenceInfo.changeflag && currentIndex  == position) {
+                if (ConferenceInfo.getInstance().getLocalStream().isAudioOff()) {
+                    audio_view.setBackgroundResource(R.drawable.call_mic_off);
+                } else {
+                    audio_view.setBackgroundResource(R.drawable.call_mic_on);
+                }
+
+                //设置用户标识
+                String fristStr = EMClient.getInstance().getCurrentUser().substring(0,5);
+                String lastStr =  EMClient.getInstance().getCurrentUser().substring(EMClient.getInstance().getCurrentUser().length()-5);
+                fristStr = fristStr+"***"+lastStr;
+                icon_text.setText(fristStr + "(我)");
+
+                if (ConferenceInfo.getInstance().getLocalStream().isVideoOff()) {
+                    video_view.setBackgroundResource(R.drawable.call_video_off);
+                    avatar_view.setVisibility(VISIBLE);
+                }else{
+                    video_view.setBackgroundResource(R.drawable.call_video_on);
+                    avatar_view.setVisibility(GONE);
+                    if(ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
+                        surfaceView.release();
+                        EMClient.getInstance().conferenceManager().setLocalSurfaceView(surfaceView);
+                    }else{
+                        avatar_view.setVisibility(VISIBLE);
                     }
-                });
-                flag = true;
-           // }
-            if(item.isAudioOff()){
-                audio_view.setBackgroundResource(R.drawable.em_call_mic_off);
+                }
+
+                /*if(ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+                     avatar_view.setVisibility(VISIBLE);
+                     icon_text.setText("");
+                }*/
             }else{
-                audio_view.setBackgroundResource(R.drawable.em_call_mic_on);
+                //设置用户标识
+                String fristStr = item.getUsername().substring(0,5);
+                String lastStr =  item.getUsername().substring(item.getUsername().length()-5);
+                fristStr = fristStr+"***"+lastStr;
+                if(item.getUsername() == EMClient.getInstance().getCurrentUser()){
+                    icon_text.setText(fristStr + " (我)");
+                }else{
+                    icon_text.setText(fristStr);
+                }
+
+                if (item.isAudioOff()) {
+                    audio_view.setBackgroundResource(R.drawable.call_mic_off);
+                } else {
+                    audio_view.setBackgroundResource(R.drawable.call_mic_on);
+                }
+                if (item.isVideoOff()){
+                    avatar_view.setVisibility(VISIBLE);
+                    video_view.setBackgroundResource(R.drawable.call_video_off);
+                } else{
+                    avatar_view.setVisibility(GONE);
+                    video_view.setBackgroundResource(R.drawable.call_video_on);
+                }
             }
-            if(item.isVideoOff()){
-                avatar_view.setVisibility(VISIBLE);
-                video_view.setBackgroundResource(R.drawable.em_call_video_off);
-            }else {
-                avatar_view.setVisibility(GONE);
-                video_view.setBackgroundResource(R.drawable.em_call_video_on);
+
+            if(callback != null){
+                callback.OnItemGetSurfaceView(surfaceView,position);
+                EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             }
         }
-
-
     }
 }
