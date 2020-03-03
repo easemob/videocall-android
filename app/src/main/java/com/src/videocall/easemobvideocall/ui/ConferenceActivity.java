@@ -22,6 +22,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Conference;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -212,61 +213,16 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             public void OnItemGetSurfaceView(EMCallSurfaceView surfaceView, int position) {
                 //进行订阅流
                 EMLog.i(TAG,"OnItemGetSurfaceView start: postion：" + position);
-                if(!ConferenceInfo.subscribestream.contains(streamList.get(position).getStreamId())){
-                    //观众第一次进来
-                    EMLog.i(TAG,"OnItemGetSurfaceView  add stream  postion：" + position);
-                    if(position == 0 && conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience && !Initflag){
-                        EMLog.i(TAG,"OnItemGetSurfaceView  Audience first come postion：" + position);
-                        itemSurfaceView = surfaceView;
-                        oppositeSurface.release();
-                        subscribe(streamList.get(position),oppositeSurface);
-                        if(streamList.get(position).isAudioOff()){
-                            speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                        }else{
-                            speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                        }
-                        if(streamList.get(position).isVideoOff()){
-                            video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                        }else{
-                            video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                        }
-                        Initflag = true;
-                        EMLog.i(TAG,"OnItemGetSurfaceView  Audience first end：" + position);
-                    }else {
-                        EMLog.i(TAG,"OnItemGetSurfaceView add stream talker postion：" + position);
-                        surfaceView.release();
 
-                        surfaceView.setZOrderOnTop(true);
-                        surfaceView.setZOrderMediaOverlay(true);
-                        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            surfaceView.setTranslationZ(1);
-                        }*/
-                        subscribe(streamList.get(position), surfaceView);
-                    }
-                    ConferenceInfo.subscribestream.add(streamList.get(position).getStreamId());
-                    EMLog.i(TAG,"OnItemGetSurfaceView  subscribestream  add stream postion：" + position);
-                }else {
-                    EMLog.i(TAG,"OnItemGetSurfaceView  add stream postion：" + position + "  changeflag:" + ConferenceInfo.changeflag);
-                    if(!ConferenceInfo.changeflag){
-                        /*EMLog.i(TAG,"OnItemGetSurfaceView add stream  updateSubscribe start postion ：" + position + "  changeflag:" + ConferenceInfo.changeflag);
-                        oppositeSurface.release();
-                        surfaceView.release();
-                        EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(position),surfaceView, new EMValueCallBack<String>() {
-                            @Override
-                            public void onSuccess(String value) {
-                            }
-                            @Override
-                            public void onError(int error, String errorMsg) {
-                            }
-                        });
-                        //oppositeSurface.release();
-                        EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                        EMLog.i(TAG,"OnItemGetSurfaceView add stream  updateSubscribe end  postion ：" + position + "  changeflag:" + ConferenceInfo.changeflag);*/
-                    }else {
-                        if(streamList.indexOf(ConferenceInfo.currentStream) == position){
-
-                            EMLog.i(TAG,"OnItemGetSurfaceView add stream  is currentStream  postion ：" + position );
-
+                if(!ConferenceInfo.removeflag){
+                    if(!ConferenceInfo.subscribestream.contains(streamList.get(position).getStreamId())){
+                        //观众第一次进来
+                        EMLog.i(TAG,"OnItemGetSurfaceView  add stream  postion：" + position);
+                        if(position == 0 && conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience && !Initflag){
+                            EMLog.i(TAG,"OnItemGetSurfaceView  Audience first come postion：" + position);
+                            itemSurfaceView = surfaceView;
+                            oppositeSurface.release();
+                            subscribe(streamList.get(position),oppositeSurface);
                             if(streamList.get(position).isAudioOff()){
                                 speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
                             }else{
@@ -277,21 +233,54 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             }else{
                                 video_show_view.setBackgroundResource(R.drawable.call_video_on);
                             }
-                            EMLog.i(TAG,"OnItemGetSurfaceView add stream  is currentStream end postion ：" + position );
-                        }
-                        if(position == updateIndex && position !=  streamList.indexOf(ConferenceInfo.currentStream)){
+                            Initflag = true;
+                            EMLog.i(TAG,"OnItemGetSurfaceView  Audience first end：" + position);
 
-                            EMLog.i(TAG,"OnItemGetSurfaceView add stream  updateSubscribe updateIndex   postion ：" + position );
+                        }else {
+                            EMLog.i(TAG,"OnItemGetSurfaceView add stream talker postion：" + position);
                             surfaceView.release();
-                            EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(position),surfaceView, new EMValueCallBack<String>() {
-                                @Override
-                                public void onSuccess(String value) {
+
+                            surfaceView.setZOrderMediaOverlay(true);
+                            surfaceView.setZOrderOnTop(true);
+                            subscribe(streamList.get(position), surfaceView);
+                        }
+                        ConferenceInfo.subscribestream.add(streamList.get(position).getStreamId());
+                        EMLog.i(TAG,"OnItemGetSurfaceView  subscribestream  add stream postion：" + position);
+                    }else {
+                        EMLog.i(TAG, "OnItemGetSurfaceView  add stream postion：" + position + "  changeflag:" + ConferenceInfo.changeflag);
+                        if (ConferenceInfo.changeflag) {
+                            if (streamList.indexOf(ConferenceInfo.currentStream) == position) {
+                                EMLog.i(TAG, "OnItemGetSurfaceView add stream  is currentStream  postion ：" + position);
+                                if (streamList.get(position).isAudioOff()) {
+                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
+                                } else {
+                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
                                 }
-                                @Override
-                                public void onError(int error, String errorMsg) {
+                                if (streamList.get(position).isVideoOff()) {
+                                    avatarView.setVisibility(View.VISIBLE);
+                                    video_show_view.setBackgroundResource(R.drawable.call_video_off);
+                                } else {
+                                    avatarView.setVisibility(View.GONE);
+                                    video_show_view.setBackgroundResource(R.drawable.call_video_on);
                                 }
-                            });
-                            EMLog.i(TAG,"OnItemGetSurfaceView add stream  updateSubscribe updateIndex end  postion ：" + position );
+                                EMLog.i(TAG, "OnItemGetSurfaceView add stream  is currentStream end postion ：" + position);
+                            }
+                        }
+                    }
+                }else{
+                    if(streamList.size() > 0){
+                        //删除以后重新订阅更新流
+                        surfaceView.release();
+                        EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(position),surfaceView, new EMValueCallBack<String>(){
+                            @Override
+                            public void onSuccess(String value) {
+                            }
+                            @Override
+                            public void onError(int error, String errorMsg) {
+                            }
+                        });
+                        if(position  == streamList.size() -1){
+                            ConferenceInfo.removeflag = false;
                         }
                     }
                }
@@ -406,7 +395,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                              }else{
                                  avatarView.setVisibility(View.GONE);
                                  //changeSurface(ConferenceInfo.currentIndex,null,itemSurfaceView);
-                                 changeSurface(streamList.indexOf(ConferenceInfo.currentStream),null,oppositeSurface);
+                                 changeSurface(streamList.indexOf(ConferenceInfo.currentStream),null,itemSurfaceView);
                                  ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
                              }
                         }else{
@@ -514,7 +503,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             }else {
                                 oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
 
-
                                 if(streamList.get(position).isVideoOff()){
                                     avatarView.setVisibility(View.VISIBLE);
                                 }else {
@@ -531,87 +519,88 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
                         }else{
                             // 没有恢复到原位 先恢复原来的视频 ,首先更新到原来的视频
-                            //oldIndex = ConferenceInfo.currentIndex;
-                            oldIndex = streamList.indexOf(ConferenceInfo.currentStream);
-                            if(!oldflag){
-                                itemSurfaceView.release();
-                                oppositeSurface.release();
-                                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),itemSurfaceView, new EMValueCallBack<String>(){
-                                    @Override
-                                    public void onSuccess(String value) {
-                                    }
-                                    @Override
-                                    public void onError(int error, String errorMsg) {
-                                    }
-                                });
-                            }else{
-                                oldSurfaceView.release();
-                                oppositeSurface.release();
-                                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),oldSurfaceView, new EMValueCallBack<String>(){
-                                    @Override
-                                    public void onSuccess(String value) {
-                                    }
-                                    @Override
-                                    public void onError(int error, String errorMsg) {
-                                    }
-                                });
-                            }
-                            avatarAdapter.notifyItemChanged(oldIndex , 0);
+                            if(streamList.size() > 0){
+                                oldIndex = streamList.indexOf(ConferenceInfo.currentStream);
+                                if(!oldflag){
+                                    itemSurfaceView.release();
+                                    oppositeSurface.release();
+                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                                    EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),itemSurfaceView, new EMValueCallBack<String>(){
+                                        @Override
+                                        public void onSuccess(String value) {
+                                        }
+                                        @Override
+                                        public void onError(int error, String errorMsg) {
+                                        }
+                                    });
+                                }else{
+                                    oldSurfaceView.release();
+                                    oppositeSurface.release();
+                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                                    EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),oldSurfaceView, new EMValueCallBack<String>(){
+                                        @Override
+                                        public void onSuccess(String value) {
+                                        }
+                                        @Override
+                                        public void onError(int error, String errorMsg) {
+                                        }
+                                    });
+                                }
+                                avatarAdapter.notifyItemChanged(oldIndex , 0);
 
-                            if(streamList.get(position).isVideoOff()){
-                                avatarView.setVisibility(View.VISIBLE);
-                            }else {
-                                avatarView.setVisibility(View.GONE);
-                            }
-                           // ConferenceInfo.currentIndex = position;
-                            ConferenceInfo.currentStream = streamList.get(position);
+                                if(streamList.get(position).isVideoOff()){
+                                    avatarView.setVisibility(View.VISIBLE);
+                                }else {
+                                    avatarView.setVisibility(View.GONE);
+                                }
+                                // ConferenceInfo.currentIndex = position;
+                                ConferenceInfo.currentStream = streamList.get(position);
 
 
-                            //设置小图标
-                            if(localStream.isAudioOff()){
-                                audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                            }else{
-                                audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                            }
-                            if(localStream.isVideoOff()){
-                                video_view.setBackgroundResource(R.drawable.call_video_off);
-                            }else{
-                                video_view.setBackgroundResource(R.drawable.call_video_on);
-                            }
+                                //设置小图标
+                                if(localStream.isAudioOff()){
+                                    audio_view.setBackgroundResource(R.drawable.call_mic_off);
+                                }else{
+                                    audio_view.setBackgroundResource(R.drawable.call_mic_on);
+                                }
+                                if(localStream.isVideoOff()){
+                                    video_view.setBackgroundResource(R.drawable.call_video_off);
+                                }else{
+                                    video_view.setBackgroundResource(R.drawable.call_video_on);
+                                }
 
-                            //本地的
-                            if(streamList.get(position).isAudioOff()){
-                                speak_show_view.setVisibility(View.VISIBLE);
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                            }else{
-                                speak_show_view.setVisibility(View.VISIBLE);
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                            }
-                            if(streamList.get(position).isVideoOff()){
-                                video_show_view.setVisibility(View.VISIBLE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                            }else{
-                                video_show_view.setVisibility(View.VISIBLE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                            }
+                                //本地的
+                                if(streamList.get(position).isAudioOff()){
+                                    speak_show_view.setVisibility(View.VISIBLE);
+                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
+                                }else{
+                                    speak_show_view.setVisibility(View.VISIBLE);
+                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
+                                }
+                                if(streamList.get(position).isVideoOff()){
+                                    video_show_view.setVisibility(View.VISIBLE);
+                                    video_show_view.setBackgroundResource(R.drawable.call_video_off);
+                                }else{
+                                    video_show_view.setVisibility(View.VISIBLE);
+                                    video_show_view.setBackgroundResource(R.drawable.call_video_on);
+                                }
 
-                            if(!oldflag){
-                                oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                                oldSurfaceView.release();
-                                oppositeSurface.release();
-                                //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
-                                changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
-                            }else{
-                                itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                                itemSurfaceView.release();
-                                oppositeSurface.release();
-                                //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
-                                changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
+                                if(!oldflag){
+                                    oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
+                                    oldSurfaceView.release();
+                                    oppositeSurface.release();
+                                    //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
+                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
+                                }else{
+                                    itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
+                                    itemSurfaceView.release();
+                                    oppositeSurface.release();
+                                    //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
+                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
+                                }
+                                ConferenceInfo.changeflag = true;
+                                oldflag = !oldflag;
                             }
-                            ConferenceInfo.changeflag = true;
-                            oldflag = !oldflag;
                         }
                     }
                 }
@@ -647,6 +636,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
         oppositeSurface.setZOrderMediaOverlay(false);
         oppositeSurface.setZOrderOnTop(false);
+
+
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             oppositeSurface.setTranslationZ(0);
         }*/
@@ -1297,10 +1288,19 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             public void run() {
                 EMLog.i(TAG, "onStreamRemoved  start userID: " + stream.getUsername());
                 Toast.makeText(getApplicationContext(), "用户 " + EasyUtils.useridFromJid(stream.getUsername()) + " 离开了房间!", Toast.LENGTH_SHORT).show();
-                if (streamList.contains(stream)) {
+                if(streamList.contains(stream)) {
+                    if(ConferenceInfo.changeflag && ConferenceInfo.currentStream.getStreamId().equals(stream.getStreamId())){
+                        //回到初始化状态
+                        oppositeSurface.release();
+                        EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                        ConferenceInfo.changeflag = false;
+                        oldflag = false;
+                        ConferenceInfo.currentStream = null;
+                    }
+                    ConferenceInfo.removeflag = true;
                     removeConferenceView(stream);
-                    if(ConferenceInfo.subscribestream.contains(stream)){
-                        ConferenceInfo.subscribestream.remove(stream.getStreamId());
+                    if(ConferenceInfo.subscribestream.contains(stream.getStreamId())){
+                        ConferenceInfo.subscribestream.remove(stream);
                     }
                     EMLog.i(TAG, "onStreamRemoved  end userID: " + stream.getUsername());
                     if(streamList.size() == 0){
@@ -1330,13 +1330,13 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             public void run() {
                 Toast.makeText(getApplicationContext(),  "用户 " + EasyUtils.useridFromJid(stream.getUsername()) + " 更新了音视频流!", Toast.LENGTH_SHORT).show();
                 //更新本地视频流
-                if(ConferenceInfo.changeflag && streamList.indexOf(stream) == streamList.indexOf(ConferenceInfo.currentStream)){
+                /*if(ConferenceInfo.changeflag && stream.getStreamId().equals(ConferenceInfo.currentStream)){
                     if(stream.isVideoOff()){
                         avatarView.setVisibility(View.VISIBLE);
                     }else{
                         avatarView.setVisibility(View.GONE);
                     }
-                }
+                }*/
                 updateConferenceMemberView(stream);
             }
         });
@@ -1359,9 +1359,9 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             @Override
             public void run() {
                 //Toast.makeText(getApplicationContext(), "State=" + state, Toast.LENGTH_SHORT).show();
-                if(state != STATE_NO_REMOTE_AUDIO || state != STATE_NO_REMOTE_VIDEO){
+                /*if(state != STATE_NO_REMOTE_AUDIO || state != STATE_NO_REMOTE_VIDEO){
                     Toast.makeText(getApplicationContext(),  "会议状态已更新为：  " + state , Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }
@@ -1830,7 +1830,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                         }
                     }
                     if (!normalParam.isVideoOff()) {
-                        try {
+                        try{
                             EMClient.getInstance().callManager().pauseVideoTransfer();
                         } catch (HyphenateException e) {
                             e.printStackTrace();
@@ -1958,7 +1958,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
      * 切换摄像头方法封装
      */
     private void changeSurface(int index, EMCallSurfaceView localSurface, EMCallSurfaceView oppositeSurface){
-
         if(conference.getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
             if(!ConferenceInfo.changeflag){
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
@@ -1985,13 +1984,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 avatarAdapter.notifyItemChanged(index , 0);
             }
-
         }else{
             if(localSurface == null){
                 avatarView.setVisibility(View.VISIBLE);
                 speak_show_view.setVisibility(View.VISIBLE);
                 video_show_view.setVisibility(View.VISIBLE);
-                avatarAdapter.notifyItemChanged(index , 0);
                 EMClient.getInstance().conferenceManager().updateSubscribe(ConferenceInfo.currentStream,oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
@@ -2001,10 +1998,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
                     }
                 });
+                avatarAdapter.notifyItemChanged(index , 0);
             }else{
                 avatarView.setVisibility(View.GONE);
                 speak_show_view.setVisibility(View.GONE);
                 video_show_view.setVisibility(View.GONE);
+                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateSubscribe(ConferenceInfo.currentStream,oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
@@ -2015,6 +2014,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     }
                 });
             }
+            //EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
             avatarAdapter.notifyItemChanged(index , 0);
         }
     }

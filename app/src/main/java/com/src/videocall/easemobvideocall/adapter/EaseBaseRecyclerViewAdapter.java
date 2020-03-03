@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.src.videocall.easemobvideocall.R;
+import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -186,7 +187,9 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             }
         }
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, this.mData.size());
+        //notifyDataSetChanged();
+        notifyItemRangeChanged(position,getItemCount()); //刷新被删除数据，以及其后面的数据
+        //notifyItemRangeChanged(position, this.mData.size());
     }
 
     /**

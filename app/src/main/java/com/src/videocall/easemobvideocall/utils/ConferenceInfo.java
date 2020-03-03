@@ -28,6 +28,7 @@ public class ConferenceInfo {
     public static int currentIndex = -1;
     public static EMConferenceStream currentStream = null;
     public static boolean changeflag = false;
+    public static boolean removeflag = false;
 
     public static List<String> subscribestream = new ArrayList<>();
     private List<EMConferenceStream> streamListAddLocal = new ArrayList<>();
@@ -55,6 +56,7 @@ public class ConferenceInfo {
         currentIndex = -1;
         currentStream = null;
         changeflag = false;
+        removeflag = false;
     }
 
     public EMConferenceManager.EMConferenceRole getCurrentrole(){
