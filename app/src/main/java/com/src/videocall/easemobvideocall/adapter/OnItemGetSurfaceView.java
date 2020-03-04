@@ -2,6 +2,7 @@ package com.src.videocall.easemobvideocall.adapter;
 
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.hyphenate.media.EMCallSurfaceView;
 
@@ -13,6 +14,6 @@ public interface OnItemGetSurfaceView {
      * 条目点击
      * @param surfaceView
      */
-     void OnItemGetSurfaceView(EMCallSurfaceView surfaceView ,int position);
+     void OnItemGetSurfaceView(EMCallSurfaceView surfaceView ,ImageView imageView, int position);
 }
 

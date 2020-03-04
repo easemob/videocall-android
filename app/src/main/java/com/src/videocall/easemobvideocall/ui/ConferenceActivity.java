@@ -153,7 +153,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
     public static int updateIndex = -2;
     private int oldIndex = 0;
 
-    private  OnItemGetSurfaceView  getSurfaceViewcallback;
+
+    private static long mLastClickTime;// 用户判断多次点击的时间
+
+    private static final int MIN_CLICK_DELAY_TIME = 1000;
+    private static long lastClickTime;
+
 
     //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
     float x1 = 0;
@@ -166,6 +171,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conference);
+
+        EMLog.i(TAG," Main threadID: " + Thread.currentThread().getName());
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
@@ -210,9 +217,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         //增加时候开始订阅流回调
         avatarAdapter.setCallback(new OnItemGetSurfaceView() {
             @Override
-            public void OnItemGetSurfaceView(EMCallSurfaceView surfaceView, int position) {
+            public void OnItemGetSurfaceView(EMCallSurfaceView surfaceView,ImageView avatar_view, int position) {
+
+
                 //进行订阅流
-                EMLog.i(TAG,"OnItemGetSurfaceView start: postion：" + position);
+                EMLog.i(TAG,"OnItemGetSurfaceView start: postion：" + position + "  threadID: " + Thread.currentThread().getName());
 
                 if(!ConferenceInfo.removeflag){
                     if(!ConferenceInfo.subscribestream.contains(streamList.get(position).getStreamId())){
@@ -281,6 +290,30 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                         });
                         if(position  == streamList.size() -1){
                             ConferenceInfo.removeflag = false;
+
+
+                            //如果是观众进来的 如果有主播 显示主播的流
+                            if (conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience) {
+                                ConferenceInfo.currentStream = streamList.get(0);
+                                oppositeSurface.release();
+                                oppositeSurface.setVisibility(View.VISIBLE);
+                                avatarView.setVisibility(View.GONE);
+
+                                speak_show_view.setVisibility(View.VISIBLE);
+                                video_show_view.setVisibility(View.VISIBLE);
+                                ConferenceInfo.changeflag = true;
+                                oldflag = false;
+                                surfaceView.setVisibility(View.GONE);
+                                avatar_view.setVisibility(View.VISIBLE);
+                                EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(position),oppositeSurface, new EMValueCallBack<String>(){
+                                    @Override
+                                    public void onSuccess(String value) {
+                                    }
+                                    @Override
+                                    public void onError(int error, String errorMsg) {
+                                    }
+                                });
+                            }
                         }
                     }
                }
@@ -389,13 +422,22 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                      video_show_view.setBackgroundResource(R.drawable.call_video_on);
                                  }
 
+                                 if(!oldflag){
+                                     //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
+                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
+                                 }else{
+                                     //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
+                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
+                                 }
                                  ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
-                                 //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
-                                 changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                              }else{
-                                 avatarView.setVisibility(View.GONE);
-                                 //changeSurface(ConferenceInfo.currentIndex,null,itemSurfaceView);
-                                 changeSurface(streamList.indexOf(ConferenceInfo.currentStream),null,itemSurfaceView);
+                                 if(!oldflag){
+                                     //changeSurface(ConferenceInfo.currentIndex,oppositeSurface,itemSurfaceView);
+                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
+                                 }else{
+                                     //changeSurface(ConferenceInfo.currentIndex, oppositeSurface, oldSurfaceView);
+                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
+                                 }
                                  ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
                              }
                         }else{
@@ -450,7 +492,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
                                 }else {
                                     //changeSurface(ConferenceInfo.currentIndex, oppositeSurface, oldSurfaceView);
-                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
+                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
                                 }
                                 ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
                             }
@@ -525,26 +567,30 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                     itemSurfaceView.release();
                                     oppositeSurface.release();
                                     EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                    EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),itemSurfaceView, new EMValueCallBack<String>(){
+                                    /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),itemSurfaceView, new EMValueCallBack<String>(){
                                         @Override
                                         public void onSuccess(String value) {
                                         }
                                         @Override
                                         public void onError(int error, String errorMsg) {
                                         }
-                                    });
+                                    });*/
+                                    EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(oldIndex).getStreamId(),itemSurfaceView);
+                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
                                 }else{
                                     oldSurfaceView.release();
                                     oppositeSurface.release();
                                     EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                    EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),oldSurfaceView, new EMValueCallBack<String>(){
+                                    /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(oldIndex),oldSurfaceView, new EMValueCallBack<String>(){
                                         @Override
                                         public void onSuccess(String value) {
                                         }
                                         @Override
                                         public void onError(int error, String errorMsg) {
                                         }
-                                    });
+                                    });*/
+                                    EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(oldIndex).getStreamId(),oldSurfaceView);
+                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
                                 }
                                 avatarAdapter.notifyItemChanged(oldIndex , 0);
 
@@ -634,13 +680,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         oppositeSurface = (EMCallSurfaceView) findViewById(R.id.opposite_surface);
         oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
 
-        oppositeSurface.setZOrderMediaOverlay(false);
         oppositeSurface.setZOrderOnTop(false);
-
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            oppositeSurface.setTranslationZ(0);
-        }*/
+        oppositeSurface.setZOrderMediaOverlay(false);
 
         avatarView = (ImageView) findViewById(R.id.img_call_avatar);
         EMClient.getInstance().conferenceManager().setLocalSurfaceView(oppositeSurface);
@@ -1957,65 +1998,76 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
     /**
      * 切换摄像头方法封装
      */
-    private void changeSurface(int index, EMCallSurfaceView localSurface, EMCallSurfaceView oppositeSurface){
-        if(conference.getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
-            if(!ConferenceInfo.changeflag){
+    private void changeSurface(int index, EMCallSurfaceView localSurface, EMCallSurfaceView oppositeSurface) {
+        if (conference.getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience) {
+            if (!ConferenceInfo.changeflag) {
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index),oppositeSurface, new EMValueCallBack<String>() {
+                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
+                /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index), oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
+
                     @Override
                     public void onError(int error, String errorMsg) {
                     }
-                });
-                avatarAdapter.notifyItemChanged(index , 0);
-            }else{
+                });*/
+                avatarAdapter.notifyItemChanged(index, 0);
+            } else {
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index),oppositeSurface, new EMValueCallBack<String>() {
+                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
+                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
+                avatarAdapter.notifyItemChanged(index, 0);
+                /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index), oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
+
                     @Override
                     public void onError(int error, String errorMsg) {
 
                     }
                 });
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                avatarAdapter.notifyItemChanged(index , 0);
+                avatarAdapter.notifyItemChanged(index, 0);*/
             }
-        }else{
-            if(localSurface == null){
-                avatarView.setVisibility(View.VISIBLE);
+        } else {
+            if (!ConferenceInfo.changeflag) {
+                avatarView.setVisibility(View.GONE);
                 speak_show_view.setVisibility(View.VISIBLE);
                 video_show_view.setVisibility(View.VISIBLE);
-                EMClient.getInstance().conferenceManager().updateSubscribe(ConferenceInfo.currentStream,oppositeSurface, new EMValueCallBack<String>() {
+                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
+                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
+                /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index), oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
+
                     @Override
                     public void onError(int error, String errorMsg) {
-
                     }
                 });
-                avatarAdapter.notifyItemChanged(index , 0);
-            }else{
-                avatarView.setVisibility(View.GONE);
+                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);*/
+                avatarAdapter.notifyItemChanged(index, 0);
+            } else{
+                avatarView.setVisibility(View.VISIBLE);
                 speak_show_view.setVisibility(View.GONE);
                 video_show_view.setVisibility(View.GONE);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                EMClient.getInstance().conferenceManager().updateSubscribe(ConferenceInfo.currentStream,oppositeSurface, new EMValueCallBack<String>() {
+                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
+                /*EMClient.getInstance().conferenceManager().updateSubscribe(streamList.get(index), oppositeSurface, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
+
                     @Override
                     public void onError(int error, String errorMsg) {
 
                     }
-                });
+                });*/
+                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
+                avatarAdapter.notifyItemChanged(index, 0);
             }
-            //EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-            avatarAdapter.notifyItemChanged(index , 0);
         }
     }
 
@@ -2094,6 +2146,15 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         super.onDestroy();
         audioManager.setMode(AudioManager.MODE_NORMAL);
         audioManager.setMicrophoneMute(false);
+    }
+
+    public static boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        if (Math.abs(time - mLastClickTime) > 500) {
+            return true;
+        }
+        mLastClickTime = time;
+        return false;
     }
 
 

@@ -15,11 +15,13 @@ package com.src.videocall.easemobvideocall;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Process;
 import android.support.multidex.MultiDex;
 
+import com.hyphenate.util.EMLog;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 
-public class DemoApplication extends Application {
+public class DemoApplication extends Application implements Thread.UncaughtExceptionHandler {
 
 	public static Context applicationContext;
 	private static DemoApplication instance;
@@ -44,6 +46,8 @@ public class DemoApplication extends Application {
         DemoHelper.getInstance().init(applicationContext);
 
 		conferenceInstance = ConferenceInfo.getInstance();
+
+		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
 	public static DemoApplication getInstance() {
 		return instance;
@@ -53,5 +57,12 @@ public class DemoApplication extends Application {
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
 		MultiDex.install(this);
+	}
+
+	@Override
+	public void uncaughtException(Thread t, Throwable e) {
+		EMLog.e("uncaughtException exit", e.getMessage());
+		System.exit(0);
+		Process.killProcess(Process.myPid());
 	}
 }

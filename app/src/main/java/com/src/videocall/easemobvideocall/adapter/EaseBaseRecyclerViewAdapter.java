@@ -36,6 +36,19 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     private EMCallSurfaceView SurfaceView;
     private boolean fristFlag = false;
 
+    private static long mLastClickTime;// 用户判断多次点击的时间
+    private static final int MIN_CLICK_DELAY_TIME = 1000;
+    private static long lastClickTime;
+
+    public static boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        if (Math.abs(time - mLastClickTime) > 500) {
+            return true;
+        }
+        mLastClickTime = time;
+        return false;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,15 +72,23 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemClickAction(v, position);
+                long curClickTime = System.currentTimeMillis();
+                if((curClickTime - lastClickTime) >= MIN_CLICK_DELAY_TIME) {
+                    // 超过点击间隔后再将lastClickTime重置为当前点击时间
+                    lastClickTime = curClickTime;
+                    //onMultiClick(v);
+                    itemClickAction(v, position);
+                }
             }
         });
+
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 return itemLongClickAction(v, position);
             }
         });
+
     }
 
     public boolean itemLongClickAction(View v, int position) {

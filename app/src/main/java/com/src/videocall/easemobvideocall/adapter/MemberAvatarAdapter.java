@@ -41,7 +41,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         streamList = ConferenceInfo.getInstance().getConferenceStreamList();
     }
 
-
     public void setCallback(OnItemGetSurfaceView callback){
         this.callback = callback;
     }
@@ -78,23 +77,13 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             icon_text = (TextView)findViewById(R.id.icon_text);
             surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
 
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                surfaceView.setTranslationZ(1);
-                audio_view.setTranslationZ(2);
-                video_view.setTranslationZ(2);
-                icon_text.setTranslationZ(2);
-            }*/
         }
 
         @Override
             public void setData(EMConferenceStream item, int position) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                audio_view.setTranslationZ(10);
-                video_view.setTranslationZ(10);
-                icon_text.setTranslationZ(10);
-            }
             EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             int currentIndex = ConferenceInfo.getInstance().getConferenceStreamList() .indexOf(ConferenceInfo.currentStream);
+            surfaceView.setVisibility(VISIBLE);
             if(ConferenceInfo.changeflag && currentIndex  == position) {
                 if (ConferenceInfo.getInstance().getLocalStream().isAudioOff()) {
                     audio_view.setBackgroundResource(R.drawable.call_mic_off);
@@ -113,11 +102,13 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
                     avatar_view.setVisibility(VISIBLE);
                 }else{
                     video_view.setBackgroundResource(R.drawable.call_video_on);
-                    avatar_view.setVisibility(GONE);
+
                     if(ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
+                        avatar_view.setVisibility(GONE);
                         surfaceView.release();
                         EMClient.getInstance().conferenceManager().setLocalSurfaceView(surfaceView);
                     }else{
+                        surfaceView.setVisibility(View.GONE);
                         avatar_view.setVisibility(VISIBLE);
                     }
                 }
@@ -152,7 +143,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             }
 
             if(callback != null){
-                callback.OnItemGetSurfaceView(surfaceView,position);
+                callback.OnItemGetSurfaceView(surfaceView,avatar_view,position);
                 EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             }
         }
