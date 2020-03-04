@@ -16,9 +16,7 @@
             android:id="@+id/opposite_surface"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop" />
-
+            android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/img_call_avatar"
             android:layout_width="match_parent"

@@ -368,7 +368,6 @@ public class DemoHelper {
 
 	}
 
-
     synchronized void reset(){
         DemoDBManager.getInstance().closeDB();
     }

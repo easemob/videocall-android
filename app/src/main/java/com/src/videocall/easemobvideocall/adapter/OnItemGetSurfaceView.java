@@ -14,6 +14,6 @@ public interface OnItemGetSurfaceView {
      * 条目点击
      * @param surfaceView
      */
-     void OnItemGetSurfaceView(EMCallSurfaceView surfaceView ,ImageView imageView, int position);
+     void OnItemGetSurfaceView(EMCallSurfaceView surfaceView , int position , ImageView imageView);
 }
 

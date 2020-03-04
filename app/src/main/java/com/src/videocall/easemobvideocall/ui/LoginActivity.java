@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     private String currentRoomname;
     private String currentPassword;
     private String accessToken;
-    private boolean istalkerfull_access = false;
     private EMConferenceManager.EMConferenceRole  conferenceRole;
     private String password = "123";
     final  private String regEx="[\n`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。， 、？-]";
@@ -114,8 +113,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        conferenceRole = EMConferenceManager.EMConferenceRole.Talker;
         ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Talker);
-        conferenceRole = ConferenceInfo.getInstance().getCurrentrole();
 
         username = PreferenceManager.getInstance().getCurrentUsername();
 
@@ -168,8 +167,9 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        conferenceRole = EMConferenceManager.EMConferenceRole.Audience;
         ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Audience);
-        conferenceRole = ConferenceInfo.getInstance().getCurrentrole();
+
         username = PreferenceManager.getInstance().getCurrentUsername();
         if(username == null){
             register(view);
@@ -296,11 +296,6 @@ public class LoginActivity extends AppCompatActivity {
                          ConferenceInfo.getInstance().setConference(value);
                          Log.d(TAG, "Get ConferenceId:"+ value.getConferenceId());
 
-                         /*DemoApplication. conferenceInstance.setRoomname(currentRoomname);
-                         DemoApplication.conferenceInstance.setPassword(currentPassword);
-                         DemoApplication.conferenceInstance.setCurrentrole(value.getConferenceRole());
-                         DemoApplication.conferenceInstance.setConference(value);*/
-
                          Intent intent = new Intent(LoginActivity.this, ConferenceActivity.class);
                          startActivity(intent);
                          finish();
@@ -349,8 +344,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 EMLog.e(TAG, "talker is full , join conference as Audience");
 
+                conferenceRole = EMConferenceManager.EMConferenceRole.Audience;
                 ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Audience);
-                conferenceRole = ConferenceInfo.getInstance().getCurrentrole();
                 joinConference();
             }
         });

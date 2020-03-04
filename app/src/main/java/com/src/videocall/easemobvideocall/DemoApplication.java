@@ -47,8 +47,13 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 
 		conferenceInstance = ConferenceInfo.getInstance();
 
+		addErrorListener();
+	}
+
+	private void addErrorListener() {
 		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
+
 	public static DemoApplication getInstance() {
 		return instance;
 	}
@@ -61,8 +66,9 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		EMLog.e("uncaughtException exit", e.getMessage());
-		System.exit(0);
+		e.printStackTrace();
+		EMLog.e("uncaughtException : ", e.getMessage());
+		System.exit(1);
 		Process.killProcess(Process.myPid());
 	}
 }
