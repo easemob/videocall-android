@@ -3,6 +3,7 @@ package com.src.videocall.easemobvideocall.adapter;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
@@ -55,6 +56,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         T item = mData.get(position);
         holder.setData(item, position);
         holder.setDataList(mData, position);
+        holder.itemView.bringToFront();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

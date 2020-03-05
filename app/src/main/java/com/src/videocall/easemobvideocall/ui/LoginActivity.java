@@ -24,6 +24,7 @@ import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.src.videocall.easemobvideocall.DemoApplication;
+import com.src.videocall.easemobvideocall.DemoHelper;
 import com.src.videocall.easemobvideocall.R;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 import com.src.videocall.easemobvideocall.utils.PreferenceManager;
@@ -282,23 +283,20 @@ public class LoginActivity extends AppCompatActivity {
     private void joinConference() {
         EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
+        DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, new EMValueCallBack<EMConference>(){
                     @Override
                     public void onSuccess(EMConference value) {
-                         EMLog.e(TAG, "join  conference  failed  success");
-                         Log.e("tag", "thread's name+"+Thread.currentThread().getName());
-                         Log.e("tag", "before name = "+currentRoomname);
-                         System.out.println("fangjianming前:" + currentRoomname);
-                         ConferenceInfo.getInstance().setRoomname(currentRoomname);
-                         ConferenceInfo.getInstance().setPassword(currentPassword);
-                         ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
-                         ConferenceInfo.getInstance().setConference(value);
-                         Log.d(TAG, "Get ConferenceId:"+ value.getConferenceId());
-
-                         Intent intent = new Intent(LoginActivity.this, ConferenceActivity.class);
-                         startActivity(intent);
-                         finish();
+                        EMLog.i(TAG, "join  conference success");
+                        ConferenceInfo.getInstance().setRoomname(currentRoomname);
+                        ConferenceInfo.getInstance().setPassword(currentPassword);
+                        ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
+                        ConferenceInfo.getInstance().setConference(value);
+                        EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
+                        Intent intent = new Intent(LoginActivity.this, ConferenceActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     @Override
                     public void onError(final int error, final String errorMsg) {

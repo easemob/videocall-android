@@ -89,6 +89,7 @@ public class DemoHelper {
 
     Queue<String> msgQueue = new ConcurrentLinkedQueue<>();
 
+    private EMConnectionListener connectionListener;
 
 	private DemoHelper() {
         executor = Executors.newCachedThreadPool();
@@ -118,18 +119,22 @@ public class DemoHelper {
 	    //wss://rtc-turn4-hsb.easemob.com/ws   //a1-hsb.easemob.com  //rtc-turn4-hsb.easemob.com  a1.easemob.com
 		//沙箱 Rtcserver
 		//turn4 Rtcserver
+
+		//线上环境
 		//options.enableDNSConfig(true);
 
-		appContext = context;
+		//沙箱地址
 		options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
 		options.setIMServer("39.107.54.56");
 		options.setImPort(6717);
 		EMClient.getInstance().init(context, options);
 
+		appContext = context;
+
 		PreferenceManager.init(context);
+
 		setGlobalListeners();
 	}
-
 
     private EMOptions initChatOptions(Context context){
         Log.d(TAG, "init HuanXin Options");
@@ -225,61 +230,22 @@ public class DemoHelper {
     }
 
 
-	EMConnectionListener connectionListener;
 	/**
 	 * set global listener
 	 */
-	protected void setGlobalListeners(){
-		//syncGroupsListeners = new ArrayList<>();
-		//syncContactsListeners = new ArrayList<>();
-		//syncBlackListListeners = new ArrayList<>();
-
-		//isGroupsSyncedWithServer = demoModel.isGroupsSynced();
-		//isContactsSyncedWithServer = demoModel.isContactSynced();
-		//isBlackListSyncedWithServer = demoModel.isBacklistSynced();
-
-		// create the global connection listener
+	public void setGlobalListeners(){
+		EMLog.i(TAG, String.format("setGlobalListeners start"));
 		connectionListener = new EMConnectionListener() {
 			@Override
 			public void onDisconnected(int error) {
-				/*EMLog.d("global listener", "onDisconnect" + error);
-				if (error == EMError.USER_REMOVED) {
-					onUserException(Constant.ACCOUNT_REMOVED);
-				} else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-					onUserException(Constant.ACCOUNT_CONFLICT);
-				} else if (error == EMError.SERVER_SERVICE_RESTRICTED) {
-					onUserException(Constant.ACCOUNT_FORBIDDEN);
-				} else if (error == EMError.USER_KICKED_BY_CHANGE_PASSWORD) {
-					onUserException(Constant.ACCOUNT_KICKED_BY_CHANGE_PASSWORD);
-				} else if (error == EMError.USER_KICKED_BY_OTHER_DEVICE) {
-					onUserException(Constant.ACCOUNT_KICKED_BY_OTHER_DEVICE);
-				}*/
+
 			}
 
 			@Override
 			public void onConnected() {
-				// in case group and contact were already synced, we supposed to notify sdk we are ready to receive the events
-				/*if (isGroupsSyncedWithServer && isContactsSyncedWithServer) {
-					EMLog.d(TAG, "group and contact already synced with servre");
-				} else {
-					if (!isGroupsSyncedWithServer) {
-						asyncFetchGroupsFromServer(null);
-					}
-
-					if (!isContactsSyncedWithServer) {
-						asyncFetchContactsFromServer(null);
-					}
-
-					if (!isBlackListSyncedWithServer) {
-						asyncFetchBlackListFromServer(null);
-					}
-				}
-			}*/
 			}
 		};
 
-
-		//IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
 		EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
 			@Override public void onMemberJoined(EMConferenceMember member) {
 				EMLog.i(TAG, String.format("member joined username: %s, member: %d", member.memberName,
@@ -291,7 +257,7 @@ public class DemoHelper {
 						EMClient.getInstance().conferenceManager().getConferenceMemberList().size()));
 			}
 
-			@Override public void onStreamAdded(EMConferenceStream stream) {
+			@Override public void onStreamAdded(EMConferenceStream stream){
 				EMLog.i(TAG, String.format("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
 						stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
 						stream.getExtension(), stream.isVideoOff(), stream.isAudioOff()));
@@ -299,11 +265,16 @@ public class DemoHelper {
 						EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
 						EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
 
-				if(!ConferenceInfo.Initflag){
-					if(ConferenceInfo.getInstance().getConference().getConferenceRole() !=EMConferenceManager.EMConferenceRole.Admin){
-						ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
-					}
-				}
+				EMLog.i(TAG, String.format("Conference stream subscribable onStreamAdded start userId %s  %s:",stream.getUsername(),stream.getStreamId()));
+
+				if(!ConferenceInfo.listenInitflag){
+                    if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream) && stream.getStreamId() != ConferenceInfo.getInstance().getLocalStream().getStreamId()){
+                        EMLog.i(TAG, String.format("Conference stream subscribable onStreamAdded not contains userId %s  %s:",stream.getUsername(),stream.getStreamId()));
+                        ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
+                        EMLog.i(TAG, String.format("Conference stream subscribable onStreamAdded end userId %s  %s %d:",stream.getUsername(),stream.getStreamId(),
+                                ConferenceInfo.getInstance().getConferenceStreamList().size()));
+                    }
+                }
 			}
 
 			@Override public void onStreamRemoved(EMConferenceStream stream) {
@@ -357,15 +328,15 @@ public class DemoHelper {
 
 			}
 		});
-		//register incoming call receiver
-		//appContext.registerReceiver(callReceiver, callFilter);
-		//register connection listener
 		EMClient.getInstance().addConnectionListener(connectionListener);
-		//register group and contact event listener
-		//registerGroupAndContactListener();
-		//register message event listener
-		//registerMessageListener();
+		EMLog.i(TAG, String.format("setGlobalListeners end"));
+	}
 
+	public void removeGlobalListeners(){
+		EMLog.i(TAG, String.format("removeGlobalListeners start"));
+		EMClient.getInstance().removeConnectionListener(connectionListener);
+		connectionListener = null;
+		EMLog.i(TAG, String.format("removeGlobalListeners end"));
 	}
 
     synchronized void reset(){

@@ -644,13 +644,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
         init();
 
-        //增加监听
+        ConferenceInfo.listenInitflag = true;
         EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
         //开启统计功能
         //EMClient.getInstance().conferenceManager().enableStatistics(true);
-
-        ConferenceInfo.Initflag = true;
     }
     /*
      初始化
@@ -662,9 +660,9 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         oppositeSurface = (EMCallSurfaceView) findViewById(R.id.opposite_surface);
         oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
 
-        //horizontalRecyclerView.bringToFront();
         oppositeSurface.setZOrderOnTop(false);
         oppositeSurface.setZOrderMediaOverlay(false);
+        horizontalRecyclerView.bringToFront();
 
         oppositeSurface.getHolder().setFormat(TRANSPARENT);
 
@@ -1272,8 +1270,14 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             public void run() {
                 EMLog.i(TAG, "onStreamAdded  start userID: " + stream.getUsername());
                 Toast.makeText(getApplicationContext(), "用户 " + EasyUtils.useridFromJid(stream.getUsername()) + " 进入了房间!", Toast.LENGTH_SHORT).show();
-                addConferenceView(stream);
-                EMLog.i(TAG, "onStreamAdded  end userID: " + stream.getUsername());
+
+                if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
+                    addConferenceView(stream);
+                    EMLog.i(TAG, "onStreamAdded  end userID: " + stream.getUsername());
+                }else{
+                    EMLog.i(TAG, "onStreamAdded  contained  userID: " + stream.getUsername());
+                    avatarAdapter.notifyItemInserted(streamList.size()-1);
+                }
 
                 //第一个主播加入
                 if(streamList.size() == 1 && conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
