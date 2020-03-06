@@ -187,9 +187,10 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             }
         }
         notifyItemRemoved(position);
-        //notifyDataSetChanged();
-        notifyItemRangeChanged(position,getItemCount()); //刷新被删除数据，以及其后面的数据
-        //notifyItemRangeChanged(position, this.mData.size());
+        if(position < mData.size()){
+            notifyItemRangeChanged(0,getItemCount()); //刷新被删除数据，以及其后面的数据
+            //notifyItemChanged(0,1);
+        }
     }
 
     /**
@@ -248,7 +249,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
 
     public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
         private EaseBaseAdapter adapter;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             initView(itemView);

@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.adapter;
 
+import android.graphics.PixelFormat;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.superrtc.sdk.VideoView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.icu.lang.UCharacter.JoiningType.TRANSPARENT;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -50,6 +52,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
     @Override
     public ViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.activity_conference_member_view, parent, false);
+        view.bringToFront();
         return new AvatarViewHolder(view);
     }
 
@@ -64,6 +67,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         private ImageView video_view;
         private ImageView audio_view;
         private TextView  icon_text;
+        private RelativeLayout show_layout;
 
         public AvatarViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,23 +81,33 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             video_view = (ImageView)findViewById(R.id.icon_videoing);
             icon_text = (TextView)findViewById(R.id.icon_text);
             surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+            //show_layout.removeView(video_view);
+            //show_layout.removeView(audio_view);
+
+
+
+            surfaceView.setZOrderMediaOverlay(true);
+            audio_view.bringToFront();
+            video_view.bringToFront();
+            surfaceView.setZOrderOnTop(true);
+            surfaceView.getHolder().setFormat(TRANSPARENT);
+
 
             /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                surfaceView.setTranslationZ(1);
-                audio_view.setTranslationZ(2);
-                video_view.setTranslationZ(2);
-                icon_text.setTranslationZ(2);
+                surfaceView.setZ(0);
+                avatar_view.setZ(1);
+                audio_view.setZ(1);
+                video_view.setZ(1);
             }*/
         }
 
         @Override
-            public void setData(EMConferenceStream item, int position) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                audio_view.setTranslationZ(10);
-                video_view.setTranslationZ(10);
-                icon_text.setTranslationZ(10);
-            }
+        public void setData(EMConferenceStream item, int position) {
+            //surfaceView.setZOrderOnTop(false);
+
+
             EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
+            surfaceView.setVisibility(VISIBLE);
             int currentIndex = ConferenceInfo.getInstance().getConferenceStreamList() .indexOf(ConferenceInfo.currentStream);
             if(ConferenceInfo.changeflag && currentIndex  == position) {
                 if (ConferenceInfo.getInstance().getLocalStream().isAudioOff()) {
@@ -119,6 +133,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
                         EMClient.getInstance().conferenceManager().setLocalSurfaceView(surfaceView);
                     }else{
                         avatar_view.setVisibility(VISIBLE);
+                        surfaceView.setVisibility(GONE);
                     }
                 }
 
@@ -152,7 +167,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             }
 
             if(callback != null){
-                callback.OnItemGetSurfaceView(surfaceView,position);
+                callback.OnItemGetSurfaceView(surfaceView,position,avatar_view);
                 EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             }
         }

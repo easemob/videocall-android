@@ -16,9 +16,7 @@
             android:id="@+id/opposite_surface"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop" />
-
+            android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/img_call_avatar"
             android:layout_width="match_parent"
@@ -168,6 +166,8 @@
                     android:id="@+id/horizontalRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:choiceMode="singleChoice"
+                    android:splitMotionEvents="false"
                     android:overScrollMode="never">
                 </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>

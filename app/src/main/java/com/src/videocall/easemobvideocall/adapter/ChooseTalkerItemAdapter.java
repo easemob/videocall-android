@@ -47,6 +47,7 @@ public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConfe
         public void initView(View itemView) {
             userId_view = (TextView)findViewById(R.id.chooseId_view);
             id_checkbox = (RadioButton)findViewById(R.id.id_checkbox);
+            chooseIndex = -1;
         }
 
         @Override

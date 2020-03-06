@@ -42,6 +42,8 @@ public class TalkerListActivity extends AppCompatActivity {
 
     private List<EMConferenceStream> streamList;
 
+    DividerItemDecoration decoration;
+
     //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
     float x1 = 0;
     float x2 = 0;
@@ -56,45 +58,74 @@ public class TalkerListActivity extends AppCompatActivity {
         attendance_count_view = (TextView)findViewById(R.id.attendance_count);
         recyclerView = (RecyclerView)findViewById(R.id.talker_recyclerView);
 
-        attendance_count_view.setText(String.valueOf(ConferenceInfo.getInstance().getConference().getAudienceTotal())+"人");
+        decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
-        streamList = ConferenceInfo.getInstance().getConferenceStreamList();
+        InitRoomInfo();
+    }
 
-        if (ConferenceInfo.getInstance().getConference().getConferenceRole()== EMConferenceManager.EMConferenceRole.Talker ||
-                ConferenceInfo.getInstance().getConference().getConferenceRole()== EMConferenceManager.EMConferenceRole.Admin){
-            streamList.add(ConferenceInfo.getInstance().getLocalStream());
-        }
+    public void InitRoomInfo(){
+        EMClient.getInstance().conferenceManager().getConferenceInfo(ConferenceInfo.getInstance().getConference().getConferenceId(),ConferenceInfo.getInstance().getPassword(),
+                new EMValueCallBack<EMConference>() {
 
-        Collections.reverse(streamList);
 
-        if(streamList.size() == 0){
-            recyclerView.setVisibility(View.GONE);
-        }else {
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+                    @Override
+                    public void onSuccess(EMConference value) {
+                        ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
+                        ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
+                        ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
+                        ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                attendance_count_view.setText(String.valueOf(ConferenceInfo.getInstance().getConference().getAudienceTotal())+"人");
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(TalkerListActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+                                streamList = ConferenceInfo.getInstance().getConferenceStreamList();
 
-        TalkerItemAdapter adapter = new TalkerItemAdapter();
-        adapter.setData(streamList);
-        recyclerView.setAdapter(adapter);
+                                if (ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
+                                    if(!streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                                        streamList.add(ConferenceInfo.getInstance().getLocalStream());
+                                    }
+                                }
 
-        DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
-        recyclerView.addItemDecoration(decoration);
+                                Collections.reverse(streamList);
+                                if(streamList.size() == 0){
+                                    recyclerView.setVisibility(View.GONE);
+                                }else {
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                }
+
+                                LinearLayoutManager layoutManager = new LinearLayoutManager(TalkerListActivity.this);
+                                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                recyclerView.setLayoutManager(layoutManager);
+
+                                TalkerItemAdapter adapter = new TalkerItemAdapter();
+                                adapter.setData(streamList);
+                                recyclerView.setAdapter(adapter);
+                                decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
+                                recyclerView.addItemDecoration(decoration);
+                            }
+                        });
+                    }
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        EMLog.i(TAG, "getConferenceInfo failed: error=" + error + ", msg=" + errorMsg);
+                    }
+                });
     }
 
     public void onTalkerListback(View view){
-        streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+        if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
+            streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+        }
         finish();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            }
             finish();
             return true;
        }
@@ -120,7 +151,9 @@ public class TalkerListActivity extends AppCompatActivity {
             } else if(x1 - x2 > 50) {
                // Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
             } else if(x2 - x1 > 50) {
-                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                    streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                }
                 finish();
             }
         }
