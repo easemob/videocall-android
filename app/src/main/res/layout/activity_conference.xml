@@ -156,11 +156,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@color/color_transparent"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:descendantFocusability="blocksDescendants">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/horizontalRecyclerView"

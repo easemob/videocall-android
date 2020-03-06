@@ -21,8 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
-        android:backgroundTint="@color/color_transparent"
-        android:background="@drawable/em_conference_member_cover">
+        android:background="#61212121">
         <ImageView
             android:id="@+id/icon_videoing"
             android:layout_width="25dp"
@@ -44,8 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/color_transparent"
-        android:background="@drawable/em_conference_member_cover">
+        android:background="#61212121">
         <TextView
             android:id="@+id/icon_text"
             android:layout_width="match_parent"
