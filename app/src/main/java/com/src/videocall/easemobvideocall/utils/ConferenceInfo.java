@@ -32,7 +32,8 @@ public class ConferenceInfo {
 
     public static List<String> subscribestream = new ArrayList<>();
     private List<EMConferenceStream> streamListAddLocal = new ArrayList<>();
-    public static boolean listenInitflag = false;
+
+    public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
         if(conferenceInfo == null){
             synchronized (ConferenceInfo.class){
@@ -49,7 +50,7 @@ public class ConferenceInfo {
     }
 
     public void Init(){
-        listenInitflag = false;
+        Initflag = false;
         streamList.clear();
         subscribestream.clear();
         currentIndex = -1;

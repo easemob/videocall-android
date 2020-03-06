@@ -68,7 +68,7 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 	public void uncaughtException(Thread t, Throwable e) {
 		e.printStackTrace();
 		EMLog.e("uncaughtException : ", e.getMessage());
-		//System.exit(1);
+		System.exit(1);
 		Process.killProcess(Process.myPid());
 	}
 }

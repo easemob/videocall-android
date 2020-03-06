@@ -9,7 +9,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,7 +71,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
 
         public AvatarViewHolder(@NonNull View itemView) {
             super(itemView);
-             itemView.setBackgroundResource(R.color.gray_normal);
         }
 
         @Override
@@ -85,20 +83,12 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
             //show_layout.removeView(video_view);
             //show_layout.removeView(audio_view);
-            show_layout = (RelativeLayout)findViewById(R.id.member_layout);
 
-            //surfaceView.setZOrderMediaOverlay(true);
-            //surfaceView.setZOrderOnTop(true);
-            show_layout.bringToFront();
-            surfaceView.setZOrderOnTop(false);
             surfaceView.setZOrderMediaOverlay(true);
-            //surfaceView.bringToFront();
-
-            /*surfaceView.setZOrderMediaOverlay(true);
             audio_view.bringToFront();
             video_view.bringToFront();
-            surfaceView.setZOrderOnTop(true);
-            surfaceView.getHolder().setFormat(TRANSPARENT);*/
+            surfaceView.setZOrderOnTop(false);
+            //surfaceView.getHolder().setFormat(TRANSPARENT);
 
 
             /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
