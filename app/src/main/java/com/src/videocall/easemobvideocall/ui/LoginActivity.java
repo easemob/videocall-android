@@ -24,6 +24,7 @@ import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.src.videocall.easemobvideocall.DemoApplication;
+import com.src.videocall.easemobvideocall.DemoHelper;
 import com.src.videocall.easemobvideocall.R;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 import com.src.videocall.easemobvideocall.utils.PreferenceManager;
@@ -282,6 +283,7 @@ public class LoginActivity extends AppCompatActivity {
     private void joinConference() {
         EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
+        DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, new EMValueCallBack<EMConference>(){
                     @Override
@@ -294,6 +296,7 @@ public class LoginActivity extends AppCompatActivity {
                         EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
                         Intent intent = new Intent(LoginActivity.this, ConferenceActivity.class);
                         startActivity(intent);
+                        //getApplicationContext().startActivity(intent);
                         finish();
                     }
                     @Override
