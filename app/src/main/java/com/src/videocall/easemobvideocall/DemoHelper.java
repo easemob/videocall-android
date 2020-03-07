@@ -89,6 +89,8 @@ public class DemoHelper {
 
     Queue<String> msgQueue = new ConcurrentLinkedQueue<>();
 
+    private EMConferenceListener conferenceListener;
+
 
 	private DemoHelper() {
         executor = Executors.newCachedThreadPool();
@@ -127,7 +129,7 @@ public class DemoHelper {
 		EMClient.getInstance().init(context, options);
 
 		PreferenceManager.init(context);
-		setGlobalListeners();
+		//setGlobalListeners();
 	}
 
 
@@ -225,62 +227,11 @@ public class DemoHelper {
     }
 
 
-	EMConnectionListener connectionListener;
 	/**
 	 * set global listener
 	 */
-	protected void setGlobalListeners(){
-		//syncGroupsListeners = new ArrayList<>();
-		//syncContactsListeners = new ArrayList<>();
-		//syncBlackListListeners = new ArrayList<>();
-
-		//isGroupsSyncedWithServer = demoModel.isGroupsSynced();
-		//isContactsSyncedWithServer = demoModel.isContactSynced();
-		//isBlackListSyncedWithServer = demoModel.isBacklistSynced();
-
-		// create the global connection listener
-		connectionListener = new EMConnectionListener() {
-			@Override
-			public void onDisconnected(int error) {
-				/*EMLog.d("global listener", "onDisconnect" + error);
-				if (error == EMError.USER_REMOVED) {
-					onUserException(Constant.ACCOUNT_REMOVED);
-				} else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-					onUserException(Constant.ACCOUNT_CONFLICT);
-				} else if (error == EMError.SERVER_SERVICE_RESTRICTED) {
-					onUserException(Constant.ACCOUNT_FORBIDDEN);
-				} else if (error == EMError.USER_KICKED_BY_CHANGE_PASSWORD) {
-					onUserException(Constant.ACCOUNT_KICKED_BY_CHANGE_PASSWORD);
-				} else if (error == EMError.USER_KICKED_BY_OTHER_DEVICE) {
-					onUserException(Constant.ACCOUNT_KICKED_BY_OTHER_DEVICE);
-				}*/
-			}
-
-			@Override
-			public void onConnected() {
-				// in case group and contact were already synced, we supposed to notify sdk we are ready to receive the events
-				/*if (isGroupsSyncedWithServer && isContactsSyncedWithServer) {
-					EMLog.d(TAG, "group and contact already synced with servre");
-				} else {
-					if (!isGroupsSyncedWithServer) {
-						asyncFetchGroupsFromServer(null);
-					}
-
-					if (!isContactsSyncedWithServer) {
-						asyncFetchContactsFromServer(null);
-					}
-
-					if (!isBlackListSyncedWithServer) {
-						asyncFetchBlackListFromServer(null);
-					}
-				}
-			}*/
-			}
-		};
-
-
-		//IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
-		EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
+	public void setGlobalListeners(){
+        conferenceListener = new EMConferenceListener() {
 			@Override public void onMemberJoined(EMConferenceMember member) {
 				EMLog.i(TAG, String.format("member joined username: %s, member: %d", member.memberName,
 						EMClient.getInstance().conferenceManager().getConferenceMemberList().size()));
@@ -356,16 +307,14 @@ public class DemoHelper {
 			public void onAttributesUpdated(EMConferenceAttribute[] attributes) {
 
 			}
-		});
-		//register incoming call receiver
-		//appContext.registerReceiver(callReceiver, callFilter);
-		//register connection listener
-		EMClient.getInstance().addConnectionListener(connectionListener);
-		//register group and contact event listener
-		//registerGroupAndContactListener();
-		//register message event listener
-		//registerMessageListener();
+		};
+		EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
+	}
+
+	public void removeGlobalListeners(){
+		EMClient.getInstance().conferenceManager().removeConferenceListener(conferenceListener);
+        conferenceListener = null;
 	}
 
     synchronized void reset(){

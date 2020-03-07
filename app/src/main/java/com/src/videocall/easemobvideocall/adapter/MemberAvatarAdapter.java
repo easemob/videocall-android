@@ -102,8 +102,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         @Override
         public void setData(EMConferenceStream item, int position) {
             //surfaceView.setZOrderOnTop(false);
-
-
             EMLog.i(TAG,"MemberAvatarAdapter setData start: postion：" + position + " userId: " + item.getUsername());
             surfaceView.setVisibility(VISIBLE);
             int currentIndex = ConferenceInfo.getInstance().getConferenceStreamList() .indexOf(ConferenceInfo.currentStream);
