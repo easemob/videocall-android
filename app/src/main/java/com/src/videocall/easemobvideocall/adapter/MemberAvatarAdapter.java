@@ -88,15 +88,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             audio_view.bringToFront();
             video_view.bringToFront();
             surfaceView.setZOrderOnTop(false);
-            //surfaceView.getHolder().setFormat(TRANSPARENT);
-
-
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                surfaceView.setZ(0);
-                avatar_view.setZ(1);
-                audio_view.setZ(1);
-                video_view.setZ(1);
-            }*/
         }
 
         @Override
@@ -147,7 +138,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
                 }else{
                     icon_text.setText(fristStr);
                 }
-
                 if (item.isAudioOff()) {
                     audio_view.setBackgroundResource(R.drawable.call_mic_off);
                 } else {

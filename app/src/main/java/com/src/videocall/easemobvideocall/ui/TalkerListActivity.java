@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TalkerListActivity extends AppCompatActivity {
+public class TalkerListActivity extends Activity {
 
     private final String TAG = this.getClass().getSimpleName();
 

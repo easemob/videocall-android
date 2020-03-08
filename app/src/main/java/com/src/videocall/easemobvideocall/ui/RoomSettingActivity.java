@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
 import static com.superrtc.mediamanager.EMediaManager.getContext;
 
-public class RoomSettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class RoomSettingActivity extends Activity implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
     TextView room_name;

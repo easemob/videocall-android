@@ -1,8 +1,7 @@
 package com.src.videocall.easemobvideocall.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
-import com.src.videocall.easemobvideocall.DemoApplication;
 import com.src.videocall.easemobvideocall.DemoHelper;
 import com.src.videocall.easemobvideocall.R;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
@@ -36,9 +34,8 @@ import java.util.regex.Pattern;
 import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private  final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_CODE_SETNICK = 1;
     private EditText roomnameEditText;
     private EditText passwordEditText;
     private String username;
@@ -78,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
     主播加入会议房间
      */
     public void addconference_anchor(View view){
@@ -131,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         //register(view);
     }
 
-    /*
+    /**
     观众加入会议房间
      */
     public void addconference_audience(View view){
@@ -183,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     /**
-     * 只能输入数字，字母，汉字和下划线
+     * 输入字符检测(只能输入数字，字母，汉字和下划线)
      * @param chars
      * @return
      */
@@ -195,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    /*
+    /**
     自动注册一个账号
      */
     public void register(View view){
@@ -241,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
         }).start();
     }
 
-    /*
+    /**
     登录IM账号
      */
     public void login(View view) {
@@ -277,7 +274,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /*
+    /**
      加入一个聊天会议室
      */
     private void joinConference() {
@@ -294,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
                         ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
                         ConferenceInfo.getInstance().setConference(value);
                         EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
-                        Intent intent = new Intent(LoginActivity.this, ConferenceActivity.class);
+                        Intent intent = new Intent(MainActivity.this, ConferenceActivity.class);
                         startActivity(intent);
                         //getApplicationContext().startActivity(intent);
                         finish();
@@ -321,9 +318,9 @@ public class LoginActivity extends AppCompatActivity {
      * 主播已满提示对话框
      */
     public void takerFullDialogDisplay() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         final AlertDialog dialog = builder.create();
-        View dialogView = View.inflate(LoginActivity.this, R.layout.activity_talker_full, null);
+        View dialogView = View.inflate(MainActivity.this, R.layout.activity_talker_full, null);
         dialog.setView(dialogView);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -357,11 +354,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /*
+    /**
     个人设置
      */
     public void personalSetting(View view){
-        Intent intent = new Intent(LoginActivity.this,
+        Intent intent = new Intent(MainActivity.this,
                 SettingActivity.class);
         startActivity(intent);
     }

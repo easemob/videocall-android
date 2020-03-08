@@ -1,43 +1,33 @@
 package com.src.videocall.easemobvideocall.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.telecom.Conference;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -47,8 +37,6 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
-import com.hyphenate.EMError;
-import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
@@ -56,46 +44,34 @@ import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMStreamParam;
 import com.hyphenate.chat.EMStreamStatistics;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.EasyUtils;
-import com.src.videocall.easemobvideocall.Constant;
 import com.src.videocall.easemobvideocall.DemoHelper;
 import com.src.videocall.easemobvideocall.R;
 import com.src.videocall.easemobvideocall.adapter.ChooseTalkerItemAdapter;
-import com.src.videocall.easemobvideocall.adapter.EaseBaseRecyclerViewAdapter;
 import com.src.videocall.easemobvideocall.adapter.MemberAvatarAdapter;
 import com.src.videocall.easemobvideocall.adapter.OnItemClickListener;
 import com.src.videocall.easemobvideocall.adapter.OnItemGetSurfaceView;
-import com.src.videocall.easemobvideocall.adapter.TalkerItemAdapter;
 import com.src.videocall.easemobvideocall.runtimepermissions.PermissionsManager;
 import com.src.videocall.easemobvideocall.runtimepermissions.PermissionsResultAction;
 import com.src.videocall.easemobvideocall.utils.ConferenceAttributeOption;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 import com.src.videocall.easemobvideocall.utils.PhoneStateManager;
 import com.src.videocall.easemobvideocall.utils.PreferenceManager;
-import com.superrtc.mediamanager.ScreenCaptureManager;
 import com.superrtc.sdk.VideoView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
 import static android.icu.lang.UCharacter.JoiningType.TRANSPARENT;
-import static com.hyphenate.EMConferenceListener.ConferenceState.STATE_NO_REMOTE_AUDIO;
-import static com.hyphenate.EMConferenceListener.ConferenceState.STATE_NO_REMOTE_VIDEO;
 
-public class ConferenceActivity extends AppCompatActivity implements EMConferenceListener {
+public class ConferenceActivity extends Activity implements EMConferenceListener {
 
     private final String TAG = this.getClass().getSimpleName();
     private static final int STATE_AUDIENCE = 0;
@@ -175,14 +151,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EMLog.i(TAG,"oncreate  ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conference);
-
-
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-
-        EMLog.i(TAG," Main threadID: " + Thread.currentThread().getName());
+        //getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
@@ -195,35 +169,25 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         localStream = ConferenceInfo.getInstance().getLocalStream();
 
         meeting_roomID = (TextView) findViewById(R.id.Meeting_roomID);
-
-        String str1 = ConferenceInfo.getInstance().getRoomname();
-        meeting_roomID.setText(str1);
-
+        meeting_roomID.setText(ConferenceInfo.getInstance().getRoomname());
         conference = ConferenceInfo.getInstance().getConference();
-        String str2 = ConferenceInfo.getInstance().getRoomname();
 
         rootContainer = (RelativeLayout)findViewById(R.id.root_layout);
-
         topContainer = (LinearLayout) findViewById(R.id.ll_top_container);
-
         bottomContainer11 = (RelativeLayout) findViewById(R.id.ll_bottom);
 
         bottomContainerView = (LinearLayout) findViewById(R.id.surface_baseline);
         bottomContainer = (LinearLayout) findViewById(R.id.ll_surface_baseline);
 
         horizontalRecyclerView = (RecyclerView) findViewById(R.id.horizontalRecyclerView);
-
         MyLinearLayoutManager layout = new MyLinearLayoutManager(ConferenceActivity.this);
         layout.setOrientation(MyLinearLayoutManager.HORIZONTAL);
-
         horizontalRecyclerView.setLayoutManager(layout);
 
         avatarAdapter = new MemberAvatarAdapter();
         avatarAdapter.setData(streamList);
         avatarAdapter.setHasStableIds(true);
-
         horizontalRecyclerView.setAdapter(avatarAdapter);
-
 
         //增加时候开始订阅流回调
         avatarAdapter.setCallback(new OnItemGetSurfaceView() {
@@ -248,16 +212,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                 oppositeSurface.release();
                                 subscribe(streamList.get(position),oppositeSurface);
                                 firstSubscribestream = true;
-
-                                //显示下面的小窗口
-                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(), 160));
-                                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                                bottomContainer11.setLayoutParams(params);
-                                bottomContainer11.setVisibility(View.VISIBLE);
-                                bottomContainer.setVisibility(View.VISIBLE);
-                                bottomContainerView.setVisibility(View.VISIBLE);
-                                oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
-
                                 EMLog.i(TAG,"OnItemGetSurfaceView firstSubscribestream end add stream  postion：" + position);
                             }else{
                                 EMLog.i(TAG,"OnItemGetSurfaceView updateRemoteSurfaceView  start  postion：" + position);
@@ -320,31 +274,30 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     if(streamList.size() > 0){
                         //删除以后重新订阅更新流
                         int currentIndex = streamList.indexOf(ConferenceInfo.currentStream);
+                        if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
+                            if(streamList.get(position).isVideoOff()){
+                                avatar_view.setVisibility(View.VISIBLE);
+                            }else {
+                                avatar_view.setVisibility(View.GONE);
+                            }
+                            surfaceView.setVisibility(View.VISIBLE);
+                        }
                         if (deleteIndex > currentIndex) {
-                            if (deleteIndex <= position) {
+                            if(deleteIndex <= position) {
                                 surfaceView.release();
-                                //oppositeSurface.release();
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView  position：" + position);
-                                //EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateRemoteSurfaceView   position：" + position);
                                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(position).getStreamId(), surfaceView);
                                 EMLog.i(TAG, "OnItemGetSurfaceView delete stream  updateRemoteSurfaceView end  position：" + position);
-                                //oppositeSurface.release();
-                                //EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateRemoteSurfaceView   position：" + position);
                             }
                             if(position  == streamList.size() -1){
                                 EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last updateRemoteSurfaceView ：" + position);
                                 ConferenceInfo.removeflag = false;
-                                //oppositeSurface.release();
-                                //EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView  last  position：" + position);
-                                //EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
-                                    EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
-                                    avatarView.setVisibility(View.VISIBLE);
+                                if(!streamList.contains(ConferenceInfo.currentStream)){
+                                    ConferenceInfo.changeflag = false;
+                                    oldflag = false;
+                                    ConferenceInfo.currentStream = null;
                                 }
-                                //ConferenceInfo.changeflag = false;
-                                //oldflag = false;
-                                //ConferenceInfo.currentStream = null;
                                 EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView ：" + position);
                             }
                         }else{
@@ -360,12 +313,19 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             if(position  == streamList.size() -1){
                                 EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last updateRemoteSurfaceView ：" + position);
                                 ConferenceInfo.removeflag = false;
-                                oppositeSurface.release();
+                                //oppositeSurface.release();
                                 EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView  last  position：" + position);
                                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
                                 if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
                                     EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
                                     avatarView.setVisibility(View.VISIBLE);
+
+                                    if(streamList.get(position).isVideoOff()){
+                                        avatar_view.setVisibility(View.VISIBLE);
+                                    }else {
+                                        avatar_view.setVisibility(View.GONE);
+                                    }
+                                    surfaceView.setVisibility(View.VISIBLE);
                                 }
                                 ConferenceInfo.changeflag = false;
                                 oldflag = false;
@@ -713,6 +673,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         //EMClient.getInstance().conferenceManager().enableStatistics(true);
 
         ConferenceInfo.Initflag = true;
+        Initflag = false;
     }
     /*
      初始化
@@ -814,7 +775,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             setRequestBtnState(STATE_AUDIENCE);
             avatarView.setVisibility(View.VISIBLE);
             oppositeSurface.setVisibility(View.GONE);
-            //ConferenceInfo.currentIndex = 0;
             if(streamList.size() > 0){
                 ConferenceInfo.currentStream = streamList.get(0);
             }
@@ -1267,14 +1227,16 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             Toast.makeText(getApplicationContext(), "您已成功退出当前会议！", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    Intent intent = new Intent(ConferenceActivity.this, LoginActivity.class);
+                    EMLog.i(TAG,"start  MainActivity");
+                    Intent intent = new Intent(ConferenceActivity.this, MainActivity.class);
                     startActivity(intent);
+                    EMLog.i(TAG,"finish ConferenceActivity");
                     finish();
                 }
                 @Override
                 public void onError(int error, String errorMsg) {
                     EMLog.i(TAG, "exit conference failed " + error + ", " + errorMsg);
-                    Intent intent = new Intent(ConferenceActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(ConferenceActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -1405,17 +1367,39 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 Toast.makeText(getApplicationContext(), "用户 " + EasyUtils.useridFromJid(stream.getUsername()) + " 离开了房间!", Toast.LENGTH_SHORT).show();
                 if(streamList.contains(stream)) {
                     EMLog.i(TAG, "delete  streamList start userID: " + stream.getUsername());
+                    deleteIndex = streamList.indexOf(stream);
                     if(ConferenceInfo.changeflag){
                             //回到初始化状态
                             EMLog.i(TAG, "number surfaceview  Init start: " + stream.getUsername());
                             if(ConferenceInfo.currentStream.getStreamId().equals(stream.getStreamId())){
-                                oppositeSurface.release();
-                                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                                if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+                                    EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
+                                    avatarView.setVisibility(View.VISIBLE);
+                                    ConferenceInfo.changeflag = false;
+                                    if(deleteIndex +1 != streamList.size()){
+                                        ConferenceInfo.currentStream = null;
+                                    }
+                                    oldflag = false;
+                                }else{
+                                    ConferenceInfo.changeflag = false;
+                                    oldflag = false;
+                                    ConferenceInfo.currentStream = null;
+
+                                    oppositeSurface.release();
+                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
+                                }
                             }
                     }
-                    deleteIndex = streamList.indexOf(stream);
-                    ConferenceInfo.removeflag = true;
+                    //删除的的是观众交换后的最后一个主播
+                    if(deleteIndex + 1 == streamList.size() && conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience && ConferenceInfo.currentStream.getStreamId().equals(stream.getStreamId())){
+                        ConferenceInfo.currentStream = null;
+                        ConferenceInfo.removeflag = false;
+                    }else {
+                        ConferenceInfo.removeflag = true;
+                    }
+
                     removeConferenceView(stream);
+
                     EMLog.i(TAG, "remove ConferenceView  end: " + stream.getUsername());
 
                     if(ConferenceInfo.subscribestream.contains(stream.getStreamId())){
@@ -1438,6 +1422,19 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                             video_show_view.setVisibility(View.GONE);
                             avatarView.setVisibility(View.VISIBLE);
                         }
+                    }else{
+                        if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
+
+                            //显示下面的小窗口
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(), 160));
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            bottomContainer11.setLayoutParams(params);
+                            bottomContainer11.setVisibility(View.VISIBLE);
+                            bottomContainer.setVisibility(View.VISIBLE);
+                            bottomContainerView.setVisibility(View.VISIBLE);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
+                        }
                     }
                 }
             }
@@ -1457,24 +1454,13 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
     @Override
     public void onPassiveLeave(final int error, final String message) { // 当前用户被踢出会议
-        /*runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Toast.makeText(getApplicationContext(), "Passive exit " + error + ", message" + message, Toast.LENGTH_SHORT).show();
-                //finish();
             }
-        });*/
-    }
 
     @Override
     public void onConferenceState(final ConferenceState state) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Toast.makeText(getApplicationContext(), "State=" + state, Toast.LENGTH_SHORT).show();
-                /*if(state != STATE_NO_REMOTE_AUDIO || state != STATE_NO_REMOTE_VIDEO){
-                    Toast.makeText(getApplicationContext(),  "会议状态已更新为：  " + state , Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
     }
@@ -1911,7 +1897,10 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         return result;
     }
 
-    // 当前设备通话状态监听器
+
+    /**
+     * 当前设备通话状态监听器
+     */
     PhoneStateManager.PhoneStateCallback phoneStateCallback = new PhoneStateManager.PhoneStateCallback() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
@@ -1981,6 +1970,9 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         return mWifiInfo.isConnected();
     }
 
+    /**
+     * 检测网路信号
+     */
     public void checkWifiState() {
         if (isWifiConnect()) {
             WifiManager mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -2006,9 +1998,12 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         }
     }
 
+    /**
+     * 定时更新通话时间
+     * @param time
+     */
     private void updateConferenceTime(String time) {
         meeting_duration.setText(time);
-
         if(!Initflag) {
             if (streamList.size() > 0){
                 //如果是观众进来的 如果有主播 显示主播的流
@@ -2024,7 +2019,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     ConferenceInfo.removeflag = false;
                     ConferenceInfo.currentStream = streamList.get(0);
                     oldflag = false;
-
                     avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream),0);
                     //Initflag = true;
 
@@ -2035,7 +2029,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     bottomContainer.setVisibility(View.VISIBLE);
                     bottomContainerView.setVisibility(View.VISIBLE);
                     oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
-
                 }else{
                     Initflag = true;
                     if(streamList.size() > 0){
@@ -2056,7 +2049,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
     }
 
     /**
-     * 切换摄像头方法封装
+     * 交换Surfaceview方法封装
      */
     private void changeSurface(int index, EMCallSurfaceView localSurface, EMCallSurfaceView oppositeSurface) {
         if (conference.getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience) {

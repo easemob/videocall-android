@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -31,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.superrtc.mediamanager.EMediaManager.getContext;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
+public class SettingActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,54 +1,36 @@
 package com.src.videocall.easemobvideocall;
 
 
-import android.app.Activity;
 import android.content.Context;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
-import com.hyphenate.EMConnectionListener;
-import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 
 
 import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.easeui.EaseUI;
-import com.hyphenate.easeui.domain.EaseAvatarOptions;
-import com.hyphenate.easeui.domain.EaseEmojicon;
-import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
-import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.model.EaseAtMessageHelper;
-import com.hyphenate.easeui.model.EaseNotifier;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.src.videocall.easemobvideocall.db.DemoDBManager;
 
-import com.src.videocall.easemobvideocall.db.UserDao;
-import com.src.videocall.easemobvideocall.ui.LoginActivity;
+import com.src.videocall.easemobvideocall.ui.MainActivity;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 import com.src.videocall.easemobvideocall.utils.PreferenceManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static com.hyphenate.easeui.utils.EaseUserUtils.getUserInfo;
 
 public class DemoHelper {
     /**
@@ -219,7 +201,7 @@ public class DemoHelper {
 
     protected void onUserException(String exception){
         EMLog.e(TAG, "onUserException: " + exception);
-        Intent intent = new Intent(appContext, LoginActivity.class);
+        Intent intent = new Intent(appContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         intent.putExtra(exception, true);
@@ -249,7 +231,6 @@ public class DemoHelper {
 				EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
 						EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
 						EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
-
 				if(!ConferenceInfo.Initflag){
 					if(ConferenceInfo.getInstance().getConference().getConferenceRole() !=EMConferenceManager.EMConferenceRole.Admin){
 						ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
