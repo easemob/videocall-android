@@ -101,7 +101,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private RelativeLayout bottomContainer11;
     private LinearLayout bottomContainerView;
 
-
     public static EMCallSurfaceView oppositeSurface;
     private EMConferenceListener conferenceListener;
 
@@ -152,7 +151,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         EMLog.i(TAG,"oncreate  ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
-
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conference);
@@ -2137,6 +2135,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
 
     @Override
     protected void onDestroy() {
+        EMLog.i(TAG,"onDestroy start  ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
         EMClient.getInstance().conferenceManager().removeConferenceListener(conferenceListener);
 
         DemoHelper.getInstance().logout(true,new EMCallBack(){
@@ -2155,9 +2154,11 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
 
             }
         });
-        super.onDestroy();
         audioManager.setMode(AudioManager.MODE_NORMAL);
         audioManager.setMicrophoneMute(false);
+        EMLog.i(TAG,"onDestroy end   ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
+        super.onDestroy();
+        EMLog.i(TAG,"onDestroy over   ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
     }
 
     public static boolean isFastDoubleClick() {
