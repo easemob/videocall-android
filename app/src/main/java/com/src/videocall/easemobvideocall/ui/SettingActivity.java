@@ -208,7 +208,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         if (f.exists() && f.canRead()) {
             try {
                 storage.mkdirs();
-                File temp = File.createTempFile("hyphenate", ".log.gz", storage);
+                File temp = File.createTempFile("videocall-android", ".log.tar", storage);
                 if (!temp.canWrite()) {
                     return;
                 }

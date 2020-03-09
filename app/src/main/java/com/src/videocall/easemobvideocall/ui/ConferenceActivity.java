@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -153,6 +154,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         EMLog.i(TAG,"oncreate  ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.preview_view);
         setContentView(R.layout.activity_conference);
         //getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
@@ -316,14 +318,9 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
                                 if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
                                     EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
+                                    oppositeSurface.setVisibility(View.VISIBLE);
                                     avatarView.setVisibility(View.VISIBLE);
-
-                                    if(streamList.get(position).isVideoOff()){
-                                        avatar_view.setVisibility(View.VISIBLE);
-                                    }else {
-                                        avatar_view.setVisibility(View.GONE);
-                                    }
-                                    surfaceView.setVisibility(View.VISIBLE);
+                                    //surfaceView.getHolder().setFormat(TRANSPARENT);
                                 }
                                 ConferenceInfo.changeflag = false;
                                 oldflag = false;
@@ -592,7 +589,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                     EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(oldIndex).getStreamId(),oldSurfaceView);
                                     EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
                                 }
-                                avatarAdapter.notifyItemChanged(oldIndex , 0);
+                                avatarAdapter.notifyItemChanged(oldIndex);
 
                                 if(streamList.get(position).isVideoOff()){
                                     avatarView.setVisibility(View.VISIBLE);
@@ -686,8 +683,8 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         //horizontalRecyclerView.bringToFront();
         oppositeSurface.setZOrderOnTop(false);
         oppositeSurface.setZOrderMediaOverlay(false);
-
         oppositeSurface.getHolder().setFormat(TRANSPARENT);
+
 
         avatarView = (ImageView) findViewById(R.id.img_call_avatar);
         EMClient.getInstance().conferenceManager().setLocalSurfaceView(oppositeSurface);
@@ -769,6 +766,9 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             // 设置连麦按钮为‘申请下麦’
             setRequestBtnState(STATE_TALKER);
         }else if(ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+            //禁止点击
+            setBtn_micAndBtn_vedio(EMConferenceManager.EMConferenceRole.Audience);
+
             //设置连麦按钮为上麦按钮
             setRequestBtnState(STATE_AUDIENCE);
             avatarView.setVisibility(View.VISIBLE);
@@ -778,6 +778,54 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             }
         }
         timeHandler.startTime();
+    }
+
+
+    /**
+     * 根据角色判断摄像头麦克风是否禁用
+     * @param role
+     */
+    private void setBtn_micAndBtn_vedio(EMConferenceManager.EMConferenceRole role){
+       if(role == EMConferenceManager.EMConferenceRole.Audience){
+           //设置麦克风和摄像头关闭  按钮不可操作
+
+           EMClient.getInstance().conferenceManager().closeVideoTransfer();
+           EMClient.getInstance().conferenceManager().closeVoiceTransfer();
+
+           normalParam.setAudioOff(true);
+           localStream.setAudioOff(true);
+           btn_mic.setBackgroundResource(R.drawable.em_call_mic_off);
+
+           normalParam.setVideoOff(true);
+           localStream.setVideoOff(true);
+           btn_video.setBackgroundResource(R.drawable.em_call_video_off);
+
+           btn_mic.setActivated(false);
+           btn_video.setActivated(false);
+
+           avatarView.setVisibility(View.VISIBLE);
+
+           btn_mic.setEnabled(false);
+           btn_video.setEnabled(false);
+       }else{
+           btn_mic.setEnabled(true);
+           btn_video.setEnabled(true);
+
+           normalParam.setAudioOff(false);
+           localStream.setAudioOff(false);
+           btn_mic.setBackgroundResource(R.drawable.em_call_mic_on);
+
+           normalParam.setVideoOff(false);
+           localStream.setVideoOff(false);
+           btn_video.setBackgroundResource(R.drawable.em_call_video_on);
+
+           EMClient.getInstance().conferenceManager().openVideoTransfer();
+           EMClient.getInstance().conferenceManager().openVoiceTransfer();
+           avatarView.setVisibility(View.GONE);
+
+           btn_mic.setActivated(true);
+           btn_video.setActivated(true);
+       }
     }
 
     private View.OnClickListener listener = new View.OnClickListener() {
@@ -808,7 +856,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 case R.id.root_layout:
                     if (bottomContainer.getVisibility() == View.VISIBLE) {
                         topContainer.setVisibility(View.GONE);
-
                         if(streamList.size() > 0){
                             RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(),100));
                             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -940,7 +987,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                          }
                      }
                     EMLog.i(TAG, "start to be  Audience notifyItemChanged  currentStream");
-                     avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream), 0);
+                     avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
                     EMLog.i(TAG, "start to be  Audience notifyItemChanged  currentStream end");
 
                     ConferenceInfo.removeflag = false;
@@ -952,7 +999,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         Initflag = false;
                     }
                     EMLog.i(TAG, "start to be  Audience notifyItemChanged  1");
-                    avatarAdapter.notifyItemChanged(0,1);
+                    avatarAdapter.notifyItemChanged(0);
                     EMLog.i(TAG, "start to be  Audience notifyItemChanged  1 end");
                 }else{
                     EMLog.i(TAG, "start to be  Audience changeflag" + ConferenceInfo.changeflag);
@@ -965,7 +1012,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     if(Initflag){
                         Initflag = false;
                     }
-                    avatarAdapter.notifyItemChanged(0,1);
+                    avatarAdapter.notifyItemChanged(0);
                     EMLog.i(TAG, "start to be  Audience notifyItemChanged  1");
                 }
             }else{
@@ -1008,7 +1055,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         }
                     }
                     EMLog.i(TAG, "start to be  Talker   notifyItemChanged start  currentStream");
-                    avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream), 0);
+                    avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
                     EMLog.i(TAG, "start to be  Talker   notifyItemChanged start  currentStream end");
                 } else {
                     EMLog.i(TAG, "start to be  Talker  ConferenceInfo.changeflag" + ConferenceInfo.changeflag);
@@ -1060,7 +1107,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         if(ConferenceInfo.changeflag){
             //if(ConferenceInfo.currentIndex != -1){
             if(ConferenceInfo.currentStream != null){
-                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) , 0);
+                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
             }
         }
     }
@@ -1093,17 +1140,13 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             }
             EMClient.getInstance().conferenceManager().closeVideoTransfer();
             if(ConferenceInfo.changeflag){
-                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) ,0);
+                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
             }
-            //avatarAdapter.updataData();
         }
 
         if(ConferenceInfo.changeflag){
-            /*if(ConferenceInfo.currentIndex != -1){
-                avatarAdapter.notifyItemChanged(ConferenceInfo.currentIndex ,0);
-            }*/
             if(ConferenceInfo.currentStream != null){
-                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) , 0);
+                avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
             }
         }
     }
@@ -1340,7 +1383,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                           firstSubscribestream = false;
                           if(Initflag){
                            Initflag = false;
-                           avatarAdapter.notifyItemChanged(0,1);
+                           avatarAdapter.notifyItemChanged(0);
                          }
                 }
                 if(streamList.size() > 0){
@@ -1553,7 +1596,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private void updateConferenceMemberView(EMConferenceStream stream) {
 
         updateIndex = streamList.indexOf(stream);
-        avatarAdapter.notifyItemChanged(updateIndex ,0);
+        avatarAdapter.notifyItemChanged(updateIndex);
     }
 
 
@@ -1577,6 +1620,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     EMLog.i(TAG, "onRoleChanged, start publish, params: " + normalParam.toString());
 
                     publish();
+                    setBtn_micAndBtn_vedio(role);
                     setRequestBtnState(STATE_TALKER);
                 }
             });
@@ -1586,6 +1630,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 public void run() {
                     // 下麦
                     unpublish(conference.getPubStreamId(EMConferenceStream.StreamType.NORMAL));
+                    setBtn_micAndBtn_vedio(role);
                     setRequestBtnState(STATE_AUDIENCE);
                 }
             });
@@ -1661,7 +1706,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 public void onSuccess(String value) {
                                     EMLog.i(TAG, "onAttributesUpdated  request_tobe_audience changeRole success, result: " + value);
                                 }
-
                                 @Override
                                 public void onError(int error, String errorMsg) {
                                     EMLog.i(TAG, "onAttributesUpdated  request_tobe_audience failed, error: " + error + " - " + errorMsg);
@@ -2017,7 +2061,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     ConferenceInfo.removeflag = false;
                     ConferenceInfo.currentStream = streamList.get(0);
                     oldflag = false;
-                    avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream),0);
+                    avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream));
                     //Initflag = true;
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(), 160));
@@ -2052,31 +2096,39 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private void changeSurface(int index, EMCallSurfaceView localSurface, EMCallSurfaceView oppositeSurface) {
         if (conference.getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience) {
             if (!ConferenceInfo.changeflag) {
+                EMLog.i(TAG,"talker start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
-                avatarAdapter.notifyItemChanged(index, 0);
+                EMLog.i(TAG,"talker end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
+                avatarAdapter.notifyItemChanged(index);
             } else {
+                EMLog.i(TAG,"talker start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                avatarAdapter.notifyItemChanged(index, 0);
+                EMLog.i(TAG,"talker end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
+                avatarAdapter.notifyItemChanged(index);
             }
         } else {
             if (!ConferenceInfo.changeflag) {
+                EMLog.i(TAG,"audience start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 avatarView.setVisibility(View.GONE);
                 speak_show_view.setVisibility(View.VISIBLE);
                 video_show_view.setVisibility(View.VISIBLE);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
-                avatarAdapter.notifyItemChanged(index, 0);
+                EMLog.i(TAG,"audience end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
+                avatarAdapter.notifyItemChanged(index);
             } else{
+                EMLog.i(TAG,"audience start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 avatarView.setVisibility(View.VISIBLE);
                 speak_show_view.setVisibility(View.GONE);
                 video_show_view.setVisibility(View.GONE);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                avatarAdapter.notifyItemChanged(index, 0);
+                avatarAdapter.notifyItemChanged(index);
+                EMLog.i(TAG,"audience end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
             }
         }
     }

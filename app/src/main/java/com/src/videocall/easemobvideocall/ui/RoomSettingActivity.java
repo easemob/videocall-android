@@ -63,8 +63,16 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                         ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
                         ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
-
-                        room_admin.setText(ConferenceInfo.getInstance().getAdmin());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(ConferenceInfo.getInstance().getAdmin() != null){
+                                    room_admin.setText(ConferenceInfo.getInstance().getAdmin());
+                                }else {
+                                    room_admin.setText("本房间还未指定管理员");
+                                }
+                            }
+                       });
                     }
                     @Override
                     public void onError(int error, String errorMsg) {
@@ -103,7 +111,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
         if (f.exists() && f.canRead()) {
             try {
                 storage.mkdirs();
-                File temp = File.createTempFile("hyphenate", ".log.gz", storage);
+                File temp = File.createTempFile("videocall-android", ".log.tar", storage);
                 if (!temp.canWrite()) {
                     return;
                 }

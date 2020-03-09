@@ -29,6 +29,11 @@ public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConfe
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public ViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.choose_talker_list, parent, false);
         return new AvatarViewHolder(view);

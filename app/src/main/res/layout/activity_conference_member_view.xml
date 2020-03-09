@@ -56,7 +56,7 @@
             android:layout_marginBottom="0dp"
             android:gravity="center"
             android:text="e6e4fc37a6bd4ch3a87ecd174167aec"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/holo_red_dark"
             android:textSize="8sp"
             android:typeface="serif" />
     </RelativeLayout>

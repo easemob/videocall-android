@@ -115,8 +115,10 @@ public class TalkerListActivity extends Activity {
     }
 
     public void onTalkerListback(View view){
-        if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
-            streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+        if(streamList != null){
+            if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            }
         }
         finish();
     }
@@ -124,8 +126,10 @@ public class TalkerListActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
-                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            if(streamList != null) {
+                if (streamList.contains(ConferenceInfo.getInstance().getLocalStream())) {
+                    streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                }
             }
             finish();
             return true;
@@ -152,8 +156,10 @@ public class TalkerListActivity extends Activity {
             } else if(x1 - x2 > 50) {
                // Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
             } else if(x2 - x1 > 50) {
-                if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
-                    streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                if(streamList != null) {
+                    if (streamList.contains(ConferenceInfo.getInstance().getLocalStream())) {
+                        streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                    }
                 }
                 finish();
             }
