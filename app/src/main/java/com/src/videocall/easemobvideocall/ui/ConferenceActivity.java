@@ -2100,14 +2100,14 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMLog.i(TAG,"talker end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
-                avatarAdapter.notifyItemChanged(index);
+                avatarAdapter.notifyItemChanged(index,0);
             } else {
                 EMLog.i(TAG,"talker start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMLog.i(TAG,"talker end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
-                avatarAdapter.notifyItemChanged(index);
+                avatarAdapter.notifyItemChanged(index,0);
             }
         } else {
             if (!ConferenceInfo.changeflag) {
@@ -2118,7 +2118,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMLog.i(TAG,"audience end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
-                avatarAdapter.notifyItemChanged(index);
+                avatarAdapter.notifyItemChanged(index,0);
             } else{
                 EMLog.i(TAG,"audience start changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
                 avatarView.setVisibility(View.VISIBLE);
@@ -2127,7 +2127,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(index).getStreamId(),oppositeSurface);
                 EMClient.getInstance().conferenceManager().updateLocalSurfaceView(localSurface);
-                avatarAdapter.notifyItemChanged(index);
+                avatarAdapter.notifyItemChanged(index,0);
                 EMLog.i(TAG,"audience end changeSurface index:" + index + "  ConferenceInfo.changeflag:" + ConferenceInfo.changeflag);
             }
         }
