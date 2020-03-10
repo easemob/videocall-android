@@ -99,12 +99,6 @@ public class DemoHelper {
 	    demoModel = new DemoModel(context);
 	    EMOptions options = initChatOptions(context);
 
-	    //wss://rtc-turn4-hsb.easemob.com/ws   //a1-hsb.easemob.com  //rtc-turn4-hsb.easemob.com  a1.easemob.com
-		//沙箱 Rtcserver
-		//turn4 Rtcserver
-		//options.enableDNSConfig(true);
-
-
 		/*options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
 		options.setIMServer("39.107.54.56");
 		options.setImPort(6717);*/
@@ -112,7 +106,6 @@ public class DemoHelper {
         appContext = context;
 		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
-		//setGlobalListeners();
 	}
 
 

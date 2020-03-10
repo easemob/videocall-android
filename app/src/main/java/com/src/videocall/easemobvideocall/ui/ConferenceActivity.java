@@ -341,7 +341,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                                  public void onItemClick(View view, int position) {
                  ImageView  audio_view = view.findViewById(R.id.icon_speaking);
                  ImageView  video_view = view.findViewById(R.id.icon_videoing);
-                 //if(ConferenceInfo.currentIndex == -1)
                  if(ConferenceInfo.currentStream == null)
                  {
                      itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
@@ -381,23 +380,19 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                          video_show_view.setVisibility(View.VISIBLE);
                          video_show_view.setBackgroundResource(R.drawable.call_video_on);
                      }
-                     //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
                      changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                      ConferenceInfo.changeflag = true;
                  }else{
-                    //if(ConferenceInfo.currentIndex == position)
                      if(streamList.indexOf(ConferenceInfo.currentStream) == position){
                         if(!oldflag){
                             itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
                             itemSurfaceView.release();
                             oppositeSurface.release();
-                            //ConferenceInfo.currentIndex = position;
                             ConferenceInfo.currentStream = streamList.get(position);
                         }else {
                             oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
                             oldSurfaceView.release();
                             oppositeSurface.release();
-                            //ConferenceInfo.currentIndex = position;
                             ConferenceInfo.currentStream = streamList.get(position);
                         }
 
@@ -439,19 +434,15 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                  }
 
                                  if(!oldflag){
-                                     //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
                                      changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                                  }else{
-                                     //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
                                      changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
                                  }
                                  ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
                              }else{
                                  if(!oldflag){
-                                     //changeSurface(ConferenceInfo.currentIndex,oppositeSurface,itemSurfaceView);
                                      changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
                                  }else{
-                                     //changeSurface(ConferenceInfo.currentIndex, oppositeSurface, oldSurfaceView);
                                      changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
                                  }
                                  ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
@@ -492,10 +483,8 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 }
 
                                if(!oldflag){
-                                   //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                                }else{
-                                   //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
                                }
                                ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
@@ -504,10 +493,8 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 speak_show_view.setVisibility(View.GONE);
                                 video_show_view.setVisibility(View.GONE);
                                 if(!oldflag){
-                                    //changeSurface(ConferenceInfo.currentIndex,oppositeSurface,itemSurfaceView);
                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
                                 }else {
-                                    //changeSurface(ConferenceInfo.currentIndex, oppositeSurface, oldSurfaceView);
                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
                                 }
                                 ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
@@ -553,8 +540,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 }else {
                                     avatarView.setVisibility(View.GONE);
                                 }
-                                //ConferenceInfo.currentIndex = position;
-                                //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
                                 ConferenceInfo.currentStream = streamList.get(position);
                                 changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                                 ConferenceInfo.changeflag = true;
@@ -566,8 +551,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 }else {
                                     avatarView.setVisibility(View.GONE);
                                 }
-                                //ConferenceInfo.currentIndex = position;
-                                //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
                                 ConferenceInfo.currentStream = streamList.get(position);
                                 oldSurfaceView.release();
                                 oppositeSurface.release();
@@ -635,13 +618,11 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                     oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
                                     oldSurfaceView.release();
                                     oppositeSurface.release();
-                                    //changeSurface(ConferenceInfo.currentIndex,oldSurfaceView,oppositeSurface);
                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
                                 }else{
                                     itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
                                     itemSurfaceView.release();
                                     oppositeSurface.release();
-                                    //changeSurface(ConferenceInfo.currentIndex,itemSurfaceView,oppositeSurface);
                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
                                 }
                                 ConferenceInfo.changeflag = true;
@@ -1109,7 +1090,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             EMClient.getInstance().conferenceManager().closeVoiceTransfer();
         }
         if(ConferenceInfo.changeflag){
-            //if(ConferenceInfo.currentIndex != -1){
             if(ConferenceInfo.currentStream != null){
                 avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) , 0);
             }
@@ -1146,13 +1126,9 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             if(ConferenceInfo.changeflag){
                 avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) ,0);
             }
-            //avatarAdapter.updataData();
         }
 
         if(ConferenceInfo.changeflag){
-            /*if(ConferenceInfo.currentIndex != -1){
-                avatarAdapter.notifyItemChanged(ConferenceInfo.currentIndex ,0);
-            }*/
             if(ConferenceInfo.currentStream != null){
                 avatarAdapter.notifyItemChanged(streamList.indexOf(ConferenceInfo.currentStream) , 0);
             }
@@ -1347,8 +1323,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Toast.makeText(getApplicationContext(), member.memberName + " joined conference!", Toast.LENGTH_SHORT).show();
-                //updateConferenceMembers();
             }
         });
     }
@@ -1358,7 +1332,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Toast.makeText(getApplicationContext(), member.memberName + " removed conference!", Toast.LENGTH_SHORT).show();
                 if (EMClient.getInstance().getCurrentUser().equals(member.memberName)) {
                     setRequestBtnState(STATE_AUDIENCE);
                 }
@@ -1516,7 +1489,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
 
     @Override
     public void onStreamStatistics(EMStreamStatistics statistics) {
-        //EMLog.i(TAG, "onStreamStatistics" + statistics.toString());
         EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalAudioBps());
         EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalCaptureWidth());
         EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalCaptureWidth());
@@ -1527,12 +1499,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (streamId.equals(conference.getPubStreamId(EMConferenceStream.StreamType.NORMAL))
-                        || streamId.equals(conference.getPubStreamId(EMConferenceStream.StreamType.DESKTOP))) {
-                    //Toast.makeText(getApplicationContext(), "Publish setup streamId=" + streamId, Toast.LENGTH_SHORT).show();
-                } else {
-                   // Toast.makeText(getApplicationContext(), "Subscribe setup streamId=" + streamId, Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -1655,8 +1621,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                     Toast.makeText(getApplicationContext(), "您已变更为管理员!", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            //publish();
-                            //setRequestBtnState(STATE_TALKER);
                         }
                         @Override
                         public void onError(int error, String errorMsg) {

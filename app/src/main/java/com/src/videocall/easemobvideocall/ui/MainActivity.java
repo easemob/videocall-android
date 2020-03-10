@@ -116,9 +116,6 @@ public class MainActivity extends Activity {
 
         username = PreferenceManager.getInstance().getCurrentUsername();
 
-        //btn_anchor.setActivated(false);
-        //btn_audience.setActivated(false);
-
         if(username == null){
             register(view);
         }else{
