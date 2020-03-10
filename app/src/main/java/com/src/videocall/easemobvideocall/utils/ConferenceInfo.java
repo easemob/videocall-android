@@ -1,7 +1,11 @@
 package com.src.videocall.easemobvideocall.utils;
+import android.util.Log;
+
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceStream;
+import com.hyphenate.util.EasyUtils;
+import com.src.videocall.easemobvideocall.ui.ConferenceActivity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,26 +16,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConferenceInfo {
-    private String roomname;
-    private String password;
+    private String roomname = null;
+    private String password = null;
     private EMConference conference;
 
     private static ConferenceInfo conferenceInfo = null;
     private List<EMConferenceStream> streamList = new ArrayList<>();
     private EMConferenceStream localStream = new EMConferenceStream();
-    private EMConferenceManager.EMConferenceRole  conferenceRole;
+    private EMConferenceManager.EMConferenceRole conferenceRole;
 
+    public static int currentIndex = -1;
+    public static EMConferenceStream currentStream = null;
+    public static boolean changeflag = false;
+    public static boolean removeflag = false;
+
+    public static List<String> subscribestream = new ArrayList<>();
     private List<EMConferenceStream> streamListAddLocal = new ArrayList<>();
 
+    public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
         if(conferenceInfo == null){
-            conferenceInfo = new ConferenceInfo();
+            synchronized (ConferenceInfo.class){
+                if(conferenceInfo == null){
+                    conferenceInfo = new ConferenceInfo();
+                }
+            }
         }
-        return  conferenceInfo;
+        return conferenceInfo;
     }
 
     private ConferenceInfo(){
 
+    }
+
+    public void Init(){
+        Initflag = false;
+        streamList.clear();
+        subscribestream.clear();
+        currentIndex = -1;
+        currentStream = null;
+        changeflag = false;
+        removeflag = false;
     }
 
     public EMConferenceManager.EMConferenceRole getCurrentrole(){
@@ -56,10 +81,12 @@ public class ConferenceInfo {
     }
 
     public String getRoomname() {
+        Log.e("tag", "get name = "+roomname + " class = "+this);
         return roomname;
     }
 
     public void setRoomname(String roomname) {
+        Log.e("tag", "set name = "+roomname + " class = "+this);
         this.roomname = roomname;
     }
 
@@ -79,29 +106,16 @@ public class ConferenceInfo {
         this.conference = conference;
     }
 
-    public  List<EMConferenceStream> deepCopy(List<EMConferenceStream> src) throws IOException, ClassNotFoundException {
-        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(byteOut);
-        out.writeObject(src);
-
-        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-        ObjectInputStream in = new ObjectInputStream(byteIn);
-        @SuppressWarnings("unchecked")
-        List<EMConferenceStream> dest = (List<EMConferenceStream>) in.readObject();
-        return dest;
-    }
-
-    private static String replaceAction(String username, String regular) {
-        return username.replaceAll(regular, "*");
-    }
-
-    public static String userIdReplaceWithStar(String userId) {
-
-        if (userId.isEmpty() || userId == null) {
-            return null;
-        } else {
-            return replaceAction(userId, "(?<=\\d{4})\\d(?=\\d{4})");
+    public String getAdmin(){
+        String[] admins = ConferenceInfo.getInstance().getConference().getAdmins();
+        String adminStr = "";
+        if(admins.length > 0){
+            for (int i = 0; i < admins.length; i++) {
+                adminStr = admins[0];
+                adminStr = EasyUtils.useridFromJid(adminStr);
+                return adminStr;
+            }
         }
+        return adminStr;
     }
-
 }

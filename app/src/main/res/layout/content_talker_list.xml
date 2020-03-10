@@ -10,7 +10,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_transparent">
-
             <com.hyphenate.easeui.widget.EaseImageView
                 android:id="@+id/avatar"
                 android:layout_width="50dp"
@@ -19,15 +18,16 @@
                 android:layout_marginLeft="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ease_default_avatar" />
+
             <TextView
                 android:id="@+id/userId_view"
-                android:layout_width="200dp"
+                android:layout_width="225dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="60dp"
-                android:gravity="center_vertical|left"
+                android:gravity="left|center_vertical"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
             <ImageView
                 android:id="@+id/mic_image"
                 android:layout_width="35dp"
@@ -35,8 +35,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="60dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/em_audio_show"
-                android:visibility="gone"/>
+                android:background="@drawable/em_audio_show" />
             <ImageView
                 android:id="@+id/video_image"
                 android:layout_width="35dp"

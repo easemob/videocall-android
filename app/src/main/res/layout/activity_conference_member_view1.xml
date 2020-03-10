@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:orientation="vertical"
+    android:background="@color/gray_normal">
+    <com.hyphenate.media.EMCallSurfaceView
+        android:id="@+id/surface_view_listItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <ImageView
+        android:id="@+id/call_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        android:src="@drawable/em_default_avatar" />
+    <RelativeLayout
+        android:id="@+id/show_layout"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentTop="true"
+        android:background="#61212121">
+        <ImageView
+            android:id="@+id/icon_videoing"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="2dp"
+            android:src="@drawable/call_video_on" />
+        <ImageView
+            android:id="@+id/icon_speaking"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:padding="2dp"
+            android:src="@drawable/call_mic_on" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="#61212121">
+
+        <TextView
+            android:id="@+id/icon_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:text="e6e4fc37a6bd4ch3a87ecd174167aec"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="8sp"
+            android:typeface="serif" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -44,13 +44,25 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
              video_image = (ImageView)findViewById(R.id.video_image);
         }
 
+
         @Override
         public void setData(EMConferenceStream item, int position) {
 
+            String fristStr =  item.getUsername().substring(0,4);
+            String lastStr =  item.getUsername().substring(item.getUsername().length()-4);
+            fristStr = fristStr+"***"+lastStr;
             if(item.getUsername() == EMClient.getInstance().getCurrentUser()){
-                userIdView.setText(ConferenceInfo.userIdReplaceWithStar(item.getUsername()) + "(我)");
+                if(item.getUsername().equals(ConferenceInfo.getInstance().getAdmin())){
+                    userIdView.setText(fristStr + " (我)" + " (管理员)");
+                }else {
+                    userIdView.setText(fristStr + " (我)");
+                }
             }else {
-                userIdView.setText(ConferenceInfo.userIdReplaceWithStar(item.getUsername()));
+                if(item.getUsername().equals(ConferenceInfo.getInstance().getAdmin())){
+                    userIdView.setText(fristStr +" (管理员)");
+                }else {
+                    userIdView.setText(fristStr);
+                }
             }
             if(item.isAudioOff()){
                 mic_image.setVisibility(GONE);

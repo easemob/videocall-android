@@ -1,5 +1,6 @@
 package com.src.videocall.easemobvideocall.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConference;
 import com.hyphenate.easeui.model.EaseCompat;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.EasyUtils;
 import com.src.videocall.easemobvideocall.R;
 import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
@@ -24,12 +28,12 @@ import java.util.ArrayList;
 
 import static com.superrtc.mediamanager.EMediaManager.getContext;
 
-public class RoomSettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class RoomSettingActivity extends Activity implements View.OnClickListener {
 
+    private final String TAG = this.getClass().getSimpleName();
     TextView room_name;
     TextView room_password;
     TextView room_admin;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +47,38 @@ public class RoomSettingActivity extends AppCompatActivity implements View.OnCli
         room_name.setText(ConferenceInfo.getInstance().getRoomname());
         room_password.setText(ConferenceInfo.getInstance().getPassword());
 
-        String[] admins = ConferenceInfo.getInstance().getConference().getAdmins();
-        String adminStr = "";
-        for (int i = 0; i < admins.length; i++) {
-            adminStr = admins[0];
-            adminStr = EasyUtils.useridFromJid(adminStr);
-        }
-        room_admin.setText(adminStr);
+        InitRoomInfo();
 
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_roomlog);
         uploadlog.setOnClickListener(this);
+    }
+
+    public void InitRoomInfo(){
+        EMClient.getInstance().conferenceManager().getConferenceInfo(ConferenceInfo.getInstance().getConference().getConferenceId(),ConferenceInfo.getInstance().getPassword(),
+                new EMValueCallBack<EMConference>() {
+                    @Override
+                    public void onSuccess(EMConference value) {
+                        ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
+                        ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
+                        ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
+                        ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(ConferenceInfo.getInstance().getAdmin() != null){
+                                    room_admin.setText(ConferenceInfo.getInstance().getAdmin());
+                                }else {
+                                    room_admin.setText("本房间还未指定管理员");
+                                }
+                            }
+                       });
+                    }
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        EMLog.i(TAG, "getConferenceInfo failed: error=" + error + ", msg=" + errorMsg);
+                    }
+                });
     }
 
     @Override
@@ -86,7 +111,7 @@ public class RoomSettingActivity extends AppCompatActivity implements View.OnCli
         if (f.exists() && f.canRead()) {
             try {
                 storage.mkdirs();
-                File temp = File.createTempFile("hyphenate", ".log.gz", storage);
+                File temp = File.createTempFile("videocall-android", ".log.tar", storage);
                 if (!temp.canWrite()) {
                     return;
                 }

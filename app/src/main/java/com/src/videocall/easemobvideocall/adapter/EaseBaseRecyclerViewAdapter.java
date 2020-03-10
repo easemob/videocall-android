@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.src.videocall.easemobvideocall.R;
+import com.src.videocall.easemobvideocall.utils.ConferenceInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,8 +55,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         T item = mData.get(position);
         holder.setData(item, position);
         holder.setDataList(mData, position);
-        //SurfaceView = holder.itemView.findViewById(R.id.item_surface_view);
-        //getSurfaceView(SurfaceView,position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,14 +99,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         }
     }
 
-    /**
-     *获取 SurfaceView 控件
-     */
-     public void getSurfaceView(EMCallSurfaceView surfaceView, int position) {
-        if(mOnItemGetSurfaceView != null) {
-            mOnItemGetSurfaceView.OnItemGetSurfaceView(surfaceView , position);
-        }
-    }
 
     /**
      * 返回数据为空时的布局
@@ -121,11 +112,11 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             public void initView(View itemView) {
 
             }
-
             @Override
             public void setData(T item, int position) {
 
             }
+
         };
     }
 
@@ -164,6 +155,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         notifyDataSetChanged();
     }
 
+
     /**
      * 添加单个数据
      * @param item
@@ -175,7 +167,10 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             }
             this.mData.add(item);
         }
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+        //notifyItemChanged(this.mData.size());
+        notifyItemInserted(this.mData.size());
+        notifyItemRangeChanged(this.mData.size()-1, this.mData.size());
     }
 
 
@@ -184,12 +179,16 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
      * @param item
      */
     public void removeData(T item) {
+        int position = this.mData.indexOf(item);
         synchronized (EaseBaseRecyclerViewAdapter.class) {
             if(mData.contains(item)){
                 this.mData.remove(item);
             }
         }
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
+        if(position < mData.size()){
+            notifyItemRangeChanged(position,getItemCount()); //刷新被删除数据，以及其后面的数据
+        }
     }
 
     /**
@@ -245,17 +244,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         mOnItemClickListener = listener;
     }
 
-    public void setOnItemGetSurfaceView(OnItemGetSurfaceView listener){
-        mOnItemGetSurfaceView = listener;
-    }
-
-    /**
-     * set item long click
-     * @param longClickListener
-     */
-    public void setOnItemLongClickListener(OnItemLongClickListener longClickListener) {
-        mOnItemLongClickListener = longClickListener;
-    }
 
     public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
         private EaseBaseAdapter adapter;
@@ -264,6 +252,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             super(itemView);
             initView(itemView);
         }
+
 
         /**
          * 初始化控件

@@ -5,7 +5,7 @@
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="160dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:orientation="vertical"
@@ -13,15 +13,14 @@
         <TextView
             android:id="@+id/info_view"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="100dp"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="主播人数最多为9人，选择一名主播下麦进行替换？"
-            android:textSize="18sp" />
-
+            android:textSize="17sp" />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="60dp">
             <Button
                 android:id="@+id/btn_kick_cancel"
                 android:layout_width="70dp"
