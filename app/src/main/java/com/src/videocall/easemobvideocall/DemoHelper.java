@@ -104,12 +104,13 @@ public class DemoHelper {
 		//turn4 Rtcserver
 		//options.enableDNSConfig(true);
 
-		appContext = context;
-		options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
-		options.setIMServer("39.107.54.56");
-		options.setImPort(6717);
-		EMClient.getInstance().init(context, options);
 
+		/*options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
+		options.setIMServer("39.107.54.56");
+		options.setImPort(6717);*/
+
+        appContext = context;
+		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
 		//setGlobalListeners();
 	}
