@@ -8,9 +8,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
-        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
-    </style>
+    <!--<style name="horizontal_slide" parent="android:Theme.NoTitleBar">-->
+        <!--<item name="android:windowAnimationStyle">@style/AnimFade2</item>-->
+    <!--</style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
