@@ -109,7 +109,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private AudioManager audioManager;
     private EMConference conference;
     private EMStreamParam normalParam;
-    private int fillSate = 0;
+    private int FitSate = 0;
 
     private List<EMConferenceStream> streamList;
     private MemberAvatarAdapter avatarAdapter;
@@ -649,7 +649,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
         //开启统计功能
-        //EMClient.getInstance().conferenceManager().enableStatistics(true);
+       //EMClient.getInstance().conferenceManager().enableStatistics(true);
 
         ConferenceInfo.Initflag = true;
         Initflag = false;
@@ -662,7 +662,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         meeting_duration = (TextView) findViewById(R.id.Meeting_duration);
         netInfoView = (ImageView)findViewById(R.id.netInfo);
         oppositeSurface = (EMCallSurfaceView) findViewById(R.id.opposite_surface);
-        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
 
         //horizontalRecyclerView.bringToFront();
         oppositeSurface.setZOrderOnTop(false);
@@ -712,6 +712,11 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         }
 
         //根据设置配置是否开关
+        btn_mic.setEnabled(true);
+        btn_video.setEnabled(true);
+        avatarView.setVisibility(View.GONE);
+        oppositeSurface.setVisibility(View.VISIBLE);
+
         if(PreferenceManager.getInstance().isCallAudio()){
             normalParam.setAudioOff(false);
             localStream.setAudioOff(false);
@@ -848,7 +853,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             bottomContainer11.setVisibility(View.VISIBLE);
                             bottomContainer.setVisibility(View.GONE);
                             bottomContainerView.setVisibility(View.VISIBLE);
-                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                         }else{
                             RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(),0));
                             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -856,7 +861,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             bottomContainer11.setVisibility(View.GONE);
                             bottomContainer.setVisibility(View.GONE);
                             bottomContainerView.setVisibility(View.GONE);
-                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                         }
                     } else {
                         if(streamList.size() > 0) {
@@ -867,7 +872,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             bottomContainer11.setVisibility(View.VISIBLE);
                             bottomContainer.setVisibility(View.VISIBLE);
                             bottomContainerView.setVisibility(View.VISIBLE);
-                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                         }else{
                             topContainer.setVisibility(View.VISIBLE);
                             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(), 60));
@@ -876,7 +881,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             bottomContainer11.setVisibility(View.VISIBLE);
                             bottomContainer.setVisibility(View.VISIBLE);
                             bottomContainerView.setVisibility(View.GONE);
-                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                         }
                     }
                     break;
@@ -1384,7 +1389,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     bottomContainer11.setVisibility(View.VISIBLE);
                     bottomContainer.setVisibility(View.VISIBLE);
                     bottomContainerView.setVisibility(View.VISIBLE);
-                    oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                    oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                 }
             }
         });
@@ -1447,7 +1452,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         bottomContainer11.setVisibility(View.VISIBLE);
                         bottomContainer.setVisibility(View.VISIBLE);
                         bottomContainerView.setVisibility(View.GONE);
-                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
 
                         if(ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
                             speak_show_view.setVisibility(View.GONE);
@@ -1465,7 +1470,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             bottomContainer11.setVisibility(View.VISIBLE);
                             bottomContainer.setVisibility(View.VISIBLE);
                             bottomContainerView.setVisibility(View.VISIBLE);
-                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                            oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                         }
                     }
                 }
@@ -2053,7 +2058,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     bottomContainer11.setVisibility(View.VISIBLE);
                     bottomContainer.setVisibility(View.VISIBLE);
                     bottomContainerView.setVisibility(View.VISIBLE);
-                    oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                    oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                 }else{
                     Initflag = true;
                     if(streamList.size() > 0){
@@ -2063,7 +2068,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         bottomContainer11.setVisibility(View.VISIBLE);
                         bottomContainer.setVisibility(View.VISIBLE);
                         bottomContainerView.setVisibility(View.VISIBLE);
-                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                     }
                 }
             }else{

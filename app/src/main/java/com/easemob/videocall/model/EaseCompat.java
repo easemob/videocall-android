@@ -1,4 +1,4 @@
-package com.src.videocall.easemobvideocall.ui;
+package com.easemob.videocall.model;
 
 import android.app.Activity;
 import android.content.ContentUris;

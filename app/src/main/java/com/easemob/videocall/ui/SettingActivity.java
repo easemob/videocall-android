@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.videocall.model.EaseCompat;
 import com.hyphenate.chat.EMClient;
 import com.easemob.videocall.ui.widget.EaseSwitchButton;
 import com.easemob.videocall.R;
@@ -224,7 +225,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
                 intent.setType("application/octet-stream");
                 ArrayList<Uri> uris = new ArrayList<>();
-                uris.add(com.src.videocall.easemobvideocall.ui.EaseCompat.getUriForFile(getContext(), temp));
+                uris.add(EaseCompat.getUriForFile(getContext(), temp));
                 intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                 startActivity(intent);
             } catch (final Exception e) {

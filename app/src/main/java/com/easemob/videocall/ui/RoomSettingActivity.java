@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.videocall.model.EaseCompat;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
@@ -126,7 +127,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
 
                 intent.setType("application/octet-stream");
                 ArrayList<Uri> uris = new ArrayList<>();
-                uris.add(com.src.videocall.easemobvideocall.ui.EaseCompat.getUriForFile(getContext(), temp));
+                uris.add(EaseCompat.getUriForFile(getContext(), temp));
                 intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                 startActivity(intent);
             } catch (final Exception e) {
