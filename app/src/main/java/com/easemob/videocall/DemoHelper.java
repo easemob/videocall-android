@@ -17,13 +17,11 @@ import com.hyphenate.chat.EMOptions;
 
 
 import com.hyphenate.chat.EMStreamStatistics;
-import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
-import com.easemob.videocall.db.DemoDBManager;
+
 import com.easemob.videocall.ui.MainActivity;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
-
 
 import java.util.List;
 import java.util.Queue;
@@ -51,8 +49,6 @@ public class DemoHelper {
     protected EMMessageListener messageListener = null;
 
 	private static DemoHelper instance = null;
-	
-	private DemoModel demoModel = null;
 
 	private String username;
 
@@ -66,7 +62,6 @@ public class DemoHelper {
 
 	private String restUrl;
 
-	private EaseUI easeUI;
 
     Queue<String> msgQueue = new ConcurrentLinkedQueue<>();
 
@@ -95,7 +90,6 @@ public class DemoHelper {
 	 *            application context
 	 */
 	public void init(Context context) {
-	    demoModel = new DemoModel(context);
 	    EMOptions options = initChatOptions(context);
 
 		/*options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
@@ -146,7 +140,6 @@ public class DemoHelper {
 			@Override
 			public void onSuccess() {
 				Log.d(TAG, "logout: onSuccess");
-			    reset();
 				if (callback != null) {
 					callback.onSuccess();
 				}
@@ -160,17 +153,12 @@ public class DemoHelper {
 			@Override
 			public void onError(int code, String error) {
 				Log.d(TAG, "logout: onSuccess");
-                reset();
 				if (callback != null) {
 					callback.onError(code, error);
 				}
 			}
 		});
 	}
-
-	public DemoModel getModel(){
-        return (DemoModel) demoModel;
-    }
 
     
     /**
@@ -300,8 +288,4 @@ public class DemoHelper {
 		EMClient.getInstance().conferenceManager().removeConferenceListener(conferenceListener);
         conferenceListener = null;
 	}
-
-    synchronized void reset(){
-        DemoDBManager.getInstance().closeDB();
-    }
 }

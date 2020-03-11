@@ -23,7 +23,7 @@
                 android:layout_marginLeft="10dip"
                 android:onClick="onRoomSettingback"
                 android:background="@drawable/ease_mm_title_back"/>
-            <com.hyphenate.easeui.widget.EaseTitleBar
+            <com.easemob.videocall.ui.widget.EaseTitleBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:titleBarTitle="@string/roomset" />

@@ -11,7 +11,7 @@ import com.easemob.videocall.R;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.easeui.widget.EaseImageView;
+import com.easemob.videocall.ui.widget.EaseImageView;
 import com.easemob.videocall.utils.ConferenceInfo;
 
 

@@ -15,7 +15,6 @@ package com.easemob.videocall.db;
 
 import android.content.Context;
 
-import com.hyphenate.easeui.domain.EaseUser;
 
 import java.util.List;
 import java.util.Map;
