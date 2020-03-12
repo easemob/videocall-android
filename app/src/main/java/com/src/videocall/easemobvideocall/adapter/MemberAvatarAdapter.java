@@ -56,10 +56,6 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         return new AvatarViewHolder(view);
     }
 
-    @Override
-    public long getItemId(int position){
-        return  position;
-    }
 
     private class AvatarViewHolder extends ViewHolder<EMConferenceStream> {
         private EMCallSurfaceView surfaceView;
