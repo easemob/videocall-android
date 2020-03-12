@@ -220,10 +220,13 @@ public class DemoHelper {
 				EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
 						EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
 						EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
+				EMLog.i(TAG, String.format("Conference stream subscribable streamListSize start: %s",ConferenceInfo.getInstance().getConferenceStreamList().size()));
 				if(!ConferenceInfo.Initflag){
 					if(ConferenceInfo.getInstance().getConference().getConferenceRole() !=EMConferenceManager.EMConferenceRole.Admin){
 						if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
+							EMLog.i(TAG, String.format("Conference stream subscribable stream  streamId: %s",stream.getUsername()));
 							ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
+							EMLog.i(TAG, String.format("Conference stream subscribable streamListSize: %s",ConferenceInfo.getInstance().getConferenceStreamList().size()));
 						}
 					}
 				}

@@ -54,6 +54,10 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
         return new AvatarViewHolder(view);
     }
 
+    @Override
+    public long getItemId(int position){
+        return  position;
+    }
 
     private class AvatarViewHolder extends ViewHolder<EMConferenceStream> {
         private EMCallSurfaceView surfaceView;
@@ -81,7 +85,7 @@ public class MemberAvatarAdapter extends EaseBaseRecyclerViewAdapter<EMConferenc
             surfaceView.setZOrderMediaOverlay(true);
             audio_view.bringToFront();
             video_view.bringToFront();
-            surfaceView.setZOrderOnTop(false);
+            //surfaceView.setZOrderOnTop(false);
         }
 
         @Override
