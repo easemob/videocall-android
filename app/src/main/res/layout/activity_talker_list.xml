@@ -18,9 +18,14 @@
             android:layout_marginLeft="10dip"
             android:onClick="onTalkerListback"
             android:background="@drawable/ease_mm_title_back"/>
-        <com.src.videocall.easemobvideocall.ui.widget.EaseTitleBar
+
+        <com.easemob.videocall.ui.widget.EaseTitleBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/set_back"
+            android:layout_alignLeft="@+id/set_back"
+            android:layout_marginStart="-10dp"
+            android:layout_marginLeft="-10dp"
             app:titleBarTitle="@string/talker_list" />
     </RelativeLayout>
     <LinearLayout
