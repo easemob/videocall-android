@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -62,6 +63,7 @@ import com.easemob.videocall.utils.ConferenceAttributeOption;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PhoneStateManager;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.jaouan.compoundlayout.RadioLayoutGroup;
 
 import com.superrtc.sdk.VideoView;
 
@@ -100,7 +102,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private LinearLayout bottomContainer;
     private LinearLayout topContainer;
     private RelativeLayout bottomContainer11;
-    private LinearLayout bottomContainerView;
+    private HorizontalScrollView bottomContainerView;
 
     public static EMCallSurfaceView oppositeSurface;
     private EMConferenceListener conferenceListener;
@@ -130,6 +132,9 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private EMCallSurfaceView itemSurfaceView;
     private EMCallSurfaceView oldSurfaceView;
     private EMCallSurfaceView firstSurfaceView;
+
+    private RadioLayoutGroup memberContainer;
+
     private boolean oldflag = false;
 
     private boolean Initflag = false;
@@ -175,469 +180,10 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         topContainer = (LinearLayout) findViewById(R.id.ll_top_container);
         bottomContainer11 = (RelativeLayout) findViewById(R.id.ll_bottom);
 
-        bottomContainerView = (LinearLayout) findViewById(R.id.surface_baseline);
+        bottomContainerView = (HorizontalScrollView)findViewById(R.id.surface_baseline);
         bottomContainer = (LinearLayout) findViewById(R.id.ll_surface_baseline);
 
-        horizontalRecyclerView = (RecyclerView) findViewById(R.id.horizontalRecyclerView);
-        MyLinearLayoutManager layout = new MyLinearLayoutManager(ConferenceActivity.this);
-        layout.setOrientation(MyLinearLayoutManager.HORIZONTAL);
-        horizontalRecyclerView.setLayoutManager(layout);
 
-        avatarAdapter = new MemberAvatarAdapter();
-        avatarAdapter.setData(streamList);
-        avatarAdapter.setHasStableIds(true);
-        horizontalRecyclerView.setAdapter(avatarAdapter);
-
-        //增加时候开始订阅流回调
-        avatarAdapter.setCallback(new OnItemGetSurfaceView() {
-            @Override
-            public void OnItemGetSurfaceView(EMCallSurfaceView surfaceView, int position,ImageView avatar_view) {
-
-                //进行订阅流
-                EMLog.i(TAG,"OnItemGetSurfaceView start: postion：" + position + "  threadID: " + Thread.currentThread().getName());
-                if(!ConferenceInfo.removeflag){
-                    if(!ConferenceInfo.subscribestream.contains(streamList.get(position).getStreamId()) || !Initflag){
-                        //观众第一次进来
-                        EMLog.i(TAG,"OnItemGetSurfaceView  add stream  postion：" + position);
-                        if(position == 0 && conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience && !Initflag){
-                            EMLog.i(TAG,"OnItemGetSurfaceView  Audience first come postion：" + position);
-                            itemSurfaceView = surfaceView;
-                            if(!firstSubscribestream){
-                                ConferenceInfo.currentStream = streamList.get(position);
-                                ConferenceInfo.changeflag = true;
-                                EMLog.i(TAG,"OnItemGetSurfaceView firstSubscribestream start add stream  postion：" + position);
-                                avatar_view.setVisibility(View.VISIBLE);
-                                oppositeSurface.setVisibility(View.VISIBLE);
-                                oppositeSurface.release();
-                                subscribe(streamList.get(position),oppositeSurface);
-                                firstSubscribestream = true;
-                                EMLog.i(TAG,"OnItemGetSurfaceView firstSubscribestream end add stream  postion：" + position);
-                            }else{
-                                EMLog.i(TAG,"OnItemGetSurfaceView updateRemoteSurfaceView  start  postion：" + position);
-                                oppositeSurface.setVisibility(View.VISIBLE);
-                                oppositeSurface.release();
-                                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(itemSurfaceView);
-                                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(position).getStreamId(),oppositeSurface);
-                                EMLog.i(TAG,"OnItemGetSurfaceView updateRemoteSurfaceView  end  postion：" + position);
-                            }
-                            if(streamList.get(position).isAudioOff()){
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                            }else{
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                            }
-                            if (streamList.get(position).isVideoOff()) {
-                                avatarView.setVisibility(View.VISIBLE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                            } else {
-                                avatarView.setVisibility(View.GONE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                            }
-                            Initflag = true;
-                            EMLog.i(TAG,"OnItemGetSurfaceView  Audience first end：" + position);
-                        }else {
-                            EMLog.i(TAG,"OnItemGetSurfaceView subscribe  stream  start postion：" + position);
-                            surfaceView.release();
-                            subscribe(streamList.get(position), surfaceView);
-                            EMLog.i(TAG,"OnItemGetSurfaceView subscribe  stream  end  postion：" + position);
-                        }
-                        if(!ConferenceInfo.subscribestream.contains(streamList.get(position).getStreamId())){
-                            EMLog.i(TAG,"OnItemGetSurfaceView streamList  add stream  end  postion：" + position);
-                            ConferenceInfo.subscribestream.add(streamList.get(position).getStreamId());
-                            EMLog.i(TAG,"OnItemGetSurfaceView streamList  add  stream  start  postion：" + position);
-                        }
-
-                        EMLog.i(TAG,"OnItemGetSurfaceView  subscribestream  add stream postion：" + position);
-                    }else {
-                        EMLog.i(TAG, "OnItemGetSurfaceView  add stream postion：" + position + "  changeflag:" + ConferenceInfo.changeflag);
-                        if (ConferenceInfo.changeflag) {
-                            if (streamList.indexOf(ConferenceInfo.currentStream) == position) {
-                                EMLog.i(TAG, "OnItemGetSurfaceView add stream  is currentStream  postion ：" + position);
-                                if (streamList.get(position).isAudioOff()) {
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                                } else {
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                                }
-                                if (streamList.get(position).isVideoOff()) {
-                                    avatarView.setVisibility(View.VISIBLE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                                } else {
-                                    avatarView.setVisibility(View.GONE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                                }
-                                EMLog.i(TAG, "OnItemGetSurfaceView update stream  is currentStream end postion ：" + position);
-                            }
-                        }else{
-                            EMLog.i(TAG, "OnItemGetSurfaceView not update stream ：" + position);
-                        }
-                    }
-                }else{
-                    if(streamList.size() > 0){
-                        //删除以后重新订阅更新流
-                        int currentIndex = streamList.indexOf(ConferenceInfo.currentStream);
-                        if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
-                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
-                            if(streamList.get(position).isVideoOff()){
-                                avatar_view.setVisibility(View.VISIBLE);
-                            }else {
-                                avatar_view.setVisibility(View.GONE);
-                            }
-                            surfaceView.setVisibility(View.VISIBLE);
-                        }
-                        if (deleteIndex > currentIndex) {
-                            if(deleteIndex <= position) {
-                                surfaceView.release();
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateRemoteSurfaceView   position：" + position);
-                                EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(position).getStreamId(), surfaceView);
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream  updateRemoteSurfaceView end  position：" + position);
-                            }
-                            if(position  == streamList.size() -1){
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last updateRemoteSurfaceView ：" + position);
-                                ConferenceInfo.removeflag = false;
-                                if(!streamList.contains(ConferenceInfo.currentStream)){
-                                    ConferenceInfo.changeflag = false;
-                                    oldflag = false;
-                                    ConferenceInfo.currentStream = null;
-                                }
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView ：" + position);
-                            }
-                        }else{
-                            //删除以后重新订阅更新流
-                            surfaceView.release();
-                            oppositeSurface.release();
-                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView  position：" + position);
-                            EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateRemoteSurfaceView   position：" + position);
-                            EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(position).getStreamId(),surfaceView);
-                            EMLog.i(TAG, "OnItemGetSurfaceView delete stream  updateRemoteSurfaceView end  position：" + position);
-
-                            if(position  == streamList.size() -1){
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last updateRemoteSurfaceView ：" + position);
-                                ConferenceInfo.removeflag = false;
-                                //oppositeSurface.release();
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView  last  position：" + position);
-                                EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
-                                    EMLog.i(TAG, "OnItemGetSurfaceView delete stream the last set avatarView  visible");
-                                    avatarView.setVisibility(View.VISIBLE);
-                                    if(streamList.get(position).isVideoOff()){
-                                        avatar_view.setVisibility(View.VISIBLE);
-                                    }else {
-                                        avatar_view.setVisibility(View.GONE);
-                                    }
-                                    surfaceView.setVisibility(View.VISIBLE);
-                                }
-                                ConferenceInfo.changeflag = false;
-                                oldflag = false;
-                                ConferenceInfo.currentStream = null;
-                                EMLog.i(TAG, "OnItemGetSurfaceView delete stream updateLocalSurfaceView ：" + position);
-                            }
-                        }
-                    }
-               }
-            }
-        });
-
-        avatarAdapter.setOnItemClickListener(new OnItemClickListener() {
-                                                 @Override
-                                                 public void onItemClick(View view, int position) {
-                 ImageView  audio_view = view.findViewById(R.id.icon_speaking);
-                 ImageView  video_view = view.findViewById(R.id.icon_videoing);
-                 if(ConferenceInfo.currentStream == null)
-                 {
-                     itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                     itemSurfaceView.release();
-                     oppositeSurface.release();
-                     //ConferenceInfo.currentIndex = position;
-                     ConferenceInfo.currentStream = streamList.get(position);
-                     if(streamList.get(position).isVideoOff()){
-                         avatarView.setVisibility(View.VISIBLE);
-                     }else {
-                         avatarView.setVisibility(View.GONE);
-                     }
-                     //设置小图标
-                     if(localStream.isAudioOff()){
-                         audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                     }else{
-                         audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                     }
-                     if(localStream.isVideoOff()){
-                         video_view.setBackgroundResource(R.drawable.call_video_off);
-                     }else{
-                         video_view.setBackgroundResource(R.drawable.call_video_on);
-                     }
-
-                     //本地的
-                     if(streamList.get(position).isAudioOff()){
-                         speak_show_view.setVisibility(View.VISIBLE);
-                         speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                     }else{
-                         speak_show_view.setVisibility(View.VISIBLE);
-                         speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                     }
-                     if(streamList.get(position).isVideoOff()){
-                         video_show_view.setVisibility(View.VISIBLE);
-                         video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                     }else{
-                         video_show_view.setVisibility(View.VISIBLE);
-                         video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                     }
-                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
-                     ConferenceInfo.changeflag = true;
-                 }else{
-                     if(streamList.indexOf(ConferenceInfo.currentStream) == position){
-                        if(!oldflag){
-                            itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                            itemSurfaceView.release();
-                            oppositeSurface.release();
-                            ConferenceInfo.currentStream = streamList.get(position);
-                        }else {
-                            oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                            oldSurfaceView.release();
-                            oppositeSurface.release();
-                            ConferenceInfo.currentStream = streamList.get(position);
-                        }
-
-                        //进来是观众的时候
-                        if(conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
-                             if(!ConferenceInfo.changeflag){
-                                 if(streamList.get(position).isVideoOff()){
-                                     avatarView.setVisibility(View.VISIBLE);
-                                 }else {
-                                     avatarView.setVisibility(View.GONE);
-                                 }
-
-                                 //设置小图标
-                                 if(localStream.isAudioOff()){
-                                     audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                                 }else{
-                                     audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                                 }
-                                 if(localStream.isVideoOff()){
-                                     video_view.setBackgroundResource(R.drawable.call_video_off);
-                                 }else{
-                                     video_view.setBackgroundResource(R.drawable.call_video_on);
-                                 }
-
-                                 //本地的
-                                 if(streamList.get(position).isAudioOff()){
-                                     speak_show_view.setVisibility(View.VISIBLE);
-                                     speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                                 }else{
-                                     speak_show_view.setVisibility(View.VISIBLE);
-                                     speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                                 }
-                                 if(streamList.get(position).isVideoOff()){
-                                     video_show_view.setVisibility(View.VISIBLE);
-                                     video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                                 }else{
-                                     video_show_view.setVisibility(View.VISIBLE);
-                                     video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                                 }
-
-                                 if(!oldflag){
-                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
-                                 }else{
-                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
-                                 }
-                                 ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
-                             }else{
-                                 if(!oldflag){
-                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
-                                 }else{
-                                     changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
-                                 }
-                                 ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
-                             }
-                        }else{
-                            if(!ConferenceInfo.changeflag){
-                                if(streamList.get(position).isVideoOff()){
-                                    avatarView.setVisibility(View.VISIBLE);
-                                }else {
-                                    avatarView.setVisibility(View.GONE);
-                                }
-                                //设置小图标
-                                if(localStream.isAudioOff()){
-                                    audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                                }else{
-                                    audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                                }
-                                if(localStream.isVideoOff()){
-                                    video_view.setBackgroundResource(R.drawable.call_video_off);
-                                }else{
-                                    video_view.setBackgroundResource(R.drawable.call_video_on);
-                                }
-
-                                //本地的
-                                if(streamList.get(position).isAudioOff()){
-                                    speak_show_view.setVisibility(View.VISIBLE);
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                                }else{
-                                    speak_show_view.setVisibility(View.VISIBLE);
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                                }
-                                if(streamList.get(position).isVideoOff()){
-                                    video_show_view.setVisibility(View.VISIBLE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                                }else{
-                                    video_show_view.setVisibility(View.VISIBLE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                                }
-
-                               if(!oldflag){
-                                   changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
-                               }else{
-                                   changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
-                               }
-                               ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
-                            }else{
-                                avatarView.setVisibility(View.GONE);
-                                speak_show_view.setVisibility(View.GONE);
-                                video_show_view.setVisibility(View.GONE);
-                                if(!oldflag){
-                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,itemSurfaceView);
-                                }else {
-                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oppositeSurface,oldSurfaceView);
-                                }
-                                ConferenceInfo.changeflag = !ConferenceInfo.changeflag;
-                            }
-                        }
-                    }else{
-                        //已经恢复到原位了
-                        if(!ConferenceInfo.changeflag){
-                            //设置小图标
-                            if(localStream.isAudioOff()){
-                                audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                            }else{
-                                audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                            }
-                            if(localStream.isVideoOff()){
-                                video_view.setBackgroundResource(R.drawable.call_video_off);
-                            }else{
-                                video_view.setBackgroundResource(R.drawable.call_video_on);
-                            }
-
-                            //本地的
-                            if(streamList.get(position).isAudioOff()){
-                                speak_show_view.setVisibility(View.VISIBLE);
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                            }else{
-                                speak_show_view.setVisibility(View.VISIBLE);
-                                speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                            }
-                            if(streamList.get(position).isVideoOff()){
-                                video_show_view.setVisibility(View.VISIBLE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                            }else{
-                                video_show_view.setVisibility(View.VISIBLE);
-                                video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                            }
-
-                            if(!oldflag){
-                                itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                                itemSurfaceView.release();
-                                oppositeSurface.release();
-                                if(streamList.get(position).isVideoOff()){
-                                    avatarView.setVisibility(View.VISIBLE);
-                                }else {
-                                    avatarView.setVisibility(View.GONE);
-                                }
-                                ConferenceInfo.currentStream = streamList.get(position);
-                                changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
-                                ConferenceInfo.changeflag = true;
-                            }else {
-                                oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
-
-                                if(streamList.get(position).isVideoOff()){
-                                    avatarView.setVisibility(View.VISIBLE);
-                                }else {
-                                    avatarView.setVisibility(View.GONE);
-                                }
-                                ConferenceInfo.currentStream = streamList.get(position);
-                                oldSurfaceView.release();
-                                oppositeSurface.release();
-                                changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
-                                ConferenceInfo.changeflag = true;
-                            }
-
-                        }else{
-                            // 没有恢复到原位 先恢复原来的视频 ,首先更新到原来的视频
-                            if(streamList.size() > 0){
-                                oldIndex = streamList.indexOf(ConferenceInfo.currentStream);
-                                if(!oldflag){
-                                    itemSurfaceView.release();
-                                    oppositeSurface.release();
-                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                    EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(oldIndex).getStreamId(),itemSurfaceView);
-                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                }else{
-                                    oldSurfaceView.release();
-                                    oppositeSurface.release();
-                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                    EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(streamList.get(oldIndex).getStreamId(),oldSurfaceView);
-                                    EMClient.getInstance().conferenceManager().updateLocalSurfaceView(oppositeSurface);
-                                }
-                                avatarAdapter.notifyItemChanged(oldIndex , 0);
-
-                                if(streamList.get(position).isVideoOff()){
-                                    avatarView.setVisibility(View.VISIBLE);
-                                }else {
-                                    avatarView.setVisibility(View.GONE);
-                                }
-                                // ConferenceInfo.currentIndex = position;
-                                ConferenceInfo.currentStream = streamList.get(position);
-
-
-                                //设置小图标
-                                if(localStream.isAudioOff()){
-                                    audio_view.setBackgroundResource(R.drawable.call_mic_off);
-                                }else{
-                                    audio_view.setBackgroundResource(R.drawable.call_mic_on);
-                                }
-                                if(localStream.isVideoOff()){
-                                    video_view.setBackgroundResource(R.drawable.call_video_off);
-                                }else{
-                                    video_view.setBackgroundResource(R.drawable.call_video_on);
-                                }
-
-                                //本地的
-                                if(streamList.get(position).isAudioOff()){
-                                    speak_show_view.setVisibility(View.VISIBLE);
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
-                                }else{
-                                    speak_show_view.setVisibility(View.VISIBLE);
-                                    speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
-                                }
-                                if(streamList.get(position).isVideoOff()){
-                                    video_show_view.setVisibility(View.VISIBLE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_off);
-                                }else{
-                                    video_show_view.setVisibility(View.VISIBLE);
-                                    video_show_view.setBackgroundResource(R.drawable.call_video_on);
-                                }
-
-                                if(!oldflag){
-                                    oldSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                                    oldSurfaceView.release();
-                                    oppositeSurface.release();
-                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),oldSurfaceView,oppositeSurface);
-                                }else{
-                                    itemSurfaceView = view.findViewById(R.id.surface_view_listItem);
-                                    itemSurfaceView.release();
-                                    oppositeSurface.release();
-                                    changeSurface(streamList.indexOf(ConferenceInfo.currentStream),itemSurfaceView,oppositeSurface);
-                                }
-                                ConferenceInfo.changeflag = true;
-                                oldflag = !oldflag;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
-        decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
-        horizontalRecyclerView.addItemDecoration(decoration);
 
         //申请权限
         requestPermissions();
@@ -2077,6 +1623,24 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             }
         }
         checkWifiState();
+    }
+
+    /**
+     * 切换小窗口后本地  摄像头 麦克风状态
+     */
+    private void setLocalState(int index){
+        if(streamList.get(index).isAudioOff()){
+            speak_show_view.setBackgroundResource(R.drawable.call_mic_off);
+        }else{
+            speak_show_view.setBackgroundResource(R.drawable.call_mic_on);
+        }
+        if (streamList.get(index).isVideoOff()) {
+            avatarView.setVisibility(View.VISIBLE);
+            video_show_view.setBackgroundResource(R.drawable.call_video_off);
+        } else {
+            avatarView.setVisibility(View.GONE);
+            video_show_view.setBackgroundResource(R.drawable.call_video_on);
+        }
     }
 
     /**

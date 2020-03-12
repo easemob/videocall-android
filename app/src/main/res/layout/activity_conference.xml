@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:rlg="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:animateLayoutChanges="true" >
+    android:animateLayoutChanges="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -151,27 +152,20 @@
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
-            <LinearLayout
+            <HorizontalScrollView
                 android:id="@+id/surface_baseline"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/color_transparent"
-                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:scrollbars="none"
                 android:visibility="gone">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:descendantFocusability="blocksDescendants">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/horizontalRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:choiceMode="singleChoice"
-                    android:splitMotionEvents="false"
-                    android:overScrollMode="never">
-                </android.support.v7.widget.RecyclerView>
-                </RelativeLayout>
-            </LinearLayout>
+                <com.easemob.videocall.ui.compoundlayout
+                    android:id="@+id/member_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    rlg:orientation="horizontal" />
+            </HorizontalScrollView>
             <LinearLayout
                 android:id="@+id/ll_surface_baseline"
                 android:layout_width="match_parent"
