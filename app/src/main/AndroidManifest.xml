@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.src.videocall.easemobvideocall">
+    package="com.easemob.videocall">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -114,5 +114,4 @@
             android:label="@string/title_activity_room_setting"
             android:theme="@style/AppTheme" />
     </application>
-
 </manifest>

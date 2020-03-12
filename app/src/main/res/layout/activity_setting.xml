@@ -22,9 +22,14 @@
                 android:layout_marginLeft="10dip"
                 android:onClick="onSettingback"
                 android:background="@drawable/ease_mm_title_back"/>
-            <com.hyphenate.easeui.widget.EaseTitleBar
+
+            <com.easemob.videocall.ui.widget.EaseTitleBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignStart="@+id/set_back"
+                android:layout_alignLeft="@+id/set_back"
+                android:layout_marginStart="-10dp"
+                android:layout_marginLeft="-10dp"
                 app:titleBarTitle="@string/set" />
         </RelativeLayout>
     <ScrollView
@@ -87,10 +92,11 @@
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif" />
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+
+                    <com.easemob.videocall.ui.widget.EaseSwitchButton
+                        android:id="@+id/switch_video"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_video"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true" />
                 </RelativeLayout>
@@ -116,7 +122,7 @@
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif" />
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+                    <com.easemob.videocall.ui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/switch_audio"

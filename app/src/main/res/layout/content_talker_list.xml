@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_transparent">
-            <com.hyphenate.easeui.widget.EaseImageView
+            <com.easemob.videocall.ui.widget.EaseImageView
                 android:id="@+id/avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -18,7 +18,6 @@
                 android:layout_marginLeft="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ease_default_avatar" />
-
             <TextView
                 android:id="@+id/userId_view"
                 android:layout_width="225dp"
@@ -43,7 +42,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/em_video_show"
-                android:visibility="gone"/>
+                android:background="@drawable/em_video_show" />
         </RelativeLayout>
 </LinearLayout>
