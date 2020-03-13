@@ -12,19 +12,20 @@ import android.widget.TextView;
 
 import com.easemob.videocall.R;
 import com.easemob.videocall.ui.widget.AvatarImageView;
+import com.hyphenate.chat.EMClient;
 import com.jaouan.compoundlayout.RadioLayout;
 
 public class MultiMemberView extends RadioLayout {
 
 	private Context context;
-	private AvatarImageView avatarView;
-	private ImageView audioOffView;
+	private ImageView avatarView;
+	private ImageView videoingView;
 	private ImageView talkingView;
 	private TextView nameView;
 
 	private FrameLayout smallerVideoPreview;
 	private boolean isVideoOff = true;
-	private boolean isAudioOff = false;
+	private boolean isAudioOff = true;
 	private String streamId;
 
 	private String username;
@@ -36,16 +37,16 @@ public class MultiMemberView extends RadioLayout {
 	public MultiMemberView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
-		LayoutInflater.from(context).inflate(R.layout.em_widget_multi_member_view, this);
+		LayoutInflater.from(context).inflate(R.layout.activity_conference_member_view, this);
 		init();
 	}
 
 	private void init() {
-		smallerVideoPreview = findViewById(R.id.mp_call_small_preview);
-		avatarView =  findViewById(R.id.img_call_avatar);
-		audioOffView =  findViewById(R.id.icon_mute);
-		talkingView =  findViewById(R.id.icon_talking);
-		nameView =  findViewById(R.id.text_name);
+		smallerVideoPreview = findViewById(R.id.small_preview);
+		avatarView =   findViewById(R.id.call_avatar);
+		videoingView =  findViewById(R.id.icon_videoing);
+		talkingView =  findViewById(R.id.icon_speaking);
+		nameView =  findViewById(R.id.icon_text);
 	}
 
 	/**
@@ -54,10 +55,9 @@ public class MultiMemberView extends RadioLayout {
 	public void setAudioOff(boolean state) {
 		isAudioOff = state;
 		if (isAudioOff) {
-			audioOffView.setVisibility(View.VISIBLE);
-			talkingView.setVisibility(View.GONE);
+			talkingView.setBackgroundResource(R.drawable.call_mic_off);
 		} else {
-			audioOffView.setVisibility(View.GONE);
+            talkingView.setBackgroundResource(R.drawable.call_mic_on);
 		}
 	}
 
@@ -65,13 +65,13 @@ public class MultiMemberView extends RadioLayout {
 	public void setChecked(boolean checked) {
 		super.setChecked(checked);
 		if (checked) {
-			avatarView.setShowBoarder(true);
+			avatarView.setVisibility(VISIBLE);
 			smallerVideoPreview.setVisibility(View.GONE);
-		} else {
-			avatarView.setShowBoarder(false);
-//			avatarView.setBorderWidth(0);
+		}else{
+			avatarView.setVisibility(GONE);
 			if (isVideoOff()){
 				smallerVideoPreview.setVisibility(View.GONE);
+				avatarView.setVisibility(VISIBLE);
 			}else{
 				smallerVideoPreview.setVisibility(View.VISIBLE);
 			}
@@ -88,13 +88,11 @@ public class MultiMemberView extends RadioLayout {
 	public void setVideoOff(boolean state) {
 		isVideoOff = state;
 		if (isVideoOff) {
-			smallerVideoPreview.setVisibility(View.GONE);
+			videoingView.setBackgroundResource(R.drawable.call_video_off);
+			avatarView.setVisibility(VISIBLE);
 		} else {
-			if (isChecked()){
-				smallerVideoPreview.setVisibility(View.GONE);
-			}else{
-				smallerVideoPreview.setVisibility(View.VISIBLE);
-			}
+			videoingView.setBackgroundResource(R.drawable.call_video_on);
+			avatarView.setVisibility(View.GONE);
 		}
 	}
 
@@ -107,12 +105,12 @@ public class MultiMemberView extends RadioLayout {
 	 * 更新说话状态
 	 */
 	public void setTalking(boolean talking) {
-		if (talking) {
-			talkingView.setVisibility(VISIBLE);
-			audioOffView.setVisibility(View.GONE);
+		/*if (talking) {
+			//talkingView.setVisibility(VISIBLE);
+			//audioOffView.setVisibility(View.GONE);
 		} else {
 			talkingView.setVisibility(GONE);
-		}
+		}*/
 	}
 
 	/**
@@ -120,11 +118,15 @@ public class MultiMemberView extends RadioLayout {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-//		EaseUserUtils.setUserAvatar(context, username, avatarView);
-		//AvatarUtils.setAvatarContent(getContext(), username, avatarView);
-		//nameView.setText(AppHelper.getInstance().getModel().getUserExtInfo(username).getNick());
-		nameView.setText("grgwrgwr");
 
+		String fristStr = username.substring(0,5);
+		String lastStr =  username.substring(username.length()-5);
+		fristStr = fristStr+"***"+lastStr;
+		if(username  == EMClient.getInstance().getCurrentUser()){
+			nameView.setText(fristStr + " (我)");
+		}else{
+			nameView.setText(fristStr);
+		}
 	}
 
 	public String getUsername(){
@@ -135,7 +137,6 @@ public class MultiMemberView extends RadioLayout {
 	public ImageView getAvatarImageView(){
 		return avatarView;
 	}
-
 
 
 	public FrameLayout getSurfaceViewContainer() {

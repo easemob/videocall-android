@@ -14,13 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.easemob.videocall.utils.ConferenceMemberInfo;
+import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
+import com.hyphenate.chat.EMStreamParam;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.media.EMCallSurfaceView;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.DemoHelper;
 import com.easemob.videocall.R;
@@ -28,7 +32,8 @@ import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
 
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +54,7 @@ public class MainActivity extends Activity {
     final  private String regEx="[\n`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。， 、？-]";
     private Button btn_anchor;
     private Button btn_audience;
+    private ConferenceSession conferenceSession;
 
     private static final int LOGIN_MIN_CLICK_DELAY_TIME = 500;
     private static long login_lastClickTime;
@@ -88,6 +94,8 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
+
+        conferenceSession = DemoHelper.getInstance().getConferenceSession();
     }
 
     /**
@@ -311,9 +319,13 @@ public class MainActivity extends Activity {
                         ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
                         ConferenceInfo.getInstance().setConference(value);
                         EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
+                        conferenceSession.setConfrId(value.getConferenceId());
+                        conferenceSession.setConfrPwd(value.getPassword());
+                        conferenceSession.setSelfUserId(username);
+                        conferenceSession.setStreamParam(value);
+
                         Intent intent = new Intent(MainActivity.this, ConferenceActivity.class);
                         startActivity(intent);
-                        //getApplicationContext().startActivity(intent);
                         finish();
                     }
                     @Override

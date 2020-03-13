@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:orientation="vertical"
-    android:background="@color/gray_normal">
-    <com.hyphenate.media.EMCallSurfaceView
-        android:id="@+id/surface_view_listItem"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/btn_gray_pressed"
+    android:gravity="center">
+    <FrameLayout
+        android:id="@+id/small_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <ImageView
         android:id="@+id/call_avatar"
         android:layout_width="match_parent"
@@ -15,6 +16,8 @@
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         android:visibility="visible"
+        android:clickable="false"
+        android:focusable="false"
         android:src="@drawable/em_default_avatar" />
     <RelativeLayout
         android:id="@+id/show_layout"

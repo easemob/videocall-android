@@ -13,11 +13,10 @@
         android:layout_height="match_parent"
         android:id="@+id/layout_surface_container"
         >
-        <com.hyphenate.media.EMCallSurfaceView
-            android:id="@+id/opposite_surface"
+        <FrameLayout
+            android:id="@+id/large_preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"/>
+            android:layout_height="match_parent"/>
         <ImageView
             android:id="@+id/img_call_avatar"
             android:layout_width="match_parent"
@@ -149,17 +148,17 @@
         <RelativeLayout
             android:id="@+id/ll_bottom"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="160dp"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
             <HorizontalScrollView
                 android:id="@+id/surface_baseline"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:scrollbars="none"
-                android:visibility="gone">
-                <com.easemob.videocall.ui.compoundlayout
+                android:visibility="visible">
+                <com.jaouan.compoundlayout.RadioLayoutGroup
                     android:id="@+id/member_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

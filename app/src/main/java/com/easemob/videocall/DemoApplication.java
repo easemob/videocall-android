@@ -18,6 +18,7 @@ import android.content.Context;
 import android.os.Process;
 import android.support.multidex.MultiDex;
 
+import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.utils.ConferenceInfo;
 
@@ -30,6 +31,8 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 	public final String PREF_USERNAME = "username";
 
 	static public ConferenceInfo conferenceInstance;
+
+	private ConferenceSession  conferenceSession;
 
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs

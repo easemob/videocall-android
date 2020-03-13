@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.easemob.videocall.db.DemoDBManager;
+import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
 import com.hyphenate.EMMessageListener;
@@ -63,8 +64,8 @@ public class DemoHelper {
 
 	private String restUrl;
 
+	private ConferenceSession conferenceSession;
 
-    Queue<String> msgQueue = new ConcurrentLinkedQueue<>();
 
     private EMConferenceListener conferenceListener;
 
@@ -78,6 +79,13 @@ public class DemoHelper {
 			instance = new DemoHelper();
 		}
 		return instance;
+	}
+
+	public  ConferenceSession getConferenceSession(){
+		if (conferenceSession == null) {
+			conferenceSession = new ConferenceSession();
+		}
+		return conferenceSession;
 	}
 
     public void execute(Runnable runnable) {
@@ -100,6 +108,10 @@ public class DemoHelper {
         appContext = context;
 		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
+	}
+
+	public Context getContext(){
+		return appContext;
 	}
 
 
