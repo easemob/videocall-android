@@ -27,7 +27,7 @@
                 android:layout_height="35dp"
                 android:paddingLeft="10dip"
                 android:layout_marginTop="12dp"
-                android:background="#169ee5"
+                android:background="#7C7FE5"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="10dp"
                 android:text="取消"
@@ -41,7 +41,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="12dp"
-                android:background="#169ee5"
+                android:background="#7C7FE5"
                 android:text="确定"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />

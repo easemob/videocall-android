@@ -47,7 +47,7 @@ public class EaseTitleBar extends RelativeLayout{
         rightImage = (ImageView) findViewById(R.id.right_image);
         titleView = (TextView) findViewById(R.id.title);
         titleLayout = (RelativeLayout) findViewById(R.id.root);
-        
+
         parseStyle(context, attrs);
     }
     
@@ -68,8 +68,10 @@ public class EaseTitleBar extends RelativeLayout{
         
             Drawable background = ta.getDrawable(R.styleable.EaseTitleBar_titleBarBackground);
             if(null != background) {
-                titleLayout.setBackground(background);
+                titleLayout.setBackgroundColor(R.styleable.EaseTitleBar_titleBarBackground);
             }
+
+            setBackgroundColor(getResources().getColor(R.color.titleBar));
             
             ta.recycle();
         }
@@ -104,7 +106,7 @@ public class EaseTitleBar extends RelativeLayout{
     }
     
     public void setBackgroundColor(int color){
-        titleLayout.setBackgroundColor(color);
+        titleLayout.setBackgroundColor(getResources().getColor(R.color.titleBar));
     }
     
     public RelativeLayout getLeftLayout(){

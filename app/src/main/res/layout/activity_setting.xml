@@ -12,7 +12,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="#00acff"
+            android:background="#7C7FE5"
             android:gravity="center_vertical" >
             <Button
                 android:id="@+id/set_back"
@@ -22,7 +22,6 @@
                 android:layout_marginLeft="10dip"
                 android:onClick="onSettingback"
                 android:background="@drawable/ease_mm_title_back"/>
-
             <com.easemob.videocall.ui.widget.EaseTitleBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -92,7 +91,6 @@
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif" />
-
                     <com.easemob.videocall.ui.widget.EaseSwitchButton
                         android:id="@+id/switch_video"
                         android:layout_width="wrap_content"
@@ -184,7 +182,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
-                        android:textColor="#00acff"
+                        android:textColor="#7C7FE5"
                         android:text="上传日志"
                         android:textSize="13sp"
                         android:background="@color/color_transparent"

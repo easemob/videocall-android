@@ -26,6 +26,7 @@
             android:layout_alignLeft="@+id/set_back"
             android:layout_marginStart="-10dp"
             android:layout_marginLeft="-10dp"
+            android:background="#7C7FE5"
             app:titleBarTitle="@string/talker_list" />
     </RelativeLayout>
     <LinearLayout
