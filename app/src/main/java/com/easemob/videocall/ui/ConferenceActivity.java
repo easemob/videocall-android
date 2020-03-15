@@ -360,7 +360,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
 
                 //videoView.setZOrderOnTop(false);
                 videoView.setZOrderMediaOverlay(false);
-                videoView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                videoView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                         ,ViewGroup.LayoutParams.MATCH_PARENT);
                 lp.addRule(RelativeLayout.CENTER_IN_PARENT);
