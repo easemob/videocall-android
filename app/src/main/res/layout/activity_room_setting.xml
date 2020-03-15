@@ -8,12 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <RelativeLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="#00acff"
+            android:background="#7C7FE5"
             android:gravity="center_vertical" >
             <Button
                 android:id="@+id/set_back"
@@ -26,9 +25,9 @@
             <com.easemob.videocall.ui.widget.EaseTitleBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#7C7FE5"
                 app:titleBarTitle="@string/roomset" />
         </RelativeLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -164,7 +163,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:gravity="center"
-                            android:textColor="#00acff"
+                            android:textColor="#7C7FE5"
                             android:text="上传日志"
                             android:textSize="12sp"
                             android:background="@color/color_transparent"

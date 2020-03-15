@@ -308,6 +308,9 @@ public class MainActivity extends Activity {
     private void joinConference() {
         EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
+        if(conferenceSession.getConferenceProfiles() != null){
+            conferenceSession.getConferenceProfiles().clear();
+        }
         DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, new EMValueCallBack<EMConference>(){

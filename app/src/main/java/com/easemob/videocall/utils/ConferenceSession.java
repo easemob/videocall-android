@@ -14,7 +14,7 @@ public class ConferenceSession implements Parcelable {
     private String selfUserId;
     private EMConference mConferenceParam;
     private EMConversation.EMConversationType mConversationType;
-    private List<ConferenceMemberInfo> memberInfoList;
+    private List<ConferenceMemberInfo> memberInfoList = null;
     private String confrId;
     private String confrPwd;
 

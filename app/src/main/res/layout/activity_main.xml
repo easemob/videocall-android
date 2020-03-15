@@ -7,28 +7,40 @@
     >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_weight="0.8"
+        android:layout_height="0dp">
         <ImageView
             android:id="@+id/logo_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="180dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/systemlogo1" />
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="@dimen/adaptive_40dp"
-            android:layout_below="@+id/logo_image"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:text="环信多人会议"/>
+            android:src="@drawable/logo" />
+        <RelativeLayout
+            android:id="@+id/set_btn1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_alignParentRight="true"
+                android:background="@color/color_transparent"
+                android:gravity="center"
+                android:onClick="personalSetting"
+                android:text="设置"
+                android:textColor="#7C7FE5"
+                android:textSize="14sp" />
+        </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:focusableInTouchMode="true"
         android:layout_weight="1" >
         <android.support.design.widget.TextInputLayout
@@ -54,14 +66,14 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-                 android:id="@+id/rl_roompassword"
-                 android:layout_width="match_parent"
-                 android:layout_height="54dp"
-                 android:layout_below="@id/rl_roomname"
-                 android:layout_marginLeft="28dp"
-                 android:layout_marginRight="28dp"
-                 android:focusableInTouchMode="true"
-                 android:layout_marginTop="20dp">
+            android:id="@+id/rl_roompassword"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_below="@id/rl_roomname"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:focusableInTouchMode="true"
+            android:layout_marginTop="20dp">
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
@@ -104,39 +116,18 @@
                 android:id="@+id/btn_audience"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="10dip"
                 android:background="@drawable/em_button_add_bg"
                 android:gravity="center"
-                android:layout_gravity="center"
                 android:onClick="addconference_audience"
-                android:paddingBottom="7dp"
                 android:paddingTop="7dp"
+                android:paddingBottom="7dp"
                 android:text="@string/add_room_audience"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/set_btn"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="50dp"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="0dp"
-                android:background="@color/color_transparent"
-                android:gravity="center"
-                android:onClick="personalSetting"
-                android:text="设置"
-                android:textColor="#00AFEF"
-                android:textSize="14sp" />
-        </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

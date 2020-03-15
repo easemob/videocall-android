@@ -38,7 +38,7 @@ public class EaseTitleBar extends RelativeLayout{
         super(context);
         init(context, null);
     }
-    
+
     private void init(Context context, AttributeSet attrs){
         LayoutInflater.from(context).inflate(R.layout.ease_widget_title_bar, this);
         leftLayout = (RelativeLayout) findViewById(R.id.left_layout);
@@ -47,16 +47,16 @@ public class EaseTitleBar extends RelativeLayout{
         rightImage = (ImageView) findViewById(R.id.right_image);
         titleView = (TextView) findViewById(R.id.title);
         titleLayout = (RelativeLayout) findViewById(R.id.root);
-        
+
         parseStyle(context, attrs);
     }
-    
+
     private void parseStyle(Context context, AttributeSet attrs){
         if(attrs != null){
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseTitleBar);
             String title = ta.getString(R.styleable.EaseTitleBar_titleBarTitle);
             titleView.setText(title);
-            
+
             Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
             if (null != leftDrawable) {
                 leftImage.setImageDrawable(leftDrawable);
@@ -65,52 +65,54 @@ public class EaseTitleBar extends RelativeLayout{
             if (null != rightDrawable) {
                 rightImage.setImageDrawable(rightDrawable);
             }
-        
+
             Drawable background = ta.getDrawable(R.styleable.EaseTitleBar_titleBarBackground);
             if(null != background) {
-                titleLayout.setBackground(background);
+                titleLayout.setBackgroundColor(R.styleable.EaseTitleBar_titleBarBackground);
             }
-            
+
+            //setBackgroundColor(getResources().getColor(R.color.titleBar));
+
             ta.recycle();
         }
     }
-    
+
     public void setLeftImageResource(int resId) {
         leftImage.setImageResource(resId);
     }
-    
+
     public void setRightImageResource(int resId) {
         rightImage.setImageResource(resId);
     }
-    
+
     public void setLeftLayoutClickListener(OnClickListener listener){
         leftLayout.setOnClickListener(listener);
     }
-    
+
     public void setRightLayoutClickListener(OnClickListener listener){
         rightLayout.setOnClickListener(listener);
     }
-    
+
     public void setLeftLayoutVisibility(int visibility){
         leftLayout.setVisibility(visibility);
     }
-    
+
     public void setRightLayoutVisibility(int visibility){
         rightLayout.setVisibility(visibility);
     }
-    
+
     public void setTitle(String title){
         titleView.setText(title);
     }
-    
+
     public void setBackgroundColor(int color){
-        titleLayout.setBackgroundColor(color);
+        titleLayout.setBackgroundColor(getResources().getColor(R.color.titleBar));
     }
-    
+
     public RelativeLayout getLeftLayout(){
         return leftLayout;
     }
-    
+
     public RelativeLayout getRightLayout(){
         return rightLayout;
     }

@@ -233,10 +233,8 @@ public class DemoHelper {
 						EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
 						EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
 				if(!ConferenceInfo.Initflag){
-					if(ConferenceInfo.getInstance().getConference().getConferenceRole() !=EMConferenceManager.EMConferenceRole.Admin){
-						if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
+					if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
 							ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
-						}
 					}
 				}
 			}
