@@ -57,14 +57,14 @@ public class MainActivity extends Activity {
     private ConferenceSession conferenceSession;
 
     private static final int LOGIN_MIN_CLICK_DELAY_TIME = 1000;
-    private static long login_lastClickTime;
+    private static long login_lastClickTime = 0;
 
     protected boolean isTimeEnabled() {
         long currentTimeMillis = System.currentTimeMillis();
         if ((currentTimeMillis - login_lastClickTime) > LOGIN_MIN_CLICK_DELAY_TIME) {
-            login_lastClickTime = currentTimeMillis;
             return true;
         }
+        login_lastClickTime = currentTimeMillis;
         return false;
     }
 
@@ -103,9 +103,7 @@ public class MainActivity extends Activity {
      */
     public void addconference_anchor(View view){
         //防止点击太快重复进入房间
-        if(!isTimeEnabled()){
-            return;
-        }
+        setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
         if(currentRoomname.length() == 0 && currentPassword.length() == 0){
@@ -157,9 +155,7 @@ public class MainActivity extends Activity {
      */
     public void addconference_audience(View view){
         //防止点击太快重复进入房间
-        if(!isTimeEnabled()){
-            return;
-        }
+        setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
 
@@ -259,8 +255,10 @@ public class MainActivity extends Activity {
                             }else{
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
                             }
+                            setBtnEnable(true);
                         }
                     });
+
                 }
             }
         }).start();
@@ -296,6 +294,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
                                 Toast.LENGTH_SHORT).show();
+                        setBtnEnable(true);
                     }
                 });
             }
@@ -337,11 +336,11 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                setBtnEnable(true);
                                 if(error == CALL_TALKER_ISFULL) {
                                     takerFullDialogDisplay();
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Join conference failed " + error + " " + errorMsg, Toast.LENGTH_SHORT).show();
-                                    return;
                                 }
                             }
                         });
@@ -396,5 +395,13 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this,
                 SettingActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * 禁止进入房间按钮操作
+     */
+    private void setBtnEnable(boolean enable){
+        btn_anchor.setEnabled(enable);
+        btn_audience.setEnabled(enable);
     }
 }
