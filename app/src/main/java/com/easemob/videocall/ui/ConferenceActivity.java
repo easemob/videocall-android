@@ -453,10 +453,18 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             lastSelectedId = getViewIdByStreamId(info.getUserId());
             imMembers.add(info.getUserId());
 
+            videoView.setZOrderOnTop(false);
+            videoView.setZOrderMediaOverlay(false);
             videoView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
             EMClient.getInstance().conferenceManager().setLocalSurfaceView(videoView);
-            ViewGroup.MarginLayoutParams params1 = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            largeSurfacePreview.addView(videoView,params1);
+            //ViewGroup.MarginLayoutParams params1 = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            //largeSurfacePreview.addView(videoView,params1);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                    ,ViewGroup.LayoutParams.MATCH_PARENT);
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+            largeSurfacePreview.addView(videoView,lp);
+
+
             memberView.getAvatarImageView().setVisibility(View.VISIBLE);
 
             //打开小窗口的 麦克风 摄像头小图标
@@ -494,6 +502,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
             bottomContainer11.setVisibility(View.VISIBLE);
             bottomContainer.setVisibility(View.VISIBLE);
             bottomContainerView.setVisibility(View.VISIBLE);
+            bottomContainer11.bringToFront();
         }
     }
 
@@ -549,7 +558,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         memberView.setAudioOff(info.isAudioOff());
         memberView.setVideoOff(info.isVideoOff());
         EMCallSurfaceView videoView = info.getVideoView();
-
         if (memberView.isChecked()){
                 if (info.isVideoOff()){
                     avatarView.setVisibility(View.VISIBLE);
@@ -611,7 +619,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     private void setBtn_micAndBtn_vedio(EMConferenceManager.EMConferenceRole role){
         if(role == EMConferenceManager.EMConferenceRole.Audience){
             //设置麦克风和摄像头关闭  按钮不可操作
-
             EMClient.getInstance().conferenceManager().closeVideoTransfer();
             EMClient.getInstance().conferenceManager().closeVoiceTransfer();
 
@@ -699,6 +706,8 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
 
         avatarView.setVisibility(View.GONE);
         EMCallSurfaceView localView = new EMCallSurfaceView(ConferenceActivity.this);
+        localView.setZOrderOnTop(false);
+        localView.setZOrderMediaOverlay(false);
         localuserProfile = new ConferenceMemberInfo();
         localuserProfile.setUserId(EMClient.getInstance().getCurrentUser());
         localuserProfile.setAudioOff(localStream.isAudioOff());
@@ -1012,7 +1021,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
      * 申请连麦 下麦
      */
     private void requesteven_wheat() {
-        if (btnState == STATE_AUDIENCE) { // 当前按钮状态是观众，需要变成主播
+        if(btnState == STATE_AUDIENCE) { // 当前按钮状态是观众，需要变成主播
             if (conference.getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience) { // 发送消息，申请上麦
                 EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser(),
                                               ConferenceAttributeOption.REQUEST_TOBE_SPEAKER, new  EMValueCallBack<Void>(){
@@ -1234,6 +1243,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         userProfile.setVideoOff(stream.isVideoOff());
 
                         EMCallSurfaceView videoView = new EMCallSurfaceView(DemoHelper.getInstance().getContext());
+                        videoView.setZOrderMediaOverlay(true);
                         videoView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
                         userProfile.setVideoView(videoView);
                         userProfiles.add(userProfile);
@@ -1624,13 +1634,15 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         final Button btn_cancel = dialogView.findViewById(R.id.choose_cancel);
         final RecyclerView recyclerView = dialogView.findViewById(R.id.chose_recyclerView);
 
+//        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(dialogView.getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
         ChooseTalkerItemAdapter adapter = new ChooseTalkerItemAdapter();
-        adapter.setData(streamList);
         recyclerView.setAdapter(adapter);
+        adapter.setData(streamList);
+
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -1639,7 +1651,6 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 ChooseTalkerItemAdapter.chooseIndex = position;
                 choose_userId = streamList.get(position).getUsername();
                 EMLog.i(TAG, "takerFullDialogDisplay choose userId: " + choose_userId);
-                adapter.notifyDataSetChanged();
                 adapter.updataData();
             }
         });
@@ -1672,12 +1683,20 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                             @Override
                                             public void onError(int error, String errorMsg) {
                                                 EMLog.i(TAG, "takerListChooseDispaly ok choose to online userId " + usreId +"  error: " + error + " - " + errorMsg);
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Toast.makeText(getApplicationContext(), "申请上麦失败!" + error + "  " + errorMsg, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         });
                             }
                             @Override
                             public void onError(int error, String errorMsg) {
                                 EMLog.i(TAG, "takerListChooseDispaly ok choose to offline userId " + choose_userId +" failed, error: " + error + " - " + errorMsg);
+
+
                             }
                         });
                 dialog2.dismiss();
@@ -1800,10 +1819,40 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
      * 定时更新通话时间
      * @param time
      */
+    int count = 0;
     private void updateConferenceTime(String time) {
         meeting_duration.setText(time);
         checkWifiState();
+        if(count == 0){
+            updataSmall();
+        }
+        count++;
     }
+
+    private void updataSmall(){
+        //第二个主播进入
+        if((ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience
+                && conferenceSession.getConferenceProfiles().size() >= 2) ||
+                (ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience
+                        && conferenceSession.getConferenceProfiles().size() > 0) ){
+            EMCallSurfaceView  videoview = (EMCallSurfaceView) largeSurfacePreview.getChildAt(0);
+            //videoview.setZOrderMediaOverlay(false);
+            //videoview.setZOrderOnTop(false);
+
+
+            //显示下边的x小窗口列表
+            topContainer.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(rootContainer.getWidth(), dip2px(getApplicationContext(), 160));
+            params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            bottomContainer11.setLayoutParams(params2);
+            bottomContainer11.setVisibility(View.VISIBLE);
+            bottomContainer.setVisibility(View.VISIBLE);
+            bottomContainerView.setVisibility(View.VISIBLE);
+            bottomContainer11.bringToFront();
+        }
+    }
+
+
 
 
     private class TimeHandler extends Handler {

@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
     private Button btn_audience;
     private ConferenceSession conferenceSession;
 
-    private static final int LOGIN_MIN_CLICK_DELAY_TIME = 500;
+    private static final int LOGIN_MIN_CLICK_DELAY_TIME = 1000;
     private static long login_lastClickTime;
 
     protected boolean isTimeEnabled() {

@@ -75,11 +75,12 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isTimeEnabled()){
+                /*if (isTimeEnabled()){
                     itemClickAction(v, position);
                 }else{
                     Toast.makeText(getApplicationContext(), "请不要点击太快!", Toast.LENGTH_SHORT).show();
-                }
+                }*/
+                itemClickAction(v, position);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

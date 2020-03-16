@@ -8,7 +8,7 @@
             <solid  android:color="#7C7FE5" />
             <!-- 设置按钮的四个角为弧形 -->
             <!-- android:radius 弧形的半径也就是弧形的弧度 -->
-            <corners android:radius="16dip" />
+            <corners android:radius="20dip" />
         </shape>
     </item>
 
@@ -17,7 +17,7 @@
             <solid  android:color="#7C7FE5" />
             <!-- 设置按钮的四个角为弧形 -->
             <!-- android:radius 弧形的半径也就是弧形的弧度 -->
-            <corners android:radius="16dip" />
+            <corners android:radius="20dip" />
         </shape>
     </item>
 </selector>
