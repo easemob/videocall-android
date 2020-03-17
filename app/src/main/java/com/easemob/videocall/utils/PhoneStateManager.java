@@ -13,7 +13,6 @@ public class PhoneStateManager {
     }
 
     private static final String TAG = "PhoneStateManager";
-
     private static PhoneStateManager INSTANCE = null;
 
     private TelephonyManager telephonyManager;

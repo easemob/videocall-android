@@ -2,13 +2,9 @@ package com.easemob.videocall.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,21 +19,21 @@ import com.hyphenate.util.EMLog;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 
-
 import com.easemob.videocall.adapter.TalkerItemAdapter;
-
 import java.util.Collections;
 import java.util.List;
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 public class TalkerListActivity extends Activity {
 
     private final String TAG = this.getClass().getSimpleName();
-
     private RecyclerView recyclerView;
     private TextView  attendance_count_view;
-    private TextView  attendance_hot_view;
-    private List<String> list;
-    private EMConference currentConference;
 
     private List<EMConferenceStream> streamList;
 
@@ -147,11 +143,8 @@ public class TalkerListActivity extends Activity {
             x2 = event.getX();
             y2 = event.getY();
             if(y1 - y2 > 50) {
-                //Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
             } else if(y2 - y1 > 50) {
-                //Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
             } else if(x1 - x2 > 50) {
-               // Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
             } else if(x2 - x1 > 50) {
                 if(streamList != null) {
                     if (streamList.contains(ConferenceInfo.getInstance().getLocalStream())) {

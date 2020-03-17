@@ -26,12 +26,13 @@
             android:layout_alignLeft="@+id/set_back"
             android:layout_marginStart="-10dp"
             android:layout_marginLeft="-10dp"
+            android:background="#7C7FE5"
             app:titleBarTitle="@string/talker_list" />
     </RelativeLayout>
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
         <RelativeLayout
             android:id="@+id/Layout_list"
             android:layout_width="match_parent"

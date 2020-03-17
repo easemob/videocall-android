@@ -17,25 +17,25 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Process;
 import android.support.multidex.MultiDex;
-
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.utils.ConferenceInfo;
 
 
-public class DemoApplication extends Application implements Thread.UncaughtExceptionHandler {
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
+
+public class DemoApplication extends Application implements Thread.UncaughtExceptionHandler {
 	public static Context applicationContext;
 	private static DemoApplication instance;
-	// login user name
-	public final String PREF_USERNAME = "username";
-
 	static public ConferenceInfo conferenceInstance;
 
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs
 	 */
-	public static String currentUserNick = "";
-
 	@Override
 	public void onCreate() {
 		MultiDex.install(this);

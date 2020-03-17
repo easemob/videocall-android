@@ -6,10 +6,6 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,6 +29,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.superrtc.mediamanager.EMediaManager.getContext;
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 public class SettingActivity extends Activity implements View.OnClickListener{
 
@@ -115,17 +117,6 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                 spinnerVideoResolution.setSelection(selection);
             }
 
-            /**
-             * Spinner onItemSelected is obscure
-             * setSelection will trigger onItemSelected
-             * if spinner.setSelection(newValue)'s newValue == spinner.getSelectionPosition(), it will not trigger onItemSelected
-             *
-             * The target we want to archive are:
-             * 1. select one spinner, clear another
-             * 2. set common text
-             * 3. if another spinner is already at position 0, ignore it
-             * 4. Use disableOnce AtomicBoolean to record whether is spinner.setSelected(x) triggered action, which should be ignored
-             */
             AtomicBoolean disableOnce = new AtomicBoolean(false);
             spinnerVideoResolution.setTag(disableOnce);
             spinnerVideoResolution.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

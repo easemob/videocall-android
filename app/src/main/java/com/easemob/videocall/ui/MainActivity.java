@@ -3,7 +3,6 @@ package com.easemob.videocall.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.EMValueCallBack;
@@ -26,14 +25,18 @@ import com.easemob.videocall.DemoHelper;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
-
-
-
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
+
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 
 public class MainActivity extends Activity {
@@ -49,6 +52,8 @@ public class MainActivity extends Activity {
     final  private String regEx="[\n`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。， 、？-]";
     private Button btn_anchor;
     private Button btn_audience;
+    private ConferenceSession conferenceSession;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +71,6 @@ public class MainActivity extends Activity {
         if(ConferenceInfo.getInstance().getPassword() != null){
             passwordEditText.setText(ConferenceInfo.getInstance().getPassword());
         }
-
         EditText editText= (EditText)findViewById(R.id.roomname);
         editText.clearFocus();
         editText.setSelected(false);
@@ -75,12 +79,16 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
+
+        conferenceSession = DemoHelper.getInstance().getConferenceSession();
     }
 
     /**
     主播加入会议房间
      */
     public void addconference_anchor(View view){
+        //防止点击太快重复进入房间
+        setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
         if(currentRoomname.length() == 0 && currentPassword.length() == 0){
@@ -124,13 +132,14 @@ public class MainActivity extends Activity {
             password = PreferenceManager.getInstance().getCurrentUserPassWord();
             login(view);
         }
-        //register(view);
     }
 
     /**
     观众加入会议房间
      */
     public void addconference_audience(View view){
+        //防止点击太快重复进入房间
+        setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
 
@@ -174,7 +183,6 @@ public class MainActivity extends Activity {
             password = PreferenceManager.getInstance().getCurrentUserPassWord();
             login(view);
         }
-        //register(view);
     }
 
 
@@ -184,7 +192,6 @@ public class MainActivity extends Activity {
      * @return
      */
     public static boolean isLegalChars(String chars){
-        //String regex = "[\u4e00-\u9fa5\\w]+";
         String regex ="^[\\u4e00-\\u9fa5A-Za-z0-9_-]*$";
         boolean result = chars.matches(regex);
         return result;
@@ -230,8 +237,10 @@ public class MainActivity extends Activity {
                             }else{
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
                             }
+                            setBtnEnable(true);
                         }
                     });
+
                 }
             }
         }).start();
@@ -241,7 +250,6 @@ public class MainActivity extends Activity {
     登录IM账号
      */
     public void login(View view) {
-        // call login method
         Log.d(TAG, "EMClient.getInstance().login");
         EMClient.getInstance().login(username, password, new EMCallBack() {
             @Override
@@ -267,6 +275,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
                                 Toast.LENGTH_SHORT).show();
+                        setBtnEnable(true);
                     }
                 });
             }
@@ -279,6 +288,9 @@ public class MainActivity extends Activity {
     private void joinConference() {
         EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
+        if(conferenceSession.getConferenceProfiles() != null){
+            conferenceSession.getConferenceProfiles().clear();
+        }
         DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, new EMValueCallBack<EMConference>(){
@@ -290,9 +302,13 @@ public class MainActivity extends Activity {
                         ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
                         ConferenceInfo.getInstance().setConference(value);
                         EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
+                        conferenceSession.setConfrId(value.getConferenceId());
+                        conferenceSession.setConfrPwd(value.getPassword());
+                        conferenceSession.setSelfUserId(username);
+                        conferenceSession.setStreamParam(value);
+
                         Intent intent = new Intent(MainActivity.this, ConferenceActivity.class);
                         startActivity(intent);
-                        //getApplicationContext().startActivity(intent);
                         finish();
                     }
                     @Override
@@ -301,11 +317,11 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                setBtnEnable(true);
                                 if(error == CALL_TALKER_ISFULL) {
                                     takerFullDialogDisplay();
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Join conference failed " + error + " " + errorMsg, Toast.LENGTH_SHORT).show();
-                                    return;
                                 }
                             }
                         });
@@ -360,5 +376,13 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this,
                 SettingActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * 禁止进入房间按钮操作
+     */
+    private void setBtnEnable(boolean enable){
+        btn_anchor.setEnabled(enable);
+        btn_audience.setEnabled(enable);
     }
 }

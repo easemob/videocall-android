@@ -1,27 +1,21 @@
 package com.easemob.videocall.adapter;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
-
 import com.easemob.videocall.R;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.media.EMCallSurfaceView;
-import com.superrtc.sdk.VideoView;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceStream> {
-
     public static int chooseIndex = -1;
     public ChooseTalkerItemAdapter(){
 

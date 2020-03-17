@@ -20,7 +20,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
             android:onClick="onChoosTalkerCancel"
-            android:background="#169ee5"
+            android:background="#7C7FE5"
             android:text="取消"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
-            android:background="#169ee5"
+            android:background="#7C7FE5"
             android:text="确定"
             android:textColor="@android:color/white"
             android:onClick="onChoosTalkerOK" />
@@ -55,6 +55,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
+                android:scrollbarSize="3dp"
+                android:scrollbarThumbVertical="@color/titleBar"
+                android:scrollbars="vertical"
                 android:layout_marginTop="0dp"></android.support.v7.widget.RecyclerView>
         </RelativeLayout>
     </LinearLayout>

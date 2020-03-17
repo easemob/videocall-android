@@ -5,15 +5,14 @@ import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.util.EasyUtils;
-
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 public class ConferenceInfo {
     private String roomname = null;
@@ -24,14 +23,6 @@ public class ConferenceInfo {
     private List<EMConferenceStream> streamList = new ArrayList<>();
     private EMConferenceStream localStream = new EMConferenceStream();
     private EMConferenceManager.EMConferenceRole conferenceRole;
-
-    public static int currentIndex = -1;
-    public static EMConferenceStream currentStream = null;
-    public static boolean changeflag = false;
-    public static boolean removeflag = false;
-
-    public static List<String> subscribestream = new ArrayList<>();
-    private List<EMConferenceStream> streamListAddLocal = new ArrayList<>();
 
     public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
@@ -52,11 +43,6 @@ public class ConferenceInfo {
     public void Init(){
         Initflag = false;
         streamList.clear();
-        subscribestream.clear();
-        currentIndex = -1;
-        currentStream = null;
-        changeflag = false;
-        removeflag = false;
     }
 
     public EMConferenceManager.EMConferenceRole getCurrentrole(){
@@ -73,11 +59,6 @@ public class ConferenceInfo {
 
     public List<EMConferenceStream> getConferenceStreamList(){
         return  streamList;
-    }
-
-    private List<EMConferenceStream> getConferenceStreamListAddLocal()
-    {
-        return streamListAddLocal;
     }
 
     public String getRoomname() {
