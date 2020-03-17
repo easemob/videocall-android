@@ -1,73 +1,41 @@
 package com.easemob.videocall;
 
 import android.content.Context;
-
-import android.content.Intent;
 import android.util.Log;
 
-import com.easemob.videocall.db.DemoDBManager;
+import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
-import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMOptions;
-
-
 import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.util.EMLog;
-
-import com.easemob.videocall.ui.MainActivity;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
 
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
+
 public class DemoHelper {
-    /**
-     * data sync listener
-     */
-    public interface DataSyncListener {
-        /**
-         * sync complete
-         * @param success true：data sync successful，false: failed to sync data
-         */
-        void onSyncComplete(boolean success);
-    }
 
     protected static final String TAG = "DemoHelper";
 
-    /**
-     * EMEventListener
-     */
-    protected EMMessageListener messageListener = null;
-
 	private static DemoHelper instance = null;
-
-	private String username;
-
     private ExecutorService executor;
-
-    protected android.os.Handler handler;
-
-	private final String KEY_REST_URL = "rest_url";
-
 	private Context appContext;
-
-	private String restUrl;
-
-
-    Queue<String> msgQueue = new ConcurrentLinkedQueue<>();
-
+	private ConferenceSession conferenceSession;
     private EMConferenceListener conferenceListener;
-
 
 	private DemoHelper() {
         executor = Executors.newCachedThreadPool();
@@ -80,9 +48,12 @@ public class DemoHelper {
 		return instance;
 	}
 
-    public void execute(Runnable runnable) {
-        executor.execute(runnable);
-    }
+	public  ConferenceSession getConferenceSession(){
+		if (conferenceSession == null) {
+			conferenceSession = new ConferenceSession();
+		}
+		return conferenceSession;
+	}
 
 	/**
 	 * init helper
@@ -102,6 +73,10 @@ public class DemoHelper {
 		PreferenceManager.init(context);
 	}
 
+	public Context getContext(){
+		return appContext;
+	}
+
 
     private EMOptions initChatOptions(Context context){
         Log.d(TAG, "init HuanXin Options");
@@ -117,15 +92,6 @@ public class DemoHelper {
         return options;
     }
 
-
-	/**
-	 * if ever logged in
-	 * 
-	 * @return
-	 */
-	public boolean isLoggedIn() {
-		return EMClient.getInstance().isLoggedInBefore();
-	}
 
 	/**
 	 * logout
@@ -161,35 +127,6 @@ public class DemoHelper {
 		});
 	}
 
-    
-    /**
-     * set current username
-     * @param username
-     */
-    public void setCurrentUserName(String username){
-    	this.username = username;
-    	//demoModel.setCurrentUserName(username);
-    }
-    
-    /**
-     * get current user's id
-     */
-    public String getCurrentUsernName(){
-    	if(username == null){
-    		//username = demoModel.getCurrentUsernName();
-    	}
-    	return username;
-    }
-
-    protected void onUserException(String exception){
-        EMLog.e(TAG, "onUserException: " + exception);
-        Intent intent = new Intent(appContext, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        intent.putExtra(exception, true);
-        appContext.startActivity(intent);
-    }
-
 
 	/**
 	 * set global listener
@@ -200,8 +137,6 @@ public class DemoHelper {
             EMClient.getInstance().conferenceManager().removeConferenceListener(conferenceListener);
             conferenceListener = null;
         }
-
-
         conferenceListener = new EMConferenceListener() {
 			@Override public void onMemberJoined(EMConferenceMember member) {
 				EMLog.i(TAG, String.format("member joined username: %s, member: %d", member.memberName,
@@ -220,14 +155,9 @@ public class DemoHelper {
 				EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
 						EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
 						EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
-				EMLog.i(TAG, String.format("Conference stream subscribable streamListSize start: %s",ConferenceInfo.getInstance().getConferenceStreamList().size()));
 				if(!ConferenceInfo.Initflag){
-					if(ConferenceInfo.getInstance().getConference().getConferenceRole() !=EMConferenceManager.EMConferenceRole.Admin){
-						if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
-							EMLog.i(TAG, String.format("Conference stream subscribable stream  streamId: %s",stream.getUsername()));
+					if(!ConferenceInfo.getInstance().getConferenceStreamList().contains(stream)){
 							ConferenceInfo.getInstance().getConferenceStreamList().add(stream);
-							EMLog.i(TAG, String.format("Conference stream subscribable streamListSize: %s",ConferenceInfo.getInstance().getConferenceStreamList().size()));
-						}
 					}
 				}
 			}
@@ -287,7 +217,6 @@ public class DemoHelper {
 		EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
 	}
-
 	public void removeGlobalListeners(){
 		EMClient.getInstance().conferenceManager().removeConferenceListener(conferenceListener);
         conferenceListener = null;

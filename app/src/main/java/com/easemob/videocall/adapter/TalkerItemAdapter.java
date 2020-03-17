@@ -9,14 +9,19 @@ import android.widget.TextView;
 
 import com.easemob.videocall.R;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceStream;
-import com.easemob.videocall.ui.widget.EaseImageView;
 import com.easemob.videocall.utils.ConferenceInfo;
 
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 
 public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceStream> {

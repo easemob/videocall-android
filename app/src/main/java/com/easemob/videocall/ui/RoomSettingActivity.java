@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,15 +15,19 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.util.EMLog;
-import com.hyphenate.util.EasyUtils;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
-
-
 import java.io.File;
 import java.util.ArrayList;
 
 import static com.superrtc.mediamanager.EMediaManager.getContext;
+
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
 
 public class RoomSettingActivity extends Activity implements View.OnClickListener {
 

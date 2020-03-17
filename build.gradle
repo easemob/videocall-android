@@ -28,6 +28,8 @@ configurations.all {
 }
 allprojects {
     repositories {
+        maven { url 'http://developer.huawei.com/repo/' }
+        maven { url 'https://jitpack.io' }
         google()
         jcenter()
     }

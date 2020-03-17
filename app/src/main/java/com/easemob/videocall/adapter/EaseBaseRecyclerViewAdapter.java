@@ -5,23 +5,20 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Toast;
+
 
 import com.easemob.videocall.R;
-import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.media.EMCallSurfaceView;
-
-
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.superrtc.ContextUtils.getApplicationContext;
+/**
+ * author lijian
+ * email: 7Allenlee@easemob.com
+ * date: 03/15/2020
+ */
+
 
 /**
  * 作为RecyclerView Adapter的基类，有默认空白布局
@@ -34,22 +31,8 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     private static final int VIEW_TYPE_ITEM = 0;
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
-    private OnItemGetSurfaceView  mOnItemGetSurfaceView;
     public Context mContext;
     public List<T> mData;
-
-
-    private static final int MIN_CLICK_DELAY_TIME = 500;
-    private static long lastClickTime;
-
-    protected boolean isTimeEnabled() {
-        long currentTimeMillis = System.currentTimeMillis();
-        if ((currentTimeMillis - lastClickTime) > MIN_CLICK_DELAY_TIME) {
-            lastClickTime = currentTimeMillis;
-            return true;
-        }
-        return false;
-    }
 
 
     @NonNull
@@ -75,11 +58,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isTimeEnabled()){
-                    itemClickAction(v, position);
-                }else{
-                    Toast.makeText(getApplicationContext(), "请不要点击太快!", Toast.LENGTH_SHORT).show();
-                }
+                itemClickAction(v, position);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -105,7 +84,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     @Override
     public int getItemViewType(int position) {
         return (mData == null || mData.isEmpty()) ? VIEW_TYPE_EMPTY : VIEW_TYPE_ITEM;
-        //return position;
     }
 
 
@@ -188,8 +166,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             }
             this.mData.add(item);
         }
-        //notifyDataSetChanged();
-        //notifyItemChanged(this.mData.size());
         notifyItemInserted(this.mData.size());
         notifyItemRangeChanged(this.mData.size()-1, this.mData.size());
     }
