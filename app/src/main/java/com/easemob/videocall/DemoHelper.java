@@ -16,6 +16,8 @@ import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.superrtc.mediamanager.EMediaEntities;
+import com.superrtc.mediamanager.EMediaSession;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -64,9 +66,9 @@ public class DemoHelper {
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
 
-		/*options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
+		options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
 		options.setIMServer("39.107.54.56");
-		options.setImPort(6717);*/
+		options.setImPort(6717);
 
         appContext = context;
 		EMClient.getInstance().init(context, options);
@@ -210,6 +212,24 @@ public class DemoHelper {
 
 			@Override
 			public void onAttributesUpdated(EMConferenceAttribute[] attributes) {
+
+			}
+			@Override
+			public void onAdminAdd(String memName){
+
+			}
+			@Override
+			public void onAdminRemove(String memName){
+
+			}
+
+			@Override
+            public  void onPubStreamFailed(int error, String message){
+
+			}
+
+			@Override
+            public  void onUpdateStreamFailed(int error, String message){
 
 			}
 		};

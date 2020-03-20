@@ -1124,6 +1124,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                EMLog.i(TAG,"onMemberJoined  nickName:" + member.nickName + " " + member.extension);
             }
         });
     }
@@ -1133,6 +1134,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                EMLog.i(TAG,"onMemberJoined  nickName:" + member.nickName + " " + member.extension);
                 if (EMClient.getInstance().getCurrentUser().equals(member.memberName)) {
                     setRequestBtnState(STATE_AUDIENCE);
                 }
@@ -1238,8 +1240,17 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
         });
     }
 
+    /**
+     * 当前用户被踢出会议回调
+     * @param error
+     * @param message
+     */
     @Override
-    public void onPassiveLeave(final int error, final String message) { // 当前用户被踢出会议
+    public void onPassiveLeave(final int error, final String message){
+        EMLog.i(TAG,"onPassiveLeave  error :" + error + " message:" + message);
+
+        //被踢后马上退出会议
+        exitConference();
     }
 
     @Override
@@ -1316,6 +1327,44 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
     @Override
     public void onReceiveInvite(final String confId, String password, String extension) { }
 
+    /**
+     * 管理员增加回调
+     * @param memName
+     */
+    @Override
+    public void onAdminAdd(String memName){
+        EMLog.i(TAG,"onAdminAdd :" + memName);
+    }
+
+    /**
+     *管理员移除回调
+     * @param memName
+     */
+    @Override
+    public void onAdminRemove(String memName){
+        EMLog.i(TAG,"onAdminRemove :" + memName);
+    }
+
+    /**
+     * Pub流失败回调
+     * @param error
+     * @param message
+     */
+    @Override
+    public  void onPubStreamFailed(int error, String message){
+        EMLog.i(TAG,"onPubStreamFailed  error :" + error + " message:" + message);
+    }
+
+    /**
+     * Update流失败回调
+     * @param error
+     * @param message
+     */
+    @Override
+    public  void onUpdateStreamFailed(int error, String message){
+        EMLog.i(TAG,"onUpdateStreamFailed  error :" + error + " message:" + message);
+    }
+
 
     @Override
     public void onRoleChanged(EMConferenceManager.EMConferenceRole role) {
@@ -1340,9 +1389,15 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     setRequestBtnState(STATE_AUDIENCE);
                 }
             });
-        }else if(role == EMConferenceManager.EMConferenceRole.Admin){  //主播变更为管理员
-            //currentRole = role;
-            EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser(),
+        }else if(role == EMConferenceManager.EMConferenceRole.Admin) {  //主播变更为管理员
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "您已变更为管理员!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            /*EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser(),
                     ConferenceAttributeOption.REQUEST_BECOME_ADMIN, new  EMValueCallBack<Void>(){
                         @Override
                         public void onSuccess(Void value) {
@@ -1358,7 +1413,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                         public void onError(int error, String errorMsg) {
                             EMLog.i(TAG, "request_tobe_speaker failed: error=" + error + ", msg=" + errorMsg);
                         }
-                    });
+                    });*/
         }
     }
 
@@ -1404,7 +1459,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                     EMLog.i(TAG, " onAttributesUpdated： talker request_tobe_audience");
                     String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), usreId);
                     EMClient.getInstance().conferenceManager().grantRole(conference.getConferenceId()
-                            , new EMConferenceMember(memName, null, null)
+                            , new EMConferenceMember(memName, null, null, null)
                             , EMConferenceManager.EMConferenceRole.Audience, new EMValueCallBack<String>() {
                                 @Override
                                 public void onSuccess(String value) {
@@ -1416,7 +1471,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                     EMLog.i(TAG, "onAttributesUpdated  request_tobe_audience failed, error: " + error + " - " + errorMsg);
                                 }
                             });
-                } else if (option.equals(ConferenceAttributeOption.REQUEST_BECOME_ADMIN)) { //变更管理员通知
+                } /*else if (option.equals(ConferenceAttributeOption.REQUEST_BECOME_ADMIN)) { //变更管理员通知
                     EMClient.getInstance().conferenceManager().deleteConferenceAttribute(usreId, new EMValueCallBack<Void>() {
                         @Override
                         public void onSuccess(Void value) {
@@ -1428,9 +1483,9 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             EMLog.i(TAG, "onAttributesUpdated  become_admin delete role failed, error: " + error + " - " + errorMsg);
                         }
                     });
-                }
+                }*/
             }else{
-                if (option.equals(ConferenceAttributeOption.REQUEST_BECOME_ADMIN)) { //变更管理员通知
+                /*if (option.equals(ConferenceAttributeOption.REQUEST_BECOME_ADMIN)) { //变更管理员通知
                     if(usreId != ConferenceInfo.getInstance().getLocalStream().getUsername()){
                         runOnUiThread(new Runnable() {
                             @Override
@@ -1440,7 +1495,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                             }
                         });
                     }
-                }
+                }*/
             }
         }
     }
@@ -1509,7 +1564,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 EMLog.i(TAG, " onAttributesUpdated： requestTalkerDisplay  request_tobe_speaker start"+ usreId);
                 String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), usreId);
                 EMClient.getInstance().conferenceManager().grantRole(conference.getConferenceId()
-                        , new EMConferenceMember(memName, null, null)
+                        , new EMConferenceMember(memName, null, null,null)
                         , EMConferenceManager.EMConferenceRole.Talker, new EMValueCallBack<String>() {
                             @Override
                             public void onSuccess(String value) {
@@ -1596,7 +1651,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                 EMLog.i(TAG, "takerListChooseDispaly ok choose to offline userId " + choose_userId);
                 String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), choose_userId);
                 EMClient.getInstance().conferenceManager().grantRole(conference.getConferenceId()
-                        , new EMConferenceMember(memName, null, null)
+                        , new EMConferenceMember(memName, null, null ,null)
                         , EMConferenceManager.EMConferenceRole.Audience, new EMValueCallBack<String>(){
                             @Override
                             public void onSuccess(String value) {
@@ -1604,7 +1659,7 @@ public class ConferenceActivity extends Activity implements EMConferenceListener
                                 //让申请的主播上线
                                 String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), usreId);
                                 EMClient.getInstance().conferenceManager().grantRole(conference.getConferenceId()
-                                        , new EMConferenceMember(memName, null, null)
+                                        , new EMConferenceMember(memName, null, null,null)
                                         , EMConferenceManager.EMConferenceRole.Talker, new EMValueCallBack<String>() {
                                             @Override
                                             public void onSuccess(String value) {
