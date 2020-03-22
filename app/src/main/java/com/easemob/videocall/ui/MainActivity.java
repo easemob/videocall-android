@@ -19,6 +19,7 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
+import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.DemoHelper;
@@ -293,7 +294,11 @@ public class MainActivity extends Activity {
         }
         DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
-        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, new EMValueCallBack<EMConference>(){
+        EMRoomConfig roomConfig = new EMRoomConfig();
+        roomConfig.setConfrTyp(EMConferenceManager.EMConferenceType.SmallCommunication);
+        roomConfig.setExt("Image1.png");
+        roomConfig.setNickName("不回头的倔强");
+        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, roomConfig,new EMValueCallBack<EMConference>(){
                     @Override
                     public void onSuccess(EMConference value) {
                         EMLog.i(TAG, "join  conference success");
