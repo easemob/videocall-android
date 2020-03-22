@@ -295,10 +295,9 @@ public class MainActivity extends Activity {
         DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMRoomConfig roomConfig = new EMRoomConfig();
-        roomConfig.setConfrTyp(EMConferenceManager.EMConferenceType.SmallCommunication);
-        roomConfig.setExt("Image1.png");
         roomConfig.setNickName("不回头的倔强");
-        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, roomConfig,new EMValueCallBack<EMConference>(){
+        roomConfig.setExt("Image1.png");
+        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole,roomConfig, new EMValueCallBack<EMConference>(){
                     @Override
                     public void onSuccess(EMConference value) {
                         EMLog.i(TAG, "join  conference success");

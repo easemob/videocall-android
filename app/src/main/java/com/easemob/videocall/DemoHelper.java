@@ -16,6 +16,8 @@ import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.superrtc.mediamanager.EMediaEntities;
+import com.superrtc.mediamanager.EMediaSession;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -210,6 +212,24 @@ public class DemoHelper {
 
 			@Override
 			public void onAttributesUpdated(EMConferenceAttribute[] attributes) {
+
+			}
+			@Override
+			public void onAdminAdd(String memName){
+
+			}
+			@Override
+			public void onAdminRemove(String memName){
+
+			}
+
+			@Override
+            public  void onPubStreamFailed(int error, String message){
+
+			}
+
+			@Override
+            public  void onUpdateStreamFailed(int error, String message){
 
 			}
 		};
