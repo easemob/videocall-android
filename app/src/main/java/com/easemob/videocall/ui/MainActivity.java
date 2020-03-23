@@ -47,6 +47,7 @@ public class MainActivity extends Activity {
     private String username;
     private String currentRoomname;
     private String currentPassword;
+    private String currentNickname;
     private String accessToken;
     private EMConferenceManager.EMConferenceRole  conferenceRole;
     private String password = "123";
@@ -127,11 +128,17 @@ public class MainActivity extends Activity {
 
         username = PreferenceManager.getInstance().getCurrentUsername();
 
-        if(username == null){
-            register(view);
+        currentNickname = PreferenceManager.getInstance().getCurrentUserNick();
+
+        if(currentNickname != null){
+            if(username == null){
+                register(view);
+            }else{
+                password = PreferenceManager.getInstance().getCurrentUserPassWord();
+                login(view);
+            }
         }else{
-            password = PreferenceManager.getInstance().getCurrentUserPassWord();
-            login(view);
+            setNickNameDialogDisplay();
         }
     }
 
@@ -178,11 +185,18 @@ public class MainActivity extends Activity {
         ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Audience);
 
         username = PreferenceManager.getInstance().getCurrentUsername();
-        if(username == null){
-            register(view);
+
+        currentNickname = PreferenceManager.getInstance().getCurrentUserNick();
+
+        if(currentNickname != null){
+            if(username == null){
+                register(view);
+            }else{
+                password = PreferenceManager.getInstance().getCurrentUserPassWord();
+                login(view);
+            }
         }else{
-            password = PreferenceManager.getInstance().getCurrentUserPassWord();
-            login(view);
+            setNickNameDialogDisplay();
         }
     }
 
@@ -295,7 +309,7 @@ public class MainActivity extends Activity {
         DemoHelper.getInstance().setGlobalListeners();
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMRoomConfig roomConfig = new EMRoomConfig();
-        roomConfig.setNickName("不回头的倔强");
+        roomConfig.setNickName(currentNickname);
         roomConfig.setExt("Image1.png");
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole,roomConfig, new EMValueCallBack<EMConference>(){
                     @Override
@@ -369,6 +383,57 @@ public class MainActivity extends Activity {
                 dialog.dismiss();
                 //主播已满不加入会议
                 EMLog.e(TAG, "talker is full , not join conference");
+            }
+        });
+    }
+
+    /**
+     * 设置昵称提示
+     */
+    private  void  setNickNameDialogDisplay(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog dialog = builder.create();
+        View dialogView = View.inflate(MainActivity.this, R.layout.activity_nickname_editshow, null);
+        dialog.setView(dialogView);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
+        dialog.show();
+
+        final Button btn_ok = dialogView.findViewById(R.id.btn_ok_nickname);
+        final Button btn_cancel = dialogView.findViewById(R.id.btn_cancel_nickname);
+        final EditText editText = dialogView.findViewById(R.id.nickname_text);
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                currentNickname = editText.getText().toString().trim();
+                if(currentNickname.length() == 0){
+                    Toast.makeText(getApplicationContext(), "昵称不允许为空!",
+                            Toast.LENGTH_SHORT).show();
+                }else {
+                    dialog.dismiss();
+                    EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + currentNickname);
+                    PreferenceManager.getInstance().setCurrentUserNick(currentNickname);
+                    if(username == null){
+                        register(view);
+                    }else{
+                        password = PreferenceManager.getInstance().getCurrentUserPassWord();
+                        login(view);
+                    }
+                }
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                //主播已满不加入会议
+                EMLog.e(TAG, "cancel setting nickename");
+                currentNickname = null;
+                setBtnEnable(true);
             }
         });
     }

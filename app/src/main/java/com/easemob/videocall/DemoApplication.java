@@ -32,6 +32,7 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 	public static Context applicationContext;
 	private static DemoApplication instance;
 	static public ConferenceInfo conferenceInstance;
+	static public String baseurl = "https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/RtcDemo/headImage/";
 
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs

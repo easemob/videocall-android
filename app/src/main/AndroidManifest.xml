@@ -70,9 +70,24 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        //个人she设置
+        //系统设置
         <activity
             android:name=".ui.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme" />
+        //个人信息
+        <activity
+            android:name=".ui.InfoActivity"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme" />
+        //设置头像
+        <activity
+            android:name=".ui.SetHeadImageActivity"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme" />
+        //设置昵称
+        <activity
+            android:name=".ui.SetNickNameActivity"
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme" />
 
