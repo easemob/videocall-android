@@ -9,7 +9,7 @@
     </style>
 
     <!--<style name="horizontal_slide" parent="android:Theme.NoTitleBar">-->
-        <!--<item name="android:windowAnimationStyle">@style/AnimFade2</item>-->
+    <!--<item name="android:windowAnimationStyle">@style/AnimFade2</item>-->
     <!--</style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -20,4 +20,13 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.AppStartLoadTranslucent.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AppStartLoadTranslucent.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AppStartLoadTranslucent.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

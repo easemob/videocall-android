@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eff2f6"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#7C7FE5"
+            android:gravity="center_vertical" >
+            <Button
+                android:id="@+id/set_back"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dip"
+                android:onClick="onMyInfoback"
+                android:background="@drawable/ease_mm_title_back"/>
+            <com.easemob.videocall.ui.widget.EaseTitleBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignStart="@+id/set_back"
+                android:layout_alignLeft="@+id/set_back"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="-10dp"
+                android:layout_marginLeft="-10dp"
+                app:titleBarTitle="我的资料" />
+        </RelativeLayout>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadingEdge="none" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <RelativeLayout
+                    android:id="@+id/rl_headInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dip"
+                    android:padding="10dip"
+                    android:background="@drawable/em_btn_bottom_selector">
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="10dip"
+                        android:text="头像"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:typeface="serif" />
+                    <ImageView
+                        android:id="@+id/headImage_Info"
+                        android:layout_width="50dip"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dip"
+                        android:textSize="14sp"
+                        android:typeface="serif" />
+                    <Button
+                        android:id="@+id/btn_set_headImage"
+                        android:layout_width="18dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="22dp"
+                        android:layout_marginRight="10dip"
+                        android:background="@drawable/em_ic_right_arrow" />
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/btn_gray_normal" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <RelativeLayout
+                        android:id="@+id/rl_nicknameInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dip"
+                        android:padding="10dip"
+                        android:background="@drawable/em_btn_bottom_selector">
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:paddingLeft="10dip"
+                            android:text="昵称"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:typeface="serif" />
+                        <TextView
+                            android:id="@+id/nickname_Info"
+                            android:layout_width="200dip"
+                            android:layout_height="32dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="30dip"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical|right"
+                            android:textSize="14sp"
+                            android:typeface="serif" />
+                        <Button
+                            android:id="@+id/btn_set_nickname"
+                            android:layout_width="18dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="22dp"
+                            android:layout_marginRight="10dip"
+                            android:background="@drawable/em_ic_right_arrow" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/btn_gray_normal" />
+            </LinearLayout>
+</LinearLayout>
+    </LinearLayout>
+</LinearLayout>
