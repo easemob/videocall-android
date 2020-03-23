@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -44,6 +45,8 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
     String url;
     String urlparm = "headImage.conf";
     private List<String> headImageList;
+    DividerItemDecoration decoration;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.activity_headimage_setting);
 
         headImageView = findViewById(R.id.headImage_recyclerView);
+
+        decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
         Button  editHeadImage_back = findViewById(R.id.editHeadImage_back);
         editHeadImage_back.setOnClickListener(this);
@@ -68,22 +73,28 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.editHeadImage_back:
-                setImageHead();
+                setImageHead(false);
                 break;
             case R.id.save_HeadImage:
-                setImageHead();
+                setImageHead(true);
                 break;
             default:
                 break;
         }
     }
 
-    private  void setImageHead(){
-        String headImage = headImageList.get(HeadImageItemAdapter.chooseIndex);
-        PreferenceManager.getInstance().setCurrentUserAvatar(headImage);
-        getIntent().putExtra("headImage", headImage);
-        setResult(RESULT_OK, getIntent());
-        finish();
+    private  void setImageHead(boolean save){
+        if(save){
+            String headImage = headImageList.get(HeadImageItemAdapter.chooseIndex);
+            PreferenceManager.getInstance().setCurrentUserAvatar(headImage);
+            getIntent().putExtra("headImage", headImage);
+            setResult(RESULT_OK, getIntent());
+            finish();
+        }else{
+            getIntent().putExtra("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
+            setResult(RESULT_OK, getIntent());
+            finish();
+        }
     }
 
 
@@ -135,8 +146,9 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                                 headImageList = new ArrayList<>();
                             }
                             headImageList.add(headImageobject.optString(key));
-                            if( PreferenceManager.getInstance().getCurrentUserAvatar() == headImageobject.optString(key)){
+                            if( PreferenceManager.getInstance().getCurrentUserAvatar().equals(headImageobject.optString(key))){
                                 HeadImageItemAdapter.chooseIndex = headImageList.size()-1;
+
                             }
                         }
                         runOnUiThread(new Runnable() {
@@ -145,7 +157,9 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                                 headImageView.setLayoutManager(layoutManager);
                                 HeadImageItemAdapter adapter = new HeadImageItemAdapter();
+                                decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
                                 headImageView.setAdapter(adapter);
+                                headImageView.addItemDecoration(decoration);
                                 adapter.setData(headImageList);
 
                                 adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -155,6 +169,7 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                                         adapter.updataData();
                                     }
                                 });
+                                adapter.updataData();
                             }
                         });
                     }catch (Exception e){

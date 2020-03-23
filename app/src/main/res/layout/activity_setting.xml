@@ -44,11 +44,10 @@
                     android:id="@+id/rl_nickname"
                     android:layout_width="match_parent"
                     android:layout_height="70dip"
-                    android:padding="10dip"
                     android:background="@drawable/em_btn_bottom_selector">
                     <ImageView
                         android:id="@+id/headImage"
-                        android:layout_width="50dip"
+                        android:layout_width="70dip"
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
@@ -62,7 +61,7 @@
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="65dip"
+                        android:layout_marginLeft="75dip"
                         android:layout_centerVertical="true"
                         android:typeface="serif"/>
                     <Button

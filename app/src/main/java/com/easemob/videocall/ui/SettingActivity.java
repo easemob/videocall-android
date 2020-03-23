@@ -206,7 +206,6 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             case R.id.btn_myInfo:
                 Intent intent = new Intent(SettingActivity.this, InfoActivity.class);
                 startActivityForResult(intent, 1);
-                startActivity(intent);
                 break;
             default:
                 break;

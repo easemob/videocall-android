@@ -94,7 +94,7 @@ public class InfoActivity extends Activity implements View.OnClickListener {
         getIntent().putExtra("nickName", nickName);
         getIntent().putExtra("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
         setResult(RESULT_OK, getIntent());
-        this.finish();
+        finish();
     }
 
     /**
