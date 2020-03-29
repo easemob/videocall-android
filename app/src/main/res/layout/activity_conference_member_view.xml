@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
+    android:layout_width="90dp"
     android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/btn_gray_pressed"
@@ -22,43 +22,38 @@
     <RelativeLayout
         android:id="@+id/show_layout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="22dp"
         android:layout_alignParentTop="true"
-        android:background="#61212121">
-        <ImageView
-            android:id="@+id/icon_videoing"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="2dp"
-            android:src="@drawable/call_video_on" />
+        android:layout_marginTop="5dp"
+        android:background="@color/color_transparent">
         <ImageView
             android:id="@+id/icon_speaking"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentLeft="true"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:padding="2dp"
-            android:src="@drawable/call_mic_on" />
+            android:layout_marginRight="5dp"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_alignParentBottom="true"
-        android:background="#61212121">
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:background="@color/color_transparent">
+        <ImageView
+            android:id="@+id/admin_show_image"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/call_talker_show"
+            android:visibility="visible"/>
         <TextView
             android:id="@+id/icon_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="17dp"
             android:layout_gravity="center"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
             android:gravity="center"
-            android:text="e6e4fc37a6bd4ch3a87ecd174167aec"
+            android:text="不回头的倔强"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="8sp"
             android:typeface="serif" />

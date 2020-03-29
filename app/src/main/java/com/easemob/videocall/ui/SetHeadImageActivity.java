@@ -9,6 +9,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -119,7 +120,7 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                     String line;
 
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    while ((line = br.readLine()) != null) {
+                    while((line = br.readLine()) != null) {
                         sb.append(line);
                     }
                     headImage = sb.toString();
@@ -148,7 +149,6 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                             headImageList.add(headImageobject.optString(key));
                             if( PreferenceManager.getInstance().getCurrentUserAvatar().equals(headImageobject.optString(key))){
                                 HeadImageItemAdapter.chooseIndex = headImageList.size()-1;
-
                             }
                         }
                         runOnUiThread(new Runnable() {
@@ -157,9 +157,9 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
                                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                                 headImageView.setLayoutManager(layoutManager);
                                 HeadImageItemAdapter adapter = new HeadImageItemAdapter();
-                                decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
+                                //decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
                                 headImageView.setAdapter(adapter);
-                                headImageView.addItemDecoration(decoration);
+                                //headImageView.addItemDecoration(decoration);
                                 adapter.setData(headImageList);
 
                                 adapter.setOnItemClickListener(new OnItemClickListener() {

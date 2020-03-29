@@ -3,59 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:orientation="vertical">
+        android:layout_width="259dp"
+        android:layout_height="163dp"
+        android:layout_gravity="center"
+        android:background="#ffffffff"
+        android:orientation="vertical"
+        android:radius="8dp">
         <TextView
             android:id="@+id/info_view"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_width="64dp"
+            android:layout_height="22dp"
             android:layout_centerVertical="true"
-            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
             android:gravity="center"
-            android:text="请设置昵称"
-            android:textColor="#7C7FE5"
-            android:textSize="20sp" />
+            android:text="输入昵称"
+            android:textColor="#3A3A3A"
+            android:textSize="16sp" />
         <EditText
             android:id="@+id/nickname_text"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="216dp"
+            android:layout_height="37dp"
             android:layout_centerVertical="true"
-            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="13dp"
             android:gravity="center"
             android:hint="请输入昵称"
-            android:textSize="16sp" />
+            android:textCursorDrawable="@null"
+            android:background="@drawable/editor_selector"
+            android:textColor="#3A3A3A"
+            android:textSize="14sp" />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="22dp"
+            android:layout_marginTop="40dp">
             <Button
                 android:id="@+id/btn_cancel_nickname"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:background="#7C7FE5"
+                android:layout_marginLeft="50dp"
+                android:background="@color/color_transparent"
                 android:text="取消"
-                android:textColor="@android:color/white"
+                android:textColor="#333333"
                 android:textSize="16sp" />
             <Button
                 android:id="@+id/btn_ok_nickname"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:background="#7C7FE5"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
                 android:text="确定"
-                android:textColor="@android:color/white"
+                android:background="@color/color_transparent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:textColor="#04AEF0"
                 android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>

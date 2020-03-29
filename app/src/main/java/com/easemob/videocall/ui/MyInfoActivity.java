@@ -1,50 +1,61 @@
 package com.easemob.videocall.ui;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.hyphenate.util.EMLog;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class InfoActivity extends Activity implements View.OnClickListener {
+public class MyInfoActivity extends Activity implements View.OnClickListener {
+    private  final String TAG = this.getClass().getSimpleName();
 
     ImageView imageView;
     TextView IDView;
     String urlparm;
     String url;
+    String nickName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_info);
 
+
         imageView = (ImageView)findViewById(R.id.headImage_Info);
         IDView = (TextView)findViewById(R.id.nickname_Info);
 
-        String nickName = PreferenceManager.getInstance().getCurrentUserNick();
+        nickName = PreferenceManager.getInstance().getCurrentUserNick();
         if(nickName != null){
             IDView.setText(nickName);
         }else{
             IDView.setText("未设置昵称");
         }
 
-       Button btn_set_headImage = findViewById(R.id.btn_set_headImage);
+       RelativeLayout btn_set_headImage = findViewById(R.id.btn_set_headImage);
        btn_set_headImage.setOnClickListener(this);
-       Button btn_set_nickname = findViewById(R.id.btn_set_nickname);
+        RelativeLayout btn_set_nickname = findViewById(R.id.btn_set_nickname);
        btn_set_nickname.setOnClickListener(this);
 
         //load image
@@ -58,12 +69,13 @@ public class InfoActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_set_headImage:
-                Intent intent1 = new Intent(InfoActivity.this, SetHeadImageActivity.class);
+                Intent intent1 = new Intent(MyInfoActivity.this, SetHeadImageActivity.class);
                 startActivityForResult(intent1, 1);
                 break;
             case R.id.btn_set_nickname:
-                Intent intent = new Intent(InfoActivity.this, SetNickNameActivity.class);
-                startActivityForResult(intent, 2);
+                //Intent intent = new Intent(InfoActivity.this, SetNickNameActivity.class);
+                //startActivityForResult(intent, 2);
+                showModifyNickNameDialog();
                 break;
             default:
                 break;
@@ -86,6 +98,48 @@ public class InfoActivity extends Activity implements View.OnClickListener {
                 loadImage();
             }
         }
+    }
+
+    private void showModifyNickNameDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyInfoActivity.this);
+        final AlertDialog dialog = builder.create();
+        View dialogView = View.inflate(MyInfoActivity.this, R.layout.activity_nickname_editshow, null);
+        dialog.setView(dialogView);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
+        dialog.show();
+
+        final Button btn_ok = dialogView.findViewById(R.id.btn_ok_nickname);
+        final Button btn_cancel = dialogView.findViewById(R.id.btn_cancel_nickname);
+        final EditText editText = dialogView.findViewById(R.id.nickname_text);
+        editText.setText(nickName);
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                nickName = editText.getText().toString().trim();
+                if(nickName.length() == 0){
+                    Toast.makeText(getApplicationContext(), "昵称不允许为空!",
+                            Toast.LENGTH_SHORT).show();
+                }else {
+                    dialog.dismiss();
+                    EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + nickName);
+                    PreferenceManager.getInstance().setCurrentUserNick(nickName);
+                    IDView.setText(nickName);
+                }
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                //主播已满不加入会议
+                EMLog.e(TAG, "cancel setting nickename");
+            }
+        });
     }
 
 

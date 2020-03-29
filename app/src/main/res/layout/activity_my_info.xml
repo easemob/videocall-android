@@ -11,29 +11,29 @@
         <RelativeLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#7C7FE5"
+            android:layout_height="44dp"
+            android:background="@color/color_transparent"
             android:gravity="center_vertical" >
             <Button
-                android:id="@+id/set_back"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
+                android:id="@+id/set_myInfo_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginTop="6dp"
-                android:layout_marginLeft="10dip"
                 android:onClick="onMyInfoback"
-                android:background="@drawable/ease_mm_title_back"/>
-            <com.easemob.videocall.ui.widget.EaseTitleBar
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:background="@drawable/ease_mm_title_back" />
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignStart="@+id/set_back"
-                android:layout_alignLeft="@+id/set_back"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="-10dp"
-                android:layout_marginLeft="-10dp"
-                app:titleBarTitle="我的资料" />
+                android:textSize="18sp"
+                android:gravity="center"
+                android:textColor="#424242"
+                android:layout_centerVertical="true"
+                android:text="我的资料" />
         </RelativeLayout>
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="108dp"
             android:fadingEdge="none" >
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,42 +42,41 @@
                 <RelativeLayout
                     android:id="@+id/rl_headInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="70dip"
-                    android:padding="10dip"
-                    android:background="@drawable/em_btn_bottom_selector">
+                    android:layout_height="108dp"
+                    android:background="@color/color_transparent">
                     <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="10dip"
                         android:text="头像"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:gravity="left|center_vertical"
+                        android:textColor="#333333"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="16dp"
+                        android:textSize="14sp"/>
                     <ImageView
                         android:id="@+id/headImage_Info"
-                        android:layout_width="50dip"
-                        android:layout_height="match_parent"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="30dip"
+                        android:layout_marginRight="42dp"
+                        android:layout_centerVertical="true"
                         android:textSize="14sp"
                         android:typeface="serif" />
-                    <Button
+                    <RelativeLayout
                         android:id="@+id/btn_set_headImage"
-                        android:layout_width="18dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentRight="true"
+                        android:layout_width="47.14dp"
+                        android:layout_height="47.14dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginRight="10dip"
-                        android:background="@drawable/em_ic_right_arrow" />
+                        android:layout_alignParentRight="true">
+                        <Button
+                            android:layout_width="5.14dp"
+                            android:layout_height="8.99dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/em_ic_right_arrow" />
+                    </RelativeLayout>
                 </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,44 +84,42 @@
                     <RelativeLayout
                         android:id="@+id/rl_nicknameInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="60dip"
-                        android:padding="10dip"
-                        android:background="@drawable/em_btn_bottom_selector">
+                        android:layout_height="66dp"
+                        android:background="@color/color_transparent">
                         <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="76dp"
+                            android:layout_height="20dp"
                             android:layout_centerVertical="true"
-                            android:paddingLeft="10dip"
-                            android:text="昵称"
-                            android:textColor="@android:color/black"
+                            android:text="我的昵称"
+                            android:textColor="#333333"
                             android:textSize="14sp"
-                            android:typeface="serif" />
+                            android:gravity="left|center_vertical"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="16dp" />
                         <TextView
                             android:id="@+id/nickname_Info"
                             android:layout_width="200dip"
-                            android:layout_height="32dip"
+                            android:layout_height="42dip"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="30dip"
+                            android:layout_marginRight="42dp"
+                            android:textColor="#999999"
                             android:layout_centerVertical="true"
                             android:gravity="center_vertical|right"
-                            android:textSize="14sp"
-                            android:typeface="serif" />
-                        <Button
+                            android:textSize="14sp"/>
+                        <RelativeLayout
                             android:id="@+id/btn_set_nickname"
-                            android:layout_width="18dp"
-                            android:layout_height="32dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
                             android:layout_centerVertical="true"
-                            android:layout_marginStart="22dp"
-                            android:layout_marginRight="10dip"
-                            android:background="@drawable/em_ic_right_arrow" />
+                            android:layout_alignParentRight="true">
+                            <Button
+                                android:layout_width="6dp"
+                                android:layout_height="9dp"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/em_ic_right_arrow" />
+                        </RelativeLayout>
                     </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dip"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@color/btn_gray_normal" />
             </LinearLayout>
 </LinearLayout>
     </LinearLayout>

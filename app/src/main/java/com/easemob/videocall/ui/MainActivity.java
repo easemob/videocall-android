@@ -2,8 +2,14 @@ package com.easemob.videocall.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -11,7 +17,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.easemob.videocall.DemoApplication;
+import com.easemob.videocall.adapter.HeadImageItemAdapter;
+import com.easemob.videocall.adapter.OnItemClickListener;
 import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -19,6 +30,7 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
+import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -26,6 +38,18 @@ import com.easemob.videocall.DemoHelper;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.hyphenate.util.EasyUtils;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,12 +79,15 @@ public class MainActivity extends Activity {
     private Button btn_anchor;
     private Button btn_audience;
     private ConferenceSession conferenceSession;
-
+    private String url = "http://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/RtcDemo/version.conf";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
          btn_anchor = (Button)findViewById(R.id.btn_anchor);
          btn_audience = (Button)findViewById(R.id.btn_audience);
@@ -83,6 +110,8 @@ public class MainActivity extends Activity {
         }
 
         conferenceSession = DemoHelper.getInstance().getConferenceSession();
+
+        getLatestVersion();
     }
 
     /**
@@ -90,6 +119,8 @@ public class MainActivity extends Activity {
      */
     public void addconference_anchor(View view){
         //防止点击太快重复进入房间
+        getLatestVersion();
+
         setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
@@ -146,6 +177,8 @@ public class MainActivity extends Activity {
     观众加入会议房间
      */
     public void addconference_audience(View view){
+        getLatestVersion();
+
         //防止点击太快重复进入房间
         setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
@@ -310,7 +343,7 @@ public class MainActivity extends Activity {
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMRoomConfig roomConfig = new EMRoomConfig();
         roomConfig.setNickName(currentNickname);
-        roomConfig.setExt("Image1.png");
+        roomConfig.setExt( PreferenceManager.getInstance().getCurrentUserAvatar());
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole,roomConfig, new EMValueCallBack<EMConference>(){
                     @Override
                     public void onSuccess(EMConference value) {
@@ -356,6 +389,7 @@ public class MainActivity extends Activity {
         View dialogView = View.inflate(MainActivity.this, R.layout.activity_talker_full, null);
         dialog.setView(dialogView);
 
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
         wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
@@ -386,6 +420,112 @@ public class MainActivity extends Activity {
             }
         });
     }
+
+    /**
+     * 查询最新版本号 进行强制升级
+     *
+     */
+    private void getLatestVersion() {
+        new AsyncTask<String, Void, String>() {
+            //该方法运行在后台线程中，因此不能在该线程中更新UI，UI线程为主线程
+            @Override
+            protected String doInBackground(String... params) {
+                String headImage = null;
+                try {
+                    String url = params[0];
+                    URL HttpURL = new URL(url);
+                    HttpURLConnection conn = (HttpURLConnection) HttpURL.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    while((line = br.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    headImage = sb.toString();
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return headImage;
+            }
+
+            //在doInBackground 执行完成后，onPostExecute 方法将被UI 线程调用，
+            // 后台的计算结果将通过该方法传递到UI线程，并且在界面上展示给用户.
+            @Override
+            protected void onPostExecute(String ImageStr) {
+                if(ImageStr != null){
+                    try {
+                        ImageStr = ImageStr.replace(" ","");
+                        JSONObject object = new JSONObject(ImageStr);
+                        JSONObject versionobj = object.optJSONObject("version");
+                        String newverison = versionobj.optString("Android");
+                        String currentversion = getCurrentVersion(getApplicationContext());
+                        if(!currentversion.equals(newverison)){
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                    final AlertDialog dialog = builder.create();
+                                    View dialogView = View.inflate(MainActivity.this, R.layout.activity_updata_version, null);
+                                    TextView infoView = dialogView.findViewById(R.id.current_info_view);
+                                    infoView.setText("检测到当前不是最新版本"+ "\n" + "为了不影响您正常使用" + "\n" + "请更新到最新版");
+                                    Button okbtn = dialogView.findViewById(R.id.btn_update_ok);
+                                    okbtn.setText("确定");
+                                    dialog.setView(dialogView);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+                                    wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
+                                    dialog.show();
+                                    final Button btn_ok = dialogView.findViewById(R.id.btn_update_ok);
+                                    btn_ok.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view){
+                                            EMLog.i(TAG, "getLatestVersion currentversion:"+ currentversion + "  newverison:" + newverison);
+                                            finish();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.execute(url);
+    }
+
+
+
+
+    /**
+     * 获取当前版本号
+     * @return
+     * @throws Exception
+     */
+    public static synchronized String getCurrentVersion(Context context) {
+        String appVersionCode = "";
+        try {
+            PackageInfo packageInfo = context.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                appVersionCode = packageInfo.versionName;
+            } else {
+                appVersionCode = packageInfo.versionName;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("", e.getMessage());
+        }
+        return appVersionCode;
+    }
+
+
 
     /**
      * 设置昵称提示

@@ -17,6 +17,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * author lijian
@@ -54,7 +60,6 @@ public class HeadImageItemAdapter extends EaseBaseRecyclerViewAdapter<String> {
         public void initView(View itemView) {
             headImage_view = (ImageView) findViewById(R.id.headImage_avatar);
             id_checkbox = (RadioButton) findViewById(R.id.headImage_checkbox);
-
         }
 
         @Override
@@ -88,7 +93,7 @@ public class HeadImageItemAdapter extends EaseBaseRecyclerViewAdapter<String> {
                         InputStream is = conn.getInputStream();
                         bitmap = BitmapFactory.decodeStream(is);
                         is.close();
-                    } catch (IOException e) {
+                    }catch(IOException e) {
                         e.printStackTrace();
                     }
                     return bitmap;
@@ -104,7 +109,5 @@ public class HeadImageItemAdapter extends EaseBaseRecyclerViewAdapter<String> {
                 }
             }.execute(url);
         }
-
-
     }
 }

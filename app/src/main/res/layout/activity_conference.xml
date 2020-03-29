@@ -10,8 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/layout_surface_container"
-        >
+        android:id="@+id/layout_surface_container">
         <RelativeLayout
             android:id="@+id/large_preview"
             android:layout_width="match_parent"
@@ -22,132 +21,105 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
+            android:background="@color/color_transparent"
             android:src="@drawable/em_default_avatar" />
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/admin_show_view"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/call_talker_show"
+        android:visibility="gone"/>
     <RelativeLayout
-        android:id="@+id/ll_btns"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp">
+      <ImageView
+        android:id="@+id/icon_speak_show"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="116dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/roominfo_selector">
+        <ImageView
+            android:id="@+id/netInfo"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="3dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/networkinfo" />
+        <TextView
+            android:id="@+id/Meeting_roomID"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="43dp"
+            android:layout_marginTop="3dp"
+            android:text="房间名称"
+            android:gravity="left|center_vertical"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/Meeting_duration"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="43dp"
+            android:layout_marginTop="23dp"
+            android:text="00:10:00"
+            android:gravity="left|center_vertical"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+        />
+        />
+    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_expansion"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/ic_comments"/>
+    <RelativeLayout
+        android:id="@+id/ll_top_container"
+        android:layout_width="40dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
         android:background="@color/color_transparent">
-        <LinearLayout
-            android:id="@+id/ll_top_container"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentTop="true"
-            android:gravity="center_horizontal"
-            android:background="#000000"
-            android:orientation="horizontal">
-             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="13dp"
-                android:layout_height="60dp"
-                android:orientation="vertical">
-                 <RelativeLayout
-                     android:layout_width="231dp"
-                     android:layout_height="match_parent">
-                     <ImageView
-                         android:id="@+id/netInfo"
-                         android:layout_width="40dp"
-                         android:layout_height="40dp"
-                         android:layout_marginLeft="10dp"
-                         android:layout_marginTop="5dp"
-                         android:background="@drawable/networkinfo" />
-                     <TextView
-                         android:id="@+id/Meeting_room"
-                         android:layout_width="80dp"
-                         android:layout_height="20dp"
-                         android:layout_marginLeft="60dp"
-                         android:layout_marginTop="5dp"
-                         android:text="房间名称"
-                         android:textColor="#FFFFFF"
-                         android:textSize="14sp" />
-                     <TextView
-                         android:id="@+id/Meeting_roomID"
-                         android:layout_width="80dp"
-                         android:layout_height="20dp"
-                         android:layout_marginLeft="60dp"
-                         android:layout_marginTop="25dp"
-                         android:text="@string/mute"
-                         android:textColor="#FFFFFF"
-                         android:textSize="14sp" />
-                     <TextView
-                         android:id="@+id/Meeting_time"
-                         android:layout_width="80dp"
-                         android:layout_height="20dp"
-                         android:layout_marginLeft="150dp"
-                         android:layout_marginTop="5dp"
-                         android:text="通话时长"
-                         android:textColor="#FFFFFF"
-                         android:textSize="14sp" />
-                     <TextView
-                         android:id="@+id/Meeting_duration"
-                         android:layout_width="80dp"
-                         android:layout_height="20dp"
-                         android:layout_marginLeft="150dp"
-                         android:layout_marginTop="25dp"
-                         android:text="@string/mute"
-                         android:textColor="#FFFFFF"
-                         android:textSize="14sp" />
-                     />
-                     />
-                 </RelativeLayout>
-                 <Button
-                     android:id="@+id/btn_speak_setting"
-                     android:layout_width="40dp"
-                     android:layout_height="40dp"
-                     android:layout_alignParentRight="true"
-                     android:layout_marginTop="10dp"
-                     android:layout_marginRight="80dp"
-                     android:background="@drawable/em_call_speaker_on"
-                     android:onClick="onSettingSpeak"
-                     android:visibility="gone"/>
-                 <Button
-                     android:id="@+id/btn_meeting_setroom"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
-                     android:layout_alignParentRight="true"
-                     android:layout_marginTop="15dp"
-                     android:layout_marginRight="20dp"
-                     android:background="@drawable/em_settings"
-                     android:onClick="onSettingRoom" />
-               </RelativeLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-            </LinearLayout>
-        </LinearLayout>
         <Button
             android:id="@+id/btn_switch_camera"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_below="@id/ll_top_container"
-            android:layout_marginRight="@dimen/adaptive_10dp"
-            android:background="@drawable/em_call_camera_toggle" />
-        <ImageView
-            android:id="@+id/icon_video_show"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/ll_top_container"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/call_video_on"
-            android:visibility="gone"/>
-        <ImageView
-            android:id="@+id/icon_speak_show"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/ll_top_container"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="70dp"
-            android:src="@drawable/call_mic_on"
-            android:visibility="gone"/>
-        <RelativeLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/call_camera_toggle" />
+        <Button
+            android:id="@+id/btn_speak_setting"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="80dp"
+            android:background="@drawable/call_audio_device"
+            android:onClick="onSettingSpeak" />
+        <Button
+            android:id="@+id/btn_meeting_setroom"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/call_settingroom"
+            android:onClick="onSettingRoom" />
+    </RelativeLayout>
+    <RelativeLayout
             android:id="@+id/ll_bottom"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
             <HorizontalScrollView
@@ -167,9 +139,9 @@
             <LinearLayout
                 android:id="@+id/ll_surface_baseline"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="80dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/btn_white_normal"
+                android:background="#141414"
                 android:orientation="vertical">
                 <LinearLayout
                     android:id="@+id/ll_bottom_container"
@@ -183,49 +155,113 @@
                         android:background="#141414">
                         <Button
                             android:id="@+id/btn_call_mic"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/em_call_mic_on"/>
+                            android:layout_marginLeft="24dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/em_call_mic_on" />
+                        <TextView
+                            android:id="@+id/text_call_mic"
+                            android:layout_width="60dp"
+                            android:layout_height="12dp"
+                            android:layout_below="@+id/btn_call_mic"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="6dp"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center"
+                            android:text="静音"/>
                         <Button
                             android:id="@+id/btn_call_video"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="100dp"
                             android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="90dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="4dp"
                             android:background="@drawable/em_call_video_on" />
+                        <TextView
+                            android:id="@+id/text_call_video"
+                            android:layout_width="60dp"
+                            android:layout_height="12dp"
+                            android:layout_below="@+id/btn_call_mic"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="82dp"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center"
+                            android:text="关闭视频"/>
                         <Button
                             android:id="@+id/btn_call_hangup"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="4dp"
                             android:background="@drawable/em_call_hangup"
                             android:gravity="center" />
+                        <TextView
+                            android:id="@+id/text_call_hangup"
+                            android:layout_width="60dp"
+                            android:layout_height="12dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/btn_call_hangup"
+                            android:layout_gravity="center"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center"
+                            android:text="挂断"/>
                         <Button
                             android:id="@+id/btn_talker_list"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="90dp"
-                            android:background="@drawable/em_call_invite" />
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="99dp"
+                            android:background="@drawable/em_call_invite"
+                            android:gravity="center"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp" />
+                        <TextView
+                            android:id="@+id/text_talker_list"
+                            android:layout_width="60dp"
+                            android:layout_height="12dp"
+                            android:layout_below="@+id/btn_talker_list"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="81dp"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center"
+                            android:text="成员"/>
                         <Button
                             android:id="@+id/btn_even_wheat"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="24dp"
+                            android:gravity="center"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
                             android:background="@drawable/em_call_request_disconnect" />
+                        <TextView
+                            android:id="@+id/text_even_wheat"
+                            android:layout_width="60dp"
+                            android:layout_height="12dp"
+                            android:layout_below="@+id/btn_talker_list"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="6dp"
+                            android:textColor="#CCCCCC"
+                            android:textSize="10sp"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center"
+                            android:text="下麦"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-    </RelativeLayout>
-
 </RelativeLayout>

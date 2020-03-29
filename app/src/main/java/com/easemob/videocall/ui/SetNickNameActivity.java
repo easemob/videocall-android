@@ -18,6 +18,7 @@ public class SetNickNameActivity extends Activity  implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nickname_setting);
 
+
         //设置昵称
         edit_nickName = findViewById(R.id.edit_nickName);
         String nickName = PreferenceManager.getInstance().getCurrentUserNick();

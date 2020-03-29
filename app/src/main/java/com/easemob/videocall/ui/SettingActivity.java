@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -58,6 +59,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+
         IDView = (TextView)findViewById(R.id.nickname_edit);
         initCameraResolutionSpinner(R.id.spinner_video_resolution);
 
@@ -94,7 +96,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         Button uploadlog = (Button)findViewById(R.id.btn_upload_log);
         uploadlog.setOnClickListener(this);
 
-        Button myInfo = (Button)findViewById(R.id.btn_myInfo);
+        RelativeLayout myInfo = (RelativeLayout)findViewById(R.id.btn_myInfo);
         myInfo.setOnClickListener(this);
 
         //load image
@@ -204,7 +206,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                  sendLogThroughMail();
                  break;
             case R.id.btn_myInfo:
-                Intent intent = new Intent(SettingActivity.this, InfoActivity.class);
+                Intent intent = new Intent(SettingActivity.this, MyInfoActivity.class);
                 startActivityForResult(intent, 1);
                 break;
             default:

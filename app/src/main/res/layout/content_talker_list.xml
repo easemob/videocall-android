@@ -1,47 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="66dp"
     android:background="@color/common_bg"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
-
         <RelativeLayout
             android:id="@+id/rl_nickname"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_transparent">
             <com.easemob.videocall.ui.widget.EaseImageView
-                android:id="@+id/avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/avatar_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:scaleType="fitXY"
+                android:layout_marginLeft="22dp"
                 android:src="@drawable/ease_default_avatar" />
             <TextView
                 android:id="@+id/userId_view"
-                android:layout_width="225dp"
-                android:layout_height="40dp"
+                android:layout_width="200dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="72dp"
                 android:gravity="left|center_vertical"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="#FF333333"
+                android:textSize="14sp" />
             <ImageView
                 android:id="@+id/mic_image"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="60dp"
+                android:layout_marginRight="77dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/em_audio_show" />
+                android:background="@drawable/call_list_audio_on" />
             <ImageView
                 android:id="@+id/video_image"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/call_list_viedo_on" />
+            <RelativeLayout
+                android:id="@+id/btn_set_Item"
+                android:layout_width="18dp"
+                android:layout_height="24dp"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/em_video_show" />
+                android:background="@color/color_transparent"
+                android:visibility="gone">
+             <Button
+                android:layout_width="5.14dp"
+                android:layout_height="8.99dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/em_ic_right_arrow" />
+            </RelativeLayout>
         </RelativeLayout>
 </LinearLayout>

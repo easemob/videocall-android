@@ -143,6 +143,11 @@ public class DemoHelper {
 			@Override public void onMemberJoined(EMConferenceMember member) {
 				EMLog.i(TAG, String.format("member joined username: %s, member: %d", member.memberName,
 						EMClient.getInstance().conferenceManager().getConferenceMemberList().size()));
+				if(!ConferenceInfo.Initflag){
+					if(!ConferenceInfo.getInstance().getConferenceMemberList().contains(member)){
+						ConferenceInfo.getInstance().getConferenceMemberList().add(member);
+					}
+				}
 			}
 
 			@Override public void onMemberExited(EMConferenceMember member) {

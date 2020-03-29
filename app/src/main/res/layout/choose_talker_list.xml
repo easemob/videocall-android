@@ -3,33 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_nickname"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="54dp"
     android:gravity="center"
-    android:background="@color/btn_white_normal">
-
+    android:background="@color/color_transparent">
     <com.easemob.videocall.ui.widget.EaseImageView
-        android:id="@+id/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/avatar_choose_view"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:scaleType="fitXY"
+        android:layout_marginLeft="20dp"
         android:src="@drawable/ease_default_avatar" />
     <TextView
         android:id="@+id/chooseId_view"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="40dp"
+        android:layout_height="21dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center_vertical|left"
-        android:textColor="@android:color/black"
-        android:textSize="12sp" />
+        android:textColor="#FFFFFFFF"
+        android:textSize="15sp" />
     <RadioButton
         android:id="@+id/id_checkbox"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:button="@drawable/choose_item_selector"
+        android:layout_marginRight="16dp"
         android:clickable="false"/>
 </LinearLayout>
