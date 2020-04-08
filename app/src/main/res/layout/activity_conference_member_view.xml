@@ -36,7 +36,7 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:background="@color/color_transparent">
         <ImageView
@@ -48,14 +48,14 @@
             android:visibility="visible"/>
         <TextView
             android:id="@+id/icon_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="17dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="17dp"
             android:gravity="center"
             android:text="不回头的倔强"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="8sp"
+            android:textSize="10sp"
             android:typeface="serif" />
     </RelativeLayout>
 </RelativeLayout>

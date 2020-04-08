@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.easemob.videocall.utils.StringUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceMember;
 
@@ -32,11 +33,11 @@ public class AdminInfoAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) view.findViewById(R.id.item_admin_text);
         if(item != null){
             if(item.equals(EMClient.getInstance().getCurrentUser())){
-                textView.setText(PreferenceManager.getInstance().getCurrentUserNick());
+                textView.setText(StringUtils.tolongNickName(PreferenceManager.getInstance().getCurrentUserNick(),10));
             }else{
                 EMConferenceMember memberInfo = ConferenceInfo.getInstance().getConferenceMemberInfo(item);
                 if(memberInfo != null){
-                    textView.setText(memberInfo.nickName);
+                    textView.setText(StringUtils.tolongNickName(memberInfo.nickName,10));
                 }
             }
         }

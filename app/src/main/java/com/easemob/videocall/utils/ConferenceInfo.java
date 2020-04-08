@@ -142,15 +142,14 @@ public class ConferenceInfo {
         this.conference = conference;
     }
 
-    public List<String> getAdmins(){
-        String[] admins = ConferenceInfo.getInstance().getConference().getAdmins();
+    public void setAdmins(String[] admins){
         String adminStr = "";
         if(admins != null){
             if(admins.length > 0){
-                for (int i = 0; i < admins.length; i++) {
-                    if(adminsList == null){
-                        adminsList = new ArrayList<>();
-                    }
+                if(adminsList == null){
+                    adminsList = new ArrayList<>();
+                }
+                for(int i = 0; i < admins.length; i++) {
                     adminStr = admins[i];
                     adminStr = EasyUtils.useridFromJid(adminStr);
                     if(!adminsList.contains(adminStr)) {
@@ -158,10 +157,12 @@ public class ConferenceInfo {
                     }
                 }
             }
-        }else{
-            if(adminsList == null){
-                adminsList = new ArrayList<>();
-            }
+        }
+    }
+
+    public List<String> getAdmins(){
+        if(adminsList == null){
+            adminsList = new ArrayList<>();
         }
         return adminsList;
     }

@@ -117,7 +117,7 @@
                             android:id="@+id/btn_request_admin"
                             android:layout_width="120dp"
                             android:layout_height="20dp"
-                            android:text="申请成为主持人"
+                            android:text=""
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="16dp"
                             android:gravity="center_vertical|right"

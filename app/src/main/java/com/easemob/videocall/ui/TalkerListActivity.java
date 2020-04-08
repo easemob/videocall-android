@@ -1,7 +1,12 @@
 package com.easemob.videocall.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.videocall.utils.Config;
+import com.easemob.videocall.utils.ConfigManager;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
@@ -33,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.easemob.videocall.utils.ConferenceAttributeOption.REQUEST_TOBE_MUTE_ALL;
+import static com.superrtc.mediamanager.EMediaManager.getContext;
 
 /**
  * author lijian
@@ -60,6 +68,24 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     float y1 = 0;
     float y2 = 0;
 
+    private int mId;
+    private String mAction;
+
+
+    // 实例化一个广播接收器 接受成为管理员的变化
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver () {
+        public void onReceive (Context context, Intent intent){
+            // TODO 接收到广播时的逻辑
+            if (mAction.equals(intent.getAction())) {
+                String[] changedParts = intent.getStringArrayExtra(Config.KEY_CHANGED_PARTS);
+                Config config = ConfigManager.getInstance().getConfig(mId);
+                String key = changedParts[0];
+                String value = (String) config.get(getContext(), key);
+                upDateTalkerList(key ,value);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +103,15 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
 
         btn_mute_all.setOnClickListener(this);
         btn_unmute_all.setOnClickListener(this);
+
+        mId = getIntent().getIntExtra(ConferenceActivity.KEY_ID, -1);
+        mAction = Config.ACTION_CONFIG_CHANGE + mId;
+        if (-1 == mId) {
+            return;
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
+                new IntentFilter(mAction));
+        Config config = ConfigManager.getInstance().getConfig(mId);
 
         InitRoomInfo();
     }
@@ -100,6 +135,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      */
     private  void setBtn_mute_all(){
         JSONObject object = null;
+        btn_mute_all.setClickable(false);
         try {
                 object = new JSONObject();
                 object.putOpt("status",1);
@@ -119,14 +155,15 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), "您已成功设置全体静音", Toast.LENGTH_SHORT).show();
-                                for (EMConferenceStream streamInfo : streamList){
+                                /*for (EMConferenceStream streamInfo : streamList){
                                     if(!streamInfo.getUsername().equals(EMClient.getInstance().getCurrentUser())){
                                         streamInfo.setAudioOff(true);
                                     }
                                 }
                                 if(adapter != null){
                                     adapter.notifyDataSetChanged();
-                                }
+                                }*/
+                                btn_mute_all.setClickable(true);
                             }
                         });
                     }
@@ -134,6 +171,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                     public void onError(int error, String errorMsg) {
                         EMLog.i(TAG, "request_tobe_mute_all failed: error=" + error + ", msg=" + errorMsg);
                         Toast.makeText(getApplicationContext(), "设置全体静音失败", Toast.LENGTH_SHORT).show();
+                        btn_mute_all.setClickable(true);
                     }
                 });
 
@@ -143,6 +181,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      * 解除全体静音
      */
     private  void setBtn_unmute_all(){
+        btn_unmute_all.setClickable(false);
         JSONObject object = null;
         try {
             object = new JSONObject();
@@ -163,14 +202,15 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), "您已成功解除全体静音", Toast.LENGTH_SHORT).show();
-                                for (EMConferenceStream streamInfo : streamList){
+                                /*for (EMConferenceStream streamInfo : streamList){
                                     if(!streamInfo.getUsername().equals(EMClient.getInstance().getCurrentUser())){
                                         streamInfo.setAudioOff(false);
                                     }
                                 }
                                 if(adapter != null){
                                     adapter.notifyDataSetChanged();
-                                }
+                                }*/
+                                btn_unmute_all.setClickable(true);
                             }
                         });
                     }
@@ -178,6 +218,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                     public void onError(int error, String errorMsg){
                         EMLog.i(TAG, "request_tobe_unmute_all failed: error=" + error + ", msg=" + errorMsg);
                         Toast.makeText(getApplicationContext(), "解除全体静音失败", Toast.LENGTH_SHORT).show();
+                        btn_unmute_all.setClickable(false);
                     }
                 });
     }
@@ -185,12 +226,12 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     public void InitRoomInfo(){
         EMClient.getInstance().conferenceManager().getConferenceInfo(ConferenceInfo.getInstance().getConference().getConferenceId(),ConferenceInfo.getInstance().getPassword(),
                 new EMValueCallBack<EMConference>() {
-
                     @Override
                     public void onSuccess(EMConference value) {
                         ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
                         ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
                         ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
+                        ConferenceInfo.getInstance().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
                         runOnUiThread(new Runnable() {
                             @Override
@@ -240,6 +281,25 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
             }
         }
         finish();
+    }
+
+    private void upDateTalkerList(String key ,String value){
+        /*if(key.equals("indexUpdate")){
+            if (streamList != null && !streamList.isEmpty()) {
+                int index = -1;
+                for (int i = 0; i < streamList.size(); i++) {
+                    EMConferenceStream userStream = streamList.get(i);
+                    if (userStream != null && userStream.getUsername() != null && userStream.getUsername().equals(value)) {
+                        index = i;
+                        break;
+                    }
+                }
+                adapter.notifyItemChanged(index);
+            }
+        }else{
+                adapter.notifyDataSetChanged();
+        }*/
+        adapter.notifyDataSetChanged();
     }
 
     @Override

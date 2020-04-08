@@ -117,6 +117,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                         ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
                         ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
                         ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
+                        ConferenceInfo.getInstance().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
                         adminList = ConferenceInfo.getInstance().getAdmins();
                         runOnUiThread(new Runnable() {
@@ -124,11 +125,15 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                             public void run() {
                                 if(adminList != null || adminList.size() > 0){
                                     if(ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser())){
-                                        room_admin.setText("");
-                                        room_admin.setClickable(false);
+                                            room_admin.setText("放弃主持人");
+                                            room_admin.setClickable(true);
                                     }else {
-                                        room_admin.setText("申请成为主持人");
-                                        room_admin.setClickable(true);
+                                        if(ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
+                                            room_admin.setText("申请成为主持人");
+                                            room_admin.setClickable(true);
+                                        }else{
+                                            room_admin.setClickable(false);
+                                        }
                                     }
                                     adapter.notifyDataSetChanged();
                                 }
@@ -206,9 +211,16 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
     }
 
     private void upDateAdmin(String userId){
-        if (userId.equals(EMClient.getInstance().getCurrentUser())) {
-            room_admin.setText("");
-            room_admin.setClickable(false);
+        if (userId.equals(EMClient.getInstance().getCurrentUser())){
+            if(adminList.contains(EMClient.getInstance().getCurrentUser())){
+                room_admin.setText("放弃主持人");
+                room_admin.setClickable(true);
+            }else{
+                room_admin.setText("申请成为主持人");
+                room_admin.setClickable(true);
+            }
+            adapter.notifyDataSetChanged();
+        }else{
             adapter.notifyDataSetChanged();
         }
     }
@@ -218,6 +230,11 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
      */
     private void requesTobeAdmin(){
         if(adminList.contains(EMClient.getInstance().getCurrentUser())){
+            if(ConferenceInfo.getInstance().getAdmins().size() == 1){
+                Toast.makeText(getApplicationContext(), "当前只有您一个主持人，不允许放弃主持人!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            room_admin.setClickable(false);
             String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), EMClient.getInstance().getCurrentUser());
             EMClient.getInstance().conferenceManager().grantRole(ConferenceInfo.getInstance().getConference().getConferenceId()
                     , new EMConferenceMember(memName, null, null, null)
@@ -229,15 +246,17 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Toast.makeText(getApplicationContext(), "放弃主持人成功！", Toast.LENGTH_SHORT).show();
                                     adapter.notifyDataSetChanged();
-                                    room_admin.setText("申请成为主持人");
+                                    room_admin.setClickable(true);
                                 }
                             });
                         }
-
                         @Override
                         public void onError(int error, String errorMsg) {
                             EMLog.i(TAG, "requesTobeAdmin  request_tobe_Talke failed, error: " + error + " - " + errorMsg);
+                            Toast.makeText(getApplicationContext(), "发送放弃主持人请求失败 请稍后重试!", Toast.LENGTH_SHORT).show();
+                            room_admin.setClickable(true);
                         }
                     });
         }else {
@@ -250,7 +269,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "发送请求管理员成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "发送请求主持人成功 ,请等待审批！", Toast.LENGTH_SHORT).show();
                                     room_admin.setClickable(true);
                                 }
                             });
@@ -262,7 +281,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "发送请求管理员失败 请稍后重试!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "发送请求主持人失败 请稍后重试!", Toast.LENGTH_SHORT).show();
                                     room_admin.setClickable(true);
                                 }
                             });

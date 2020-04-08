@@ -85,6 +85,7 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
             tvMute.setText("静音");
         }
 
+
         //已经是管理员
         if(ConferenceInfo.getInstance().getAdmins().contains(username) || username.equals(EMClient.getInstance().getCurrentUser())){
             tvRemoveMeeting.setVisibility(View.GONE);
@@ -153,13 +154,13 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
                         @Override
                         public void onSuccess(Void value) {
                             EMLog.i(TAG, "request_tobe_unmute scuessed");
-                            getActivity().runOnUiThread(new Runnable() {
+                            /*getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     conferenceStream.setAudioOff(false);
                                     adapter.notifyItemChanged(position);
                                 }
-                            });
+                            });*/
                             dismiss();
                         }
                         @Override
@@ -186,13 +187,13 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
                         @Override
                         public void onSuccess(Void value) {
                             EMLog.i(TAG, "request_tobe_mute scuessed");
-                            getActivity().runOnUiThread(new Runnable() {
+                            /*getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     conferenceStream.setAudioOff(true);
                                     adapter.notifyItemChanged(position);
                                 }
-                            });
+                            });*/
                             dismiss();
                         }
                         @Override

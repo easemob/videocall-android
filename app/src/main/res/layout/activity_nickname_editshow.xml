@@ -29,8 +29,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="13dp"
             android:gravity="center"
-            android:hint="请输入昵称"
             android:textCursorDrawable="@null"
+            android:hint="请输入昵称"
             android:background="@drawable/editor_selector"
             android:textColor="#3A3A3A"
             android:textSize="14sp" />

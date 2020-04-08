@@ -23,6 +23,7 @@ import com.easemob.videocall.R;
 import com.easemob.videocall.ui.SetTalkerItemDialog;
 import com.easemob.videocall.ui.widget.EaseImageView;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.easemob.videocall.utils.StringUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
@@ -49,9 +50,6 @@ import static com.superrtc.ContextUtils.getApplicationContext;
 
 
 public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceStream> {
-
-    private String username;
-
     private TalkerItemAdapter adapter;
 
     public TalkerItemAdapter() {
@@ -87,28 +85,28 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
 
         @Override
         public void setData(EMConferenceStream item, int position) {
-            username = item.getUsername();
+            String username = item.getUsername();
 
             //item.getUsername() != EMClient.getInstance().getCurrentUser()
             if(ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser()) ) {
                 btn_ItemSet.setVisibility(VISIBLE);
-                MyListener listener = new MyListener(position);
+                MyListener listener = new MyListener(position,username);
                 btn_ItemSet.setOnClickListener(listener);
             }
             EMConferenceMember memberInfo = ConferenceInfo.getInstance().getConferenceMemberInfo(item.getUsername());
             if(item.getUsername() == EMClient.getInstance().getCurrentUser()){
                 if(ConferenceInfo.getInstance().getAdmins().contains(item.getUsername())){
-                    userIdView.setText(PreferenceManager.getInstance().getCurrentUserNick() + " (我)" + " (主持人)");
+                    userIdView.setText(StringUtils.tolongNickName(PreferenceManager.getInstance().getCurrentUserNick(),6) + " (我)" + " (主持人)");
                 }else {
-                    userIdView.setText(PreferenceManager.getInstance().getCurrentUserNick() + " (我)");
+                    userIdView.setText(StringUtils.tolongNickName(PreferenceManager.getInstance().getCurrentUserNick(),6) + " (我)");
                 }
                 headImage = PreferenceManager.getInstance().getCurrentUserAvatar();
                 url =  DemoApplication.baseurl + headImage;
             }else {
                 if(ConferenceInfo.getInstance().getAdmins().contains(item.getUsername())){
-                    userIdView.setText(memberInfo.nickName +" (主持人)");
+                    userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6) +" (主持人)");
                 }else {
-                    userIdView.setText(memberInfo.nickName);
+                    userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6));
                 }
                 try {
                     JSONObject object = new JSONObject(memberInfo.extension);
@@ -178,9 +176,11 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
 
     private class MyListener implements View.OnClickListener {
         private int position;
+        private String username;
 
-        public MyListener(int position) {
+        public MyListener(int position,String username) {
             this.position = position;
+            this.username = username;
         }
 
         @Override

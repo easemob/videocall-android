@@ -7,7 +7,15 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,11 +45,16 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
     String url;
     String nickName;
 
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_info);
-
 
         imageView = (ImageView)findViewById(R.id.headImage_Info);
         IDView = (TextView)findViewById(R.id.nickname_Info);
@@ -73,8 +86,6 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                 startActivityForResult(intent1, 1);
                 break;
             case R.id.btn_set_nickname:
-                //Intent intent = new Intent(InfoActivity.this, SetNickNameActivity.class);
-                //startActivityForResult(intent, 2);
                 showModifyNickNameDialog();
                 break;
             default:
@@ -144,11 +155,47 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
 
 
     public void onMyInfoback(View view){
-        String nickName = IDView.getText().toString().trim();
-        getIntent().putExtra("nickName", nickName);
+        getIntent().putExtra("nickName",  PreferenceManager.getInstance().getCurrentUserNick());
         getIntent().putExtra("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
         setResult(RESULT_OK, getIntent());
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            getIntent().putExtra("nickName",  PreferenceManager.getInstance().getCurrentUserNick());
+            getIntent().putExtra("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
+            setResult(RESULT_OK, getIntent());
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //继承了Activity的onTouchEvent方法，直接监听点击事件
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            x1 = event.getX();
+            y1 = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            //当手指离开的时候
+            x2 = event.getX();
+            y2 = event.getY();
+            if (y1 - y2 > 50) {
+            } else if (y2 - y1 > 50) {
+            } else if (x1 - x2 > 50) {
+            } else if (x2 - x1 > 50) {
+                getIntent().putExtra("nickName",  PreferenceManager.getInstance().getCurrentUserNick());
+                getIntent().putExtra("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
+                setResult(RESULT_OK, getIntent());
+                finish();
+            }
+        }
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -185,5 +232,10 @@ public class MyInfoActivity extends Activity implements View.OnClickListener {
                 }
             }
         }.execute(url);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

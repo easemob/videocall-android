@@ -166,7 +166,7 @@ public class MultiMemberView extends RadioLayout {
 	public void setNickname(String nickname){
 		if(nickname != null){
 			this.nickname = nickname;
-			if(username  == EMClient.getInstance().getCurrentUser()){
+			if(username == EMClient.getInstance().getCurrentUser()){
 				nameView.setText(nickname);
 			}else{
 				nameView.setText(nickname);

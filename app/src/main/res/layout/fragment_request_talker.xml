@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="174dp"
+    android:layout_height="wrap_content"
+    android:background="@color/color_transparent"
+    android:orientation="vertical"
+    android:layout_marginLeft="16dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="234dp">
+    <LinearLayout
+        android:layout_width="174dp"
+        android:layout_height="92dp"
+        android:background="#99000000"
+        android:orientation="vertical"
+        android:radius="4dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="6dp"
+            android:layout_height="32dp">
+            <ImageView
+                android:id="@+id/show_icon_view"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:background="@drawable/choose_onwheat"/>
+
+            <TextView
+                android:id="@+id/show_ID_view"
+                android:layout_width="130dp"
+                android:layout_height="16dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="0dp"
+                android:text="小仙女小可爱"
+                android:textColor="#ffffffff"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/show_action_view"
+                android:layout_width="100dp"
+                android:layout_height="12dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:text="申请上麦"
+                android:textColor="#ffffffff"
+                android:textSize="10sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp">
+            <Button
+                android:id="@+id/btn_choose_cancel"
+                android:layout_width="76dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="6dp"
+                android:radius="18dp"
+                android:background="#ffef413f"
+                android:text="拒绝"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"/>
+            <Button
+                android:id="@+id/btn_choose_ok"
+                android:layout_width="76dp"
+                android:layout_height="36dp"
+                android:background="#ff00afef"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="6dp"
+                android:text="批准"
+                android:textColor="#ffffffff"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

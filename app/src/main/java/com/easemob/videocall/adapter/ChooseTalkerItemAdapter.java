@@ -72,7 +72,7 @@ public class ChooseTalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConfe
         @Override
         public void setData(EMConferenceStream item, int position){
             EMConferenceMember memberInfo = ConferenceInfo.getInstance().getConferenceMemberInfo(item.getUsername());
-            if(item.getUsername() == EMClient.getInstance().getCurrentUser()){
+            if(item.getUsername().equals(EMClient.getInstance().getCurrentUser())){
                 if(ConferenceInfo.getInstance().getAdmins().contains(item.getUsername())){
                     userId_view.setText(PreferenceManager.getInstance().getCurrentUserNick() + " (我)" + " (主持人)");
                 }else {

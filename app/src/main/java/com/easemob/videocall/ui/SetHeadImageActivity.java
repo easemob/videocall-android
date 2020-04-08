@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -84,7 +85,7 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
         }
     }
 
-    private  void setImageHead(boolean save){
+    private void setImageHead(boolean save){
         if(save){
             String headImage = headImageList.get(HeadImageItemAdapter.chooseIndex);
             PreferenceManager.getInstance().setCurrentUserAvatar(headImage);

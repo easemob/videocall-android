@@ -1,5 +1,6 @@
 package com.easemob.videocall.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,7 +10,12 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -23,6 +29,8 @@ import android.widget.Toast;
 import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.adapter.HeadImageItemAdapter;
 import com.easemob.videocall.adapter.OnItemClickListener;
+import com.easemob.videocall.runtimepermissions.PermissionsManager;
+import com.easemob.videocall.runtimepermissions.PermissionsResultAction;
 import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -39,7 +47,8 @@ import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
 import com.hyphenate.util.EasyUtils;
-
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -111,7 +120,14 @@ public class MainActivity extends Activity {
 
         conferenceSession = DemoHelper.getInstance().getConferenceSession();
 
+        //申请权限
+        requestPermissions();
+
         getLatestVersion();
+
+        setEditTextInhibitInputSpace(roomnameEditText);
+        setEditTextInhibitInputSpace(passwordEditText);
+
     }
 
     /**
@@ -245,6 +261,20 @@ public class MainActivity extends Activity {
         return result;
     }
 
+    public static void setEditTextInhibitInputSpace(EditText editText){
+        InputFilter filter=new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if(source.equals(" ")){
+                    return "";
+                }else {
+                    return null;
+                }
+            }
+        };
+        editText.setFilters(new InputFilter[]{filter});
+    }
+
 
     /**
     自动注册一个账号
@@ -331,7 +361,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     加入一个聊天会议室
+     加入会议室
      */
     private void joinConference() {
         EMClient.getInstance().setDebugMode(true);
@@ -343,7 +373,15 @@ public class MainActivity extends Activity {
         EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMRoomConfig roomConfig = new EMRoomConfig();
         roomConfig.setNickName(currentNickname);
-        roomConfig.setExt( PreferenceManager.getInstance().getCurrentUserAvatar());
+        try {
+            JSONObject extobject = new JSONObject();
+            extobject.putOpt("headImage",PreferenceManager.getInstance().getCurrentUserAvatar());
+            String extStr = extobject.toString();
+            extStr = extStr.replace("\\","");
+            roomConfig.setExt(extStr);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
         EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole,roomConfig, new EMValueCallBack<EMConference>(){
                     @Override
                     public void onSuccess(EMConference value) {
@@ -545,6 +583,13 @@ public class MainActivity extends Activity {
         final Button btn_cancel = dialogView.findViewById(R.id.btn_cancel_nickname);
         final EditText editText = dialogView.findViewById(R.id.nickname_text);
 
+        CharSequence text = editText.getText();
+        //Debug.asserts(text instanceof Spannable);
+        if (text instanceof Spannable) {
+            Spannable spanText = (Spannable)text;
+            Selection.setSelection(spanText, text.length());
+        }
+
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -593,5 +638,24 @@ public class MainActivity extends Activity {
     private void setBtnEnable(boolean enable){
         btn_anchor.setEnabled(enable);
         btn_audience.setEnabled(enable);
+    }
+
+    @TargetApi(23)
+    private void requestPermissions() {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+            }
+
+            @Override
+            public void onDenied(String permission) {
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }

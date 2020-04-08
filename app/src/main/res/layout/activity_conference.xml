@@ -86,7 +86,7 @@
         android:layout_marginTop="50dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="16dp"
-        android:background="@drawable/ic_comments"/>
+        android:background="@drawable/ic_comments_up"/>
     <RelativeLayout
         android:id="@+id/ll_top_container"
         android:layout_width="40dp"
@@ -153,97 +153,126 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#141414">
+                       <RelativeLayout
+                        android:id="@+id/btn_call_mic_layout"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="6dp">
                         <Button
                             android:id="@+id/btn_call_mic"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="24dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
                             android:background="@drawable/em_call_mic_on" />
-                        <TextView
-                            android:id="@+id/text_call_mic"
-                            android:layout_width="60dp"
-                            android:layout_height="12dp"
-                            android:layout_below="@+id/btn_call_mic"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="6dp"
-                            android:textColor="#CCCCCC"
-                            android:textSize="10sp"
-                            android:layout_marginTop="1dp"
-                            android:gravity="center"
-                            android:text="静音"/>
+                           <TextView
+                               android:id="@+id/text_call_mic"
+                               android:layout_width="match_parent"
+                               android:layout_height="15dp"
+                               android:layout_alignParentEnd="true"
+                               android:layout_marginTop="25dp"
+                               android:gravity="center"
+                               android:text="静音"
+                               android:textColor="#CCCCCC"
+                               android:textSize="10sp" />
+                       </RelativeLayout>
+                       <RelativeLayout
+                        android:id="@+id/btn_call_video_layout"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="82dp">
                         <Button
                             android:id="@+id/btn_call_video"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginLeft="100dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginTop="4dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
                             android:background="@drawable/em_call_video_on" />
                         <TextView
                             android:id="@+id/text_call_video"
-                            android:layout_width="60dp"
-                            android:layout_height="12dp"
-                            android:layout_below="@+id/btn_call_mic"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="82dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="25dp"
                             android:textColor="#CCCCCC"
                             android:textSize="10sp"
-                            android:layout_marginTop="1dp"
                             android:gravity="center"
                             android:text="关闭视频"/>
+                       </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/btn_call_hangup_layout"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center">
                         <Button
                             android:id="@+id/btn_call_hangup"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
-                            android:layout_marginTop="4dp"
+                            android:layout_alignParentTop="true"
                             android:background="@drawable/em_call_hangup"
                             android:gravity="center" />
                         <TextView
                             android:id="@+id/text_call_hangup"
-                            android:layout_width="60dp"
-                            android:layout_height="12dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_below="@+id/btn_call_hangup"
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="25dp"
                             android:layout_gravity="center"
                             android:textColor="#CCCCCC"
                             android:textSize="10sp"
-                            android:layout_marginTop="1dp"
                             android:gravity="center"
                             android:text="挂断"/>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/btn_talker_list_layout"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="81dp">
                         <Button
                             android:id="@+id/btn_talker_list"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="99dp"
-                            android:background="@drawable/em_call_invite"
-                            android:gravity="center"
-                            android:textColor="#CCCCCC"
-                            android:textSize="10sp" />
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/em_call_invite"/>
                         <TextView
                             android:id="@+id/text_talker_list"
-                            android:layout_width="60dp"
-                            android:layout_height="12dp"
-                            android:layout_below="@+id/btn_talker_list"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="81dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="25dp"
                             android:textColor="#CCCCCC"
                             android:textSize="10sp"
-                            android:layout_marginTop="1dp"
                             android:gravity="center"
                             android:text="成员"/>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/btn_even_wheat_layout"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="6dp">
                         <Button
                             android:id="@+id/btn_even_wheat"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="24dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
                             android:gravity="center"
                             android:textColor="#CCCCCC"
                             android:textSize="10sp"
@@ -251,15 +280,14 @@
                         <TextView
                             android:id="@+id/text_even_wheat"
                             android:layout_width="60dp"
-                            android:layout_height="12dp"
-                            android:layout_below="@+id/btn_talker_list"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="6dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="25dp"
                             android:textColor="#CCCCCC"
                             android:textSize="10sp"
-                            android:layout_marginTop="1dp"
                             android:gravity="center"
                             android:text="下麦"/>
+                    </RelativeLayout>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
