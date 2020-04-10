@@ -120,10 +120,10 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_mute_all:
-                setBtn_mute_all();
+                onMuteAll();
                 break;
             case R.id.btn_unmute_all:
-                setBtn_unmute_all();
+                onUnMuteAll();
                 break;
             default:
                 break;
@@ -133,7 +133,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     /**
      * 全体静音
      */
-    private  void setBtn_mute_all(){
+    private  void onMuteAll(){
         JSONObject object = null;
         btn_mute_all.setClickable(false);
         try {
@@ -172,7 +172,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     /**
      * 解除全体静音
      */
-    private  void setBtn_unmute_all(){
+    private void onUnMuteAll(){
         btn_unmute_all.setClickable(false);
         JSONObject object = null;
         try {
