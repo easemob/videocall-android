@@ -1,7 +1,5 @@
 package com.easemob.videocall.ui;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -9,6 +7,11 @@ import android.view.WindowManager;
 
 import com.easemob.videocall.R;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
 
 public abstract class BaseLiveDialogFragment extends BaseDialogFragment {
 
@@ -17,9 +20,6 @@ public abstract class BaseLiveDialogFragment extends BaseDialogFragment {
         super.onStart();
         try {
             Window dialogWindow = getDialog().getWindow();
-//            dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//            dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
-//            dialogWindow.setDimAmount(0);
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             lp.gravity = Gravity.BOTTOM;
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT;

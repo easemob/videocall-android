@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.InputFilter;
 import android.text.Selection;
 import android.text.Spannable;
@@ -26,9 +25,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.videocall.DemoApplication;
-import com.easemob.videocall.adapter.HeadImageItemAdapter;
-import com.easemob.videocall.adapter.OnItemClickListener;
 import com.easemob.videocall.runtimepermissions.PermissionsManager;
 import com.easemob.videocall.runtimepermissions.PermissionsResultAction;
 import com.easemob.videocall.utils.ConferenceSession;
@@ -38,7 +34,6 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
-import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -46,8 +41,6 @@ import com.easemob.videocall.DemoHelper;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
-import com.hyphenate.util.EasyUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,8 +50,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,7 +63,6 @@ import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
  * date: 03/15/2020
  */
 
-
 public class MainActivity extends Activity {
     private  final String TAG = this.getClass().getSimpleName();
     private EditText roomnameEditText;
@@ -81,12 +71,12 @@ public class MainActivity extends Activity {
     private String currentRoomname;
     private String currentPassword;
     private String currentNickname;
-    private String accessToken;
     private EMConferenceManager.EMConferenceRole  conferenceRole;
     private String password = "123";
     final  private String regEx="[\n`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。， 、？-]";
     private Button btn_anchor;
     private Button btn_audience;
+    private TextView version_view;
     private ConferenceSession conferenceSession;
     private String url = "http://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/RtcDemo/version.conf";
 
@@ -94,15 +84,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-         btn_anchor = (Button)findViewById(R.id.btn_anchor);
-         btn_audience = (Button)findViewById(R.id.btn_audience);
+        btn_anchor = (Button)findViewById(R.id.btn_anchor);
+        btn_audience = (Button)findViewById(R.id.btn_audience);
+        version_view = (TextView)findViewById(R.id.versionName_view);
 
         roomnameEditText = (EditText) findViewById(R.id.roomname);
         passwordEditText = (EditText) findViewById(R.id.password);
+        roomnameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(18)});
+        passwordEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(18)});
+
         if(ConferenceInfo.getInstance().getRoomname() != null){
             roomnameEditText.setText(ConferenceInfo.getInstance().getRoomname());
         }
@@ -142,30 +132,37 @@ public class MainActivity extends Activity {
         currentPassword = passwordEditText.getText().toString().trim();
         if(currentRoomname.length() == 0 && currentPassword.length() == 0){
             Toast.makeText(getApplicationContext(), "房间名或密码不允许为空！", Toast.LENGTH_SHORT).show();
+            setBtnEnable(true);
             return;
         }
         if(currentRoomname.length() < 3){
             Toast.makeText(getApplicationContext(), "房间名不能少于3位！", Toast.LENGTH_SHORT).show();
+            setBtnEnable(true);
             return;
         }
         if(currentPassword.length() < 3){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "密码不能少于3位！", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(currentRoomname.length() > 18){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间名不能超过18位！", Toast.LENGTH_SHORT).show();
             return;
         }
         if(currentPassword.length() > 18){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间密码不能超过18位！", Toast.LENGTH_SHORT).show();
             return;
         }
         if(!isLegalChars(currentRoomname)){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间名不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符!", Toast.LENGTH_SHORT).show();
             return;
         }
         if(!isLegalChars(currentPassword)){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "密码不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -179,10 +176,10 @@ public class MainActivity extends Activity {
 
         if(currentNickname != null){
             if(username == null){
-                register(view);
+                register();
             }else{
                 password = PreferenceManager.getInstance().getCurrentUserPassWord();
-                login(view);
+                login();
             }
         }else{
             setNickNameDialogDisplay();
@@ -202,30 +199,37 @@ public class MainActivity extends Activity {
 
         if(currentRoomname.length() == 0 && currentPassword.length() == 0){
             Toast.makeText(getApplicationContext(), "房间名或密码不允许为空！", Toast.LENGTH_SHORT).show();
+            setBtnEnable(true);
             return;
         }
         if(currentRoomname.length() < 3){
             Toast.makeText(getApplicationContext(), "房间名不能少于3位！", Toast.LENGTH_SHORT).show();
+            setBtnEnable(true);
             return;
         }
         if(currentPassword.length() < 3){
             Toast.makeText(getApplicationContext(), "密码不能少于3位！", Toast.LENGTH_SHORT).show();
+            setBtnEnable(true);
             return;
         }
 
         if(currentRoomname.length() > 18){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间名不能超过18位！", Toast.LENGTH_SHORT).show();
             return;
         }
         if(currentPassword.length() > 18){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间密码不能超过18位！", Toast.LENGTH_SHORT).show();
             return;
         }
         if(!isLegalChars(currentRoomname)){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "房间名不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符!", Toast.LENGTH_SHORT).show();
             return;
         }
         if(!isLegalChars(currentPassword)){
+            setBtnEnable(true);
             Toast.makeText(getApplicationContext(), "密码不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -239,10 +243,10 @@ public class MainActivity extends Activity {
 
         if(currentNickname != null){
             if(username == null){
-                register(view);
+                register();
             }else{
                 password = PreferenceManager.getInstance().getCurrentUserPassWord();
-                login(view);
+                login();
             }
         }else{
             setNickNameDialogDisplay();
@@ -272,14 +276,15 @@ public class MainActivity extends Activity {
                 }
             }
         };
-        editText.setFilters(new InputFilter[]{filter});
+
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(18)});
     }
 
 
     /**
     自动注册一个账号
      */
-    public void register(View view){
+    public void register(){
         new Thread(new Runnable() {
             public void run() {
                 UUID uuid = UUID.randomUUID();
@@ -290,14 +295,11 @@ public class MainActivity extends Activity {
                 try {
                     // call method in SDK
                     EMClient.getInstance().createAccount(username, password);
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            //注册成功进行登录
-                            PreferenceManager.getInstance().setCurrentUserName(username);
-                            PreferenceManager.getInstance().setCurrentuserPassword(password);
-                            login(view);
-                        }
-                    });
+
+                    //注册成功进行登录
+                    PreferenceManager.getInstance().setCurrentUserName(username);
+                    PreferenceManager.getInstance().setCurrentuserPassword(password);
+                    login();
                 } catch (final HyphenateException e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -327,20 +329,19 @@ public class MainActivity extends Activity {
     /**
     登录IM账号
      */
-    public void login(View view) {
+    public void login() {
         Log.d(TAG, "EMClient.getInstance().login");
         EMClient.getInstance().login(username, password, new EMCallBack() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "login: onSuccess");
-                accessToken = EMClient.getInstance().getAccessToken();
                 //登录成功进入会议房间
                 if(currentRoomname == null || currentPassword == null){
                     Toast.makeText(getApplicationContext(), "房间名和密码不允许为空",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                joinConference();
+                joinRoom();
             }
             @Override
             public void onProgress(int progress, String status) {
@@ -363,14 +364,13 @@ public class MainActivity extends Activity {
     /**
      加入会议室
      */
-    private void joinConference() {
+    private void joinRoom() {
         EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
         if(conferenceSession.getConferenceProfiles() != null){
             conferenceSession.getConferenceProfiles().clear();
         }
         DemoHelper.getInstance().setGlobalListeners();
-        EMClient.getInstance().conferenceManager().set(accessToken,EMClient.getInstance().getOptions().getAppKey() ,username);
         EMRoomConfig roomConfig = new EMRoomConfig();
         roomConfig.setNickName(currentNickname);
         try {
@@ -440,12 +440,10 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view){
                 dialog.dismiss();
-
                 EMLog.e(TAG, "talker is full , join conference as Audience");
-
                 conferenceRole = EMConferenceManager.EMConferenceRole.Audience;
                 ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Audience);
-                joinConference();
+                joinRoom();
             }
         });
 
@@ -502,6 +500,9 @@ public class MainActivity extends Activity {
                         JSONObject versionobj = object.optJSONObject("version");
                         String newverison = versionobj.optString("Android");
                         String currentversion = getCurrentVersion(getApplicationContext());
+                        String versionName = "V";
+                        versionName = versionName + currentversion;
+                        version_view.setText(versionName);
                         if(!currentversion.equals(newverison)){
                             runOnUiThread(new Runnable() {
                                 public void run() {
@@ -602,10 +603,10 @@ public class MainActivity extends Activity {
                     EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + currentNickname);
                     PreferenceManager.getInstance().setCurrentUserNick(currentNickname);
                     if(username == null){
-                        register(view);
+                        register();
                     }else{
                         password = PreferenceManager.getInstance().getCurrentUserPassWord();
-                        login(view);
+                        login();
                     }
                 }
             }

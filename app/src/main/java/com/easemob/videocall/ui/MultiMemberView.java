@@ -134,19 +134,6 @@ public class MultiMemberView extends RadioLayout {
 		return isVideoOff;
 	}
 
-
-	/**
-	 * 更新说话状态(二期可能会用到 先注释)
-	 */
-	public void setTalking(boolean talking) {
-		/*if (talking) {
-			//talkingView.setVisibility(VISIBLE);
-			//audioOffView.setVisibility(View.GONE);
-		} else {
-			talkingView.setVisibility(GONE);
-		}*/
-	}
-
 	/**
 	 * 设置当前 view 对应的 stream 的用户，主要用来语音通话时显示对方头像
 	 */

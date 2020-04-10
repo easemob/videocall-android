@@ -5,6 +5,13 @@ import android.view.View;
 import android.widget.TextView;
 import com.easemob.videocall.R;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
+
+
 public class HangUpDialog extends BaseLiveDialogFragment implements View.OnClickListener {
     private final String TAG = this.getClass().getSimpleName();
     private TextView btn_leave;

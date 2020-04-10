@@ -126,15 +126,27 @@
         </LinearLayout>
         <Button
             android:layout_width="48dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="50dp"
             android:background="@color/color_transparent"
             android:gravity="center"
             android:onClick="personalSetting"
             android:text="设置"
             android:textColor="#00AFEF"
             android:textSize="14sp" />
+        <TextView
+            android:id="@+id/versionName_view"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:background="@color/color_transparent"
+            android:gravity="center"
+            android:text="V1.2.0"
+            android:textColor="@color/gray_normal"
+            android:textSize="12sp" />
     </RelativeLayout>
 </LinearLayout>

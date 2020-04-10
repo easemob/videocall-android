@@ -6,8 +6,8 @@ android {
         applicationId "com.easemob.videocall"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 2
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -49,8 +49,8 @@ configurations.all {
 
 dependencies {
     //内部直接依赖项目，用户可以使用远程依赖或者本地依赖
-    //api 'com.hyphenate:hyphenate-sdk:3.6.5'
-    api project(':hyphenatechatsdk')
+    api 'com.hyphenate:hyphenate-sdk:3.6.5'
+    //api project(':hyphenatechatsdk')
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation 'com.parse:parse-android:1.13.1'
     implementation 'com.android.support:multidex:1.0.0'

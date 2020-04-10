@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 /**
- * 作为dialog fragment的基类
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
  */
+
 public abstract class BaseDialogFragment extends DialogFragment {
     public Activity mContext;
 

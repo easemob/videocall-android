@@ -155,14 +155,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), "您已成功设置全体静音", Toast.LENGTH_SHORT).show();
-                                /*for (EMConferenceStream streamInfo : streamList){
-                                    if(!streamInfo.getUsername().equals(EMClient.getInstance().getCurrentUser())){
-                                        streamInfo.setAudioOff(true);
-                                    }
-                                }
-                                if(adapter != null){
-                                    adapter.notifyDataSetChanged();
-                                }*/
                                 btn_mute_all.setClickable(true);
                             }
                         });
@@ -202,14 +194,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), "您已成功解除全体静音", Toast.LENGTH_SHORT).show();
-                                /*for (EMConferenceStream streamInfo : streamList){
-                                    if(!streamInfo.getUsername().equals(EMClient.getInstance().getCurrentUser())){
-                                        streamInfo.setAudioOff(false);
-                                    }
-                                }
-                                if(adapter != null){
-                                    adapter.notifyDataSetChanged();
-                                }*/
                                 btn_unmute_all.setClickable(true);
                             }
                         });
@@ -284,21 +268,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     }
 
     private void upDateTalkerList(String key ,String value){
-        /*if(key.equals("indexUpdate")){
-            if (streamList != null && !streamList.isEmpty()) {
-                int index = -1;
-                for (int i = 0; i < streamList.size(); i++) {
-                    EMConferenceStream userStream = streamList.get(i);
-                    if (userStream != null && userStream.getUsername() != null && userStream.getUsername().equals(value)) {
-                        index = i;
-                        break;
-                    }
-                }
-                adapter.notifyItemChanged(index);
-            }
-        }else{
-                adapter.notifyDataSetChanged();
-        }*/
         adapter.notifyDataSetChanged();
     }
 

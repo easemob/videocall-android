@@ -4,6 +4,13 @@ import android.view.View;
 import android.widget.TextView;
 import com.easemob.videocall.R;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
+
+
 public class SwitchAudioDialog extends BaseLiveDialogFragment implements View.OnClickListener {
     private final String TAG = this.getClass().getSimpleName();
     private TextView btn_loudspeaker;  //扬声器
@@ -40,7 +47,6 @@ public class SwitchAudioDialog extends BaseLiveDialogFragment implements View.On
         super.initView(savedInstanceState);
         btn_loudspeaker = findViewById(R.id.btn_loudspeaker);
         btn_builtIn = findViewById(R.id.btn_builtIn);
-        //btn_bluetooth = findViewById(R.id.btn_bluetooth);
         btn_cancel = findViewById(R.id.bnt_cancel_switch_device);
     }
 
@@ -50,7 +56,6 @@ public class SwitchAudioDialog extends BaseLiveDialogFragment implements View.On
         super.initListener();
         btn_loudspeaker.setOnClickListener(this);
         btn_builtIn.setOnClickListener(this);
-        //btn_bluetooth.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
     }
 
@@ -66,14 +71,11 @@ public class SwitchAudioDialog extends BaseLiveDialogFragment implements View.On
                 onLoudspeaker();
                 break;
             case R.id.btn_builtIn:
-                onBuiltIn();
-                break;
-            /*case R.id.btn_bluetooth:
-                onBluetooth();
-                break;*/
+                 onBuiltIn();
+                 break;
             case R.id.bnt_cancel_switch_device:
-                dismiss();
-                break;
+                 dismiss();
+                 break;
         }
     }
 

@@ -16,6 +16,12 @@ import com.hyphenate.chat.EMConferenceMember;
 
 import java.util.List;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
+
 public class AdminInfoAdapter extends ArrayAdapter<String> {
 
     private int layoutId;

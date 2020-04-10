@@ -80,7 +80,6 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
         room_name = (TextView)findViewById(R.id.room_name_edit);
         room_password = (TextView)findViewById(R.id.room_password_edit);
         room_admin = (TextView)findViewById(R.id.btn_request_admin);
-
         adminList = ConferenceInfo.getInstance().getAdmins();
 
         mId = getIntent().getIntExtra(ConferenceActivity.KEY_ID, -1);
@@ -104,7 +103,6 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_roomlog);
         uploadlog.setOnClickListener(this);
-
         room_admin.setOnClickListener(this);
 
     }

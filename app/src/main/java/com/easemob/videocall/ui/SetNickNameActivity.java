@@ -10,6 +10,12 @@ import android.widget.Toast;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.PreferenceManager;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
+
 public class SetNickNameActivity extends Activity  implements View.OnClickListener {
 
     EditText edit_nickName;
@@ -17,7 +23,6 @@ public class SetNickNameActivity extends Activity  implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nickname_setting);
-
 
         //设置昵称
         edit_nickName = findViewById(R.id.edit_nickName);

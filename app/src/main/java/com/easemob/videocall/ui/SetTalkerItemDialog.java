@@ -30,8 +30,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyphenate.util.DensityUtil.dip2px;
-import static com.superrtc.ContextUtils.getApplicationContext;
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 03/15/2020
+ */
+
 
 public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.OnClickListener {
     private final String TAG = this.getClass().getSimpleName();
@@ -43,8 +47,6 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
     private int position;
     private EMConferenceStream conferenceStream;
     private TalkerItemAdapter adapter;
-    private CardView setCardView;
-    private LinearLayout setCardViewLayout;
 
     public static SetTalkerItemDialog getNewInstance(String username) {
         SetTalkerItemDialog dialog = new SetTalkerItemDialog();
@@ -77,15 +79,11 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
         tvSetAdmin = findViewById(R.id.set_admin);
         tvRemoveMeeting = findViewById(R.id.remove_meeting);
         tvCancel = findViewById(R.id.tv_cancel);
-        setCardView = findViewById(R.id.card_view_one);
-        setCardViewLayout = findViewById(R.id.card_view_layout);
         if(conferenceStream.isAudioOff()){
             tvMute.setText("解除静音");
         }else {
             tvMute.setText("静音");
         }
-
-
         //已经是管理员
         if(ConferenceInfo.getInstance().getAdmins().contains(username) || username.equals(EMClient.getInstance().getCurrentUser())){
             tvRemoveMeeting.setVisibility(View.GONE);
@@ -154,13 +152,6 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
                         @Override
                         public void onSuccess(Void value) {
                             EMLog.i(TAG, "request_tobe_unmute scuessed");
-                            /*getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    conferenceStream.setAudioOff(false);
-                                    adapter.notifyItemChanged(position);
-                                }
-                            });*/
                             dismiss();
                         }
                         @Override
@@ -187,13 +178,6 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
                         @Override
                         public void onSuccess(Void value) {
                             EMLog.i(TAG, "request_tobe_mute scuessed");
-                            /*getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    conferenceStream.setAudioOff(true);
-                                    adapter.notifyItemChanged(position);
-                                }
-                            });*/
                             dismiss();
                         }
                         @Override

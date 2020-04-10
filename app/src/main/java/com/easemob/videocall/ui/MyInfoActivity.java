@@ -36,6 +36,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
+
 public class MyInfoActivity extends Activity implements View.OnClickListener {
     private  final String TAG = this.getClass().getSimpleName();
 

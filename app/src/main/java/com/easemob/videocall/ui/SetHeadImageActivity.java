@@ -39,8 +39,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+/**
+ * author lijian
+ * email: Allenlee@easemob.com
+ * date: 04/10/2020
+ */
 
 public class SetHeadImageActivity extends Activity implements View.OnClickListener {
     RecyclerView headImageView;
@@ -49,14 +53,11 @@ public class SetHeadImageActivity extends Activity implements View.OnClickListen
     private List<String> headImageList;
     DividerItemDecoration decoration;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_headimage_setting);
-
         headImageView = findViewById(R.id.headImage_recyclerView);
-
         decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
         Button  editHeadImage_back = findViewById(R.id.editHeadImage_back);
