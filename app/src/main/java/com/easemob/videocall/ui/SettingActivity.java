@@ -2,19 +2,26 @@ package com.easemob.videocall.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.model.EaseCompat;
 import com.hyphenate.chat.EMClient;
 import com.easemob.videocall.ui.widget.EaseSwitchButton;
@@ -24,6 +31,10 @@ import com.easemob.videocall.utils.PreferenceManager;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,19 +49,27 @@ import static com.superrtc.mediamanager.EMediaManager.getContext;
 
 public class SettingActivity extends Activity implements View.OnClickListener{
 
+    ImageView imageView;
+    String url;
+    TextView  IDView;
+    String urlparm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        TextView  IDView = (TextView)findViewById(R.id.nickname_edit);
+
+        IDView = (TextView)findViewById(R.id.nickname_edit);
         initCameraResolutionSpinner(R.id.spinner_video_resolution);
 
-        String username = PreferenceManager.getInstance().getCurrentUsername();
-        if(username != null){
-            IDView.setText(username);
+        imageView = (ImageView)findViewById(R.id.headImage);
+
+        String nickName = PreferenceManager.getInstance().getCurrentUserNick();
+        if(nickName != null){
+            IDView.setText(nickName);
         }else{
-            IDView.setText("未注册");
+            IDView.setText("未设置昵称");
         }
 
         // video
@@ -76,6 +95,15 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_log);
         uploadlog.setOnClickListener(this);
+
+        RelativeLayout myInfo = (RelativeLayout)findViewById(R.id.btn_myInfo);
+        myInfo.setOnClickListener(this);
+
+        //load image
+        urlparm = PreferenceManager.getInstance().getCurrentUserAvatar();
+        url = DemoApplication.baseurl;
+        url = url + urlparm;
+        loadImage();
     }
 
     public void onSettingback(View view){
@@ -177,8 +205,28 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             case R.id.btn_upload_log:
                  sendLogThroughMail();
                  break;
+            case R.id.btn_myInfo:
+                Intent intent = new Intent(SettingActivity.this, MyInfoActivity.class);
+                startActivityForResult(intent, 1);
+                break;
             default:
                 break;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            if(data != null) {
+                String name = data.getStringExtra("nickName");
+                IDView.setText(name);
+                String headImage = data.getStringExtra("headImage");
+                url = DemoApplication.baseurl;
+                url = url + headImage;
+                loadImage();
+            }
         }
     }
 
@@ -229,5 +277,41 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                 });
             }
         }
+    }
+
+    /**
+     * 获取网落图片资源
+     * @return
+     */
+    private void loadImage() {
+        new AsyncTask<String, Void, Bitmap>() {
+            //该方法运行在后台线程中，因此不能在该线程中更新UI，UI线程为主线程
+            @Override
+            protected Bitmap doInBackground(String... params) {
+                Bitmap bitmap = null;
+                try {
+                    String url = params[0];
+                    URL HttpURL = new URL(url);
+                    HttpURLConnection conn = (HttpURLConnection) HttpURL.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            //在doInBackground 执行完成后，onPostExecute 方法将被UI 线程调用，
+            // 后台的计算结果将通过该方法传递到UI线程，并且在界面上展示给用户.
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if(bitmap != null){
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        }.execute(url);
     }
 }

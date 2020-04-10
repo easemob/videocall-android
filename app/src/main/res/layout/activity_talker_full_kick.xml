@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_width="259dp"
+        android:layout_height="163dp"
+        android:layout_gravity="center"
+        android:background="#ffffffff"
         android:orientation="vertical"
+        android:radius="8dp">
         >
         <TextView
             android:id="@+id/info_view"
@@ -16,34 +17,33 @@
             android:layout_height="100dp"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="主播人数最多为9人，选择一名主播下麦进行替换？"
-            android:textSize="17sp" />
+            android:text="主播人数已满 选人下麦"
+            android:textColor="#3A3A3A"
+            android:textSize="16sp"
+            />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="22dp"
+            android:layout_marginTop="20dp">
             <Button
                 android:id="@+id/btn_kick_cancel"
-                android:layout_width="70dp"
-                android:layout_height="35dp"
-                android:paddingLeft="10dip"
-                android:layout_marginTop="12dp"
-                android:background="#7C7FE5"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/color_transparent"
                 android:text="取消"
-                android:textColor="@android:color/white"
+                android:textColor="#333333"
                 android:textSize="16sp" />
-
             <Button
                 android:id="@+id/btn_kick_ok"
-                android:layout_width="70dp"
-                android:layout_height="35dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="12dp"
-                android:background="#7C7FE5"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
                 android:text="确定"
-                android:textColor="@android:color/white"
+                android:background="@color/color_transparent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:textColor="#04AEF0"
                 android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>

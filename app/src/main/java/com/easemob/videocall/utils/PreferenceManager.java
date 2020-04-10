@@ -260,7 +260,7 @@ public class PreferenceManager {
 	}
 
 	public String getCurrentUserAvatar() {
-		return mSharedPreferences.getString(SHARED_KEY_CURRENTUSER_AVATAR, null);
+		return mSharedPreferences.getString(SHARED_KEY_CURRENTUSER_AVATAR, "Image3.png");
 	}
 
 	public void setCurrentUserName(String username){

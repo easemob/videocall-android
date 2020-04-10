@@ -11,26 +11,29 @@
         <RelativeLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#7C7FE5"
+            android:layout_height="44dp"
+            android:background="@color/color_transparent"
             android:gravity="center_vertical" >
             <Button
-                android:id="@+id/set_back"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginLeft="10dip"
-                android:onClick="onRoomSettingback"
-                android:background="@drawable/ease_mm_title_back"/>
-            <com.easemob.videocall.ui.widget.EaseTitleBar
+                android:id="@+id/set_room_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:background="@drawable/ease_mm_title_back"
+                android:onClick="onRoomSettingback" />
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#7C7FE5"
-                app:titleBarTitle="@string/roomset" />
+                android:textSize="18sp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:textColor="#424242"
+                android:text="房间信息" />
         </RelativeLayout>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fadingEdge="none" >
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,142 +42,123 @@
                 <RelativeLayout
                     android:id="@+id/rl_nickname"
                     android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:padding="10dip"
-                    android:background="@drawable/em_btn_bottom_selector">
+                    android:layout_height="66dp"
+                    android:background="@color/color_transparent">
                     <TextView
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="66dp"
+                        android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="10dip"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="20dp"
                         android:text="@string/roomName"
-                        android:textColor="@android:color/black"
+                        android:textColor="#FF999999"
+                        android:gravity="left|center_vertical"
                         android:textSize="14sp"
                         android:typeface="serif" />
                     <TextView
                         android:id="@+id/room_name_edit"
                         android:layout_width="200dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:gravity="center_vertical|right"
-                        android:textColor="@android:color/black"
+                        android:textColor="#FF999999"
                         android:textSize="14sp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:typeface="serif"/>
+                        android:layout_marginRight="16dp" />
                 </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal"
-                    />
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
-
                     <RelativeLayout
                         android:id="@+id/rl_switch_video"
                         android:layout_width="match_parent"
-                        android:layout_height="50dip"
-                        android:background="@drawable/em_btn_bottom_selector"
-                        android:padding="10dip" >
+                        android:layout_height="66dp"
+                        android:background="@color/color_transparent">
                         <TextView
-                            android:layout_width="120dp"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dip"
-                            android:text="@string/roomPassword"
-                            android:textColor="@android:color/black"
+                            android:layout_width="76dp"
+                            android:layout_height="20dp"
                             android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="20dp"
+                            android:text="@string/roomPassword"
                             android:textSize="14sp"
+                            android:gravity="left|center_vertical"
+                            android:textColor="#FF999999"
                             android:typeface="serif" />
                         <TextView
                             android:id="@+id/room_password_edit"
                             android:layout_width="200dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:gravity="center_vertical|right"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FF999999"
                             android:textSize="14sp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:typeface="serif"/>
+                            android:layout_marginRight="16dp"/>
                     </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/textview1"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dip"
-                        android:layout_marginLeft="10dip"
-                        android:layout_marginRight="10dip"
-                        android:background="@color/btn_gray_normal" />
-
                     <RelativeLayout
                         android:id="@+id/rl_switch_audio"
                         android:layout_width="match_parent"
-                        android:layout_height="50dip"
-                        android:background="@drawable/em_btn_bottom_selector"
-                        android:padding="10dip" >
+                        android:layout_height="66dp"
+                        android:background="@color/color_transparent">
                         <TextView
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dip"
-                            android:text="@string/room_admin"
-                            android:layout_centerVertical="true"
-                            android:textColor="@android:color/black"
+                            android:text="主持人"
+                            android:layout_width="62dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="20dp"
+                            android:gravity="left|center_vertical"
                             android:textSize="14sp"
+                            android:layout_centerVertical="true"
+                            android:textColor="#FF999999"
                             android:typeface="serif" />
                         <TextView
-                            android:id="@+id/room_admin_edit"
-                            android:layout_width="280dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical|right"
-                            android:textColor="@android:color/black"
-                            android:textSize="14sp"
+                            android:id="@+id/btn_request_admin"
+                            android:layout_width="120dp"
+                            android:layout_height="20dp"
+                            android:text=""
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:typeface="serif"/>
+                            android:layout_marginRight="16dp"
+                            android:gravity="center_vertical|right"
+                            android:textColor="#FF00AFEF"
+                            android:textSize="14sp"
+                            android:layout_centerVertical="true"/>
                     </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dip"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@color/btn_gray_normal" />
+                    <com.easemob.videocall.ui.widget.MyListview
+                            android:id="@+id/adminListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/em_btn_bottom_selector">
+                    </com.easemob.videocall.ui.widget.MyListview>
                     <RelativeLayout
                         android:id="@+id/rl_push_settings"
                         android:layout_width="match_parent"
-                        android:layout_height="50dip"
-                        android:background="@drawable/em_btn_bottom_selector"
-                        android:paddingLeft="10dip" >
+                        android:layout_height="66dp"
+                        android:background="@color/color_transparent">
                         <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="140dp"
+                            android:layout_height="20dp"
                             android:layout_centerVertical="true"
-                            android:paddingLeft="10dip"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="20dp"
                             android:text="@string/upload_log_info"
-                            android:textColor="@android:color/black"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
+                            android:textColor="#FF999999"
                             android:typeface="serif" />
                         <Button
                             android:id="@+id/btn_upload_roomlog"
-                            android:layout_width="70dp"
-                            android:layout_height="40dip"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center"
-                            android:textColor="#7C7FE5"
+                            android:layout_width="76dp"
+                            android:layout_height="20dp"
+                            android:textColor="#FF00AFEF"
                             android:text="上传日志"
-                            android:textSize="12sp"
+                            android:gravity="right|center_vertical"
                             android:background="@color/color_transparent"
-                            android:layout_marginRight="10dip" />
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="16dp"
+                            android:textSize="14sp" />
                     </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dip"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@color/btn_gray_normal" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

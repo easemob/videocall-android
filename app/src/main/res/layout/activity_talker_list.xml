@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/common_bg"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#00acff"
+        android:layout_height="44dp"
+        android:background="@color/color_transparent"
         android:gravity="center_vertical" >
         <Button
-            android:id="@+id/set_back"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="10dip"
-            android:onClick="onTalkerListback"
-            android:background="@drawable/ease_mm_title_back"/>
-
-        <com.easemob.videocall.ui.widget.EaseTitleBar
+            android:id="@+id/set_list_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24dp"
+            android:background="@drawable/ease_mm_title_back"
+            android:onClick="onTalkerListback"/>
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/set_back"
-            android:layout_alignLeft="@+id/set_back"
-            android:layout_marginStart="-10dp"
-            android:layout_marginLeft="-10dp"
-            android:background="#7C7FE5"
-            app:titleBarTitle="@string/talker_list" />
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:textColor="#424242"
+            android:text="主播列表" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,53 +34,69 @@
         <RelativeLayout
             android:id="@+id/Layout_list"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="46dp"
             android:background="@drawable/em_btn_bottom_selector">
             <TextView
-                android:layout_width="120dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="100dp"
-                android:layout_centerVertical="true"
-                android:text="@string/attendance"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
-                android:gravity="center"/>
-            <TextView
                 android:id="@+id/attendance_count"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
+                android:layout_width="106dp"
+                android:layout_height="16dp"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="80dp"
+                android:textColor="#FF666666"
                 android:gravity="center"
-                android:text="0"
+                android:text="当前观众人数 0"
                 android:textSize="12sp" />
             <ImageView
                 android:id="@+id/attendance_hot"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_toRightOf="@id/attendance_count"
+                android:layout_marginLeft ="4dp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="40dp"
-                android:layout_alignParentRight="true"
                 android:background="@drawable/em_hot_show" />
-            <TextView
-                android:layout_marginTop="59dp"
-                android:layout_alignParentTop="true"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#FF4B5766" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/btn_white_normal"
             android:orientation="vertical">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/talker_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="0dp"></android.support.v7.widget.RecyclerView>
+                android:layout_alignParentTop="true">
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/btn_mute_layout"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/btn_white_normal"
+            android:visibility="visible">
+            <Button
+                android:id="@+id/btn_mute_all"
+                android:layout_width="76dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="22dp"
+                android:background="@color/color_transparent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#FF00AFEF"
+                android:textSize="14sp"
+                android:text="全体静音"/>
+            <Button
+                android:id="@+id/btn_unmute_all"
+                android:layout_width="96dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="120dp"
+                android:background="@color/color_transparent"
+                android:text="解除全体静音"
+                android:gravity="center"
+                android:textColor="#FF00AFEF"
+                android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

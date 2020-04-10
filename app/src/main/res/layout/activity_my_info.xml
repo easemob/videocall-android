@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eff2f6"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/color_transparent"
+            android:gravity="center_vertical" >
+            <Button
+                android:id="@+id/set_myInfo_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="6dp"
+                android:onClick="onMyInfoback"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:background="@drawable/ease_mm_title_back" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:textColor="#424242"
+                android:layout_centerVertical="true"
+                android:text="我的资料" />
+        </RelativeLayout>
+            android:layout_width="match_parent"
+            android:layout_height="108dp"
+            android:fadingEdge="none" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <RelativeLayout
+                    android:id="@+id/rl_headInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="108dp"
+                    android:background="@color/color_transparent">
+                    <TextView
+                        android:layout_width="48dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:text="头像"
+                        android:gravity="left|center_vertical"
+                        android:textColor="#333333"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="16dp"
+                        android:textSize="14sp"/>
+                    <ImageView
+                        android:id="@+id/headImage_Info"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="42dp"
+                        android:layout_centerVertical="true"
+                        android:textSize="14sp"
+                        android:typeface="serif" />
+                    <RelativeLayout
+                        android:id="@+id/btn_set_headImage"
+                        android:layout_width="47.14dp"
+                        android:layout_height="47.14dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true">
+                        <Button
+                            android:layout_width="5.14dp"
+                            android:layout_height="8.99dp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/em_ic_right_arrow" />
+                    </RelativeLayout>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <RelativeLayout
+                        android:id="@+id/rl_nicknameInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="66dp"
+                        android:background="@color/color_transparent">
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:text="我的昵称"
+                            android:textColor="#333333"
+                            android:textSize="14sp"
+                            android:gravity="left|center_vertical"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="16dp" />
+                        <TextView
+                            android:id="@+id/nickname_Info"
+                            android:layout_width="200dip"
+                            android:layout_height="42dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="42dp"
+                            android:textColor="#999999"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical|right"
+                            android:textSize="14sp"/>
+                        <RelativeLayout
+                            android:id="@+id/btn_set_nickname"
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true">
+                            <Button
+                                android:layout_width="6dp"
+                                android:layout_height="9dp"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/em_ic_right_arrow" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+            </LinearLayout>
+</LinearLayout>
+    </LinearLayout>
+</LinearLayout>

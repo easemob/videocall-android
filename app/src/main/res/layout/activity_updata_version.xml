@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="259dp"
+        android:layout_height="163dp"
+        android:layout_gravity="center"
+        android:background="#ffffffff"
+        android:orientation="vertical"
+        android:radius="8dp">
+        >
+        <TextView
+            android:id="@+id/current_info_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="当前不是最新版本 请更新到最新"
+            android:textColor="#3A3A3A"
+            android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp">
+            <Button
+                android:id="@+id/btn_update_ok"
+                android:layout_width="62dp"
+                android:layout_height="match_parent"
+                android:text="更新"
+                android:gravity="center"
+                android:background="@color/color_transparent"
+                android:layout_centerHorizontal="true"
+                android:textColor="#04AEF0"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

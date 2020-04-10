@@ -469,4 +469,5 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_talker_list">TalkerListActivity</string>
     <string name="title_activity_room_setting">RoomSettingActivity</string>
+    <string name="title_activity_my_info">MyInfo</string>
 </resources>

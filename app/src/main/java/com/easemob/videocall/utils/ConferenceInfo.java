@@ -1,8 +1,10 @@
 package com.easemob.videocall.utils;
 import android.util.Log;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
+import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.util.EasyUtils;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class ConferenceInfo {
     private List<EMConferenceStream> streamList = new ArrayList<>();
     private EMConferenceStream localStream = new EMConferenceStream();
     private EMConferenceManager.EMConferenceRole conferenceRole;
+    private List<EMConferenceMember> memberList;
+    private List<String> adminsList;
 
     public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
@@ -43,6 +47,12 @@ public class ConferenceInfo {
     public void Init(){
         Initflag = false;
         streamList.clear();
+        if(memberList != null){
+            memberList.clear();
+         }
+        if(adminsList != null){
+           adminsList.clear();
+        }
     }
 
     public EMConferenceManager.EMConferenceRole getCurrentrole(){
@@ -57,9 +67,54 @@ public class ConferenceInfo {
         return localStream;
     }
 
+    public List<EMConferenceMember> getConferenceMemberList(){
+        if(memberList == null){
+            memberList = new ArrayList<>();
+        }
+        return memberList;
+    }
+
+    public EMConferenceMember getConferenceMemberInfo(String memberName){
+        if (memberList == null || memberName == null || memberList.isEmpty()) {
+            return null;
+        }
+        String memName = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey(), memberName);
+        for (EMConferenceMember memberInfo : memberList){
+            if (memberInfo.memberName.equals(memName)){
+                return memberInfo;
+            }
+        }
+        return null;
+    }
+
+    public EMConferenceMember getConferenceStream(String streamId){
+        if (memberList == null || streamId == null || memberList.isEmpty()) {
+            return null;
+        }
+        for (EMConferenceMember memberInfo : memberList){
+            if (memberInfo.memberId.equals(streamId)){
+                return memberInfo;
+            }
+        }
+        return null;
+    }
+
+    public EMConferenceStream getConferenceSpeakStream(String streamId){
+        if (streamId == null || streamList == null || streamList.isEmpty()) {
+            return null;
+        }
+        for (EMConferenceStream streamInfo : streamList){
+            if (streamInfo.getStreamId().equals(streamId)){
+                return streamInfo;
+            }
+        }
+        return null;
+    }
+
     public List<EMConferenceStream> getConferenceStreamList(){
         return  streamList;
     }
+
 
     public String getRoomname() {
         Log.e("tag", "get name = "+roomname + " class = "+this);
@@ -87,16 +142,28 @@ public class ConferenceInfo {
         this.conference = conference;
     }
 
-    public String getAdmin(){
-        String[] admins = ConferenceInfo.getInstance().getConference().getAdmins();
+    public void setAdmins(String[] admins){
         String adminStr = "";
-        if(admins.length > 0){
-            for (int i = 0; i < admins.length; i++) {
-                adminStr = admins[0];
-                adminStr = EasyUtils.useridFromJid(adminStr);
-                return adminStr;
+        if(admins != null){
+            if(admins.length > 0){
+                if(adminsList == null){
+                    adminsList = new ArrayList<>();
+                }
+                for(int i = 0; i < admins.length; i++) {
+                    adminStr = admins[i];
+                    adminStr = EasyUtils.useridFromJid(adminStr);
+                    if(!adminsList.contains(adminStr)) {
+                        adminsList.add(adminStr);
+                    }
+                }
             }
         }
-        return adminStr;
+    }
+
+    public List<String> getAdmins(){
+        if(adminsList == null){
+            adminsList = new ArrayList<>();
+        }
+        return adminsList;
     }
 }

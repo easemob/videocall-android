@@ -2,44 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg"
+    android:background="@color/black_deep"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/white">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FF4B5766" />
+        android:layout_height="53dp">
         <Button
             android:id="@+id/choose_cancel"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="12dp"
-            android:onClick="onChoosTalkerCancel"
-            android:background="#7C7FE5"
-            android:text="取消"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/choose_close"
+            android:onClick="onChoosTalkerCancel"/>
         <Button
             android:id="@+id/choose_ok"
-            android:layout_width="55dp"
-            android:layout_height="30dp"
+            android:layout_width="76dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="12dp"
-            android:background="#7C7FE5"
-            android:text="确定"
-            android:textColor="@android:color/white"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:background="@color/color_transparent"
+            android:text="确定替换"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
             android:onClick="onChoosTalkerOK" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="49dp"
-            android:background="#FF4B5766" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,17 +36,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/btn_white_normal"
+            android:background="@color/color_transparent"
             android:orientation="vertical">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/chose_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
                 android:scrollbarSize="3dp"
                 android:scrollbarThumbVertical="@color/titleBar"
-                android:scrollbars="vertical"
-                android:layout_marginTop="0dp"></android.support.v7.widget.RecyclerView>
+                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
