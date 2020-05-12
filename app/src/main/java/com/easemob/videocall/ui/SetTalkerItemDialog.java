@@ -18,6 +18,7 @@ import com.easemob.videocall.utils.ConferenceAttributeOption;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
@@ -68,7 +69,7 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
         if(bundle != null) {
             username = bundle.getString("username");
             position = bundle.getInt("position");
-            conferenceStream = ConferenceInfo.getInstance().getConferenceStreamList().get(position);
+            conferenceStream = ConferenceInfo.getInstance().getTalkerList().get(position);
         }
     }
 
@@ -131,62 +132,20 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
     /**
      * 解除静音
      */
-    private void onCancel_mute(){
-        tvMute.setClickable(false);
-        JSONObject object = null;
-        if(conferenceStream.isAudioOff()){
-            try {
-                object = new JSONObject();
-                object.putOpt("action","unmute");
-                JSONArray userArray = new JSONArray();
-                userArray.put(0,username);
-                object.put("uids",userArray);
-                long time = System.currentTimeMillis();
-                long t = time/1000;
-                object.putOpt("timestamp",t);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser(),
-                    object.toString(), new  EMValueCallBack<Void>(){
-                        @Override
-                        public void onSuccess(Void value) {
-                            EMLog.i(TAG, "request_tobe_unmute scuessed");
-                            dismiss();
-                        }
-                        @Override
-                        public void onError(int error, String errorMsg) {
-                            EMLog.i(TAG, "request_tobe_unmute failed: error=" + error + ", msg=" + errorMsg);
-                            dismiss();
-                        }
-                    });
-        }else{
-            try {
-                object = new JSONObject();
-                object.putOpt("action","mute");
-                JSONArray userArray = new JSONArray();
-                userArray.put(0,username);
-                object.putOpt("uids",userArray);
-                long time = System.currentTimeMillis();
-                long t = time/1000;
-                object.putOpt("timestamp",t);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser(),
-                    object.toString(), new  EMValueCallBack<Void>(){
-                        @Override
-                        public void onSuccess(Void value) {
-                            EMLog.i(TAG, "request_tobe_mute scuessed");
-                            dismiss();
-                        }
-                        @Override
-                        public void onError(int error, String errorMsg) {
-                            EMLog.i(TAG, "request_tobe_mute failed: error=" + error + ", msg=" + errorMsg);
-                            dismiss();
-                        }
-                    });
+    private void onCancel_mute() {
+        if(EMClient.getInstance().getCurrentUser().equals(username)){
+            dismiss();
+            return;
         }
+        tvMute.setClickable(false);
+        EMConferenceMember reqInfo = ConferenceInfo.getInstance().getConferenceMemberInfo(username);
+        if (conferenceStream.isAudioOff()) {
+            EMClient.getInstance().conferenceManager().unmuteMember(reqInfo.memberId);
+        } else {
+            EMClient.getInstance().conferenceManager().muteMember(reqInfo.memberId);
+        }
+        tvMute.setClickable(true);
+        dismiss();
     }
 
     /**

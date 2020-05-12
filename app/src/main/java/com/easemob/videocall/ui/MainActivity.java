@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.text.InputFilter;
 import android.text.Selection;
 import android.text.Spannable;
@@ -31,9 +33,12 @@ import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMCDNCanvas;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
+import com.hyphenate.chat.EMLiveConfig;
+import com.hyphenate.chat.EMLiveLayoutStyle;
 import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -41,6 +46,8 @@ import com.easemob.videocall.DemoHelper;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,6 +62,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
+import static com.hyphenate.EMError.GENERAL_ERROR;
 
 
 /**
@@ -120,13 +128,12 @@ public class MainActivity extends Activity {
 
     }
 
+
     /**
     主播加入会议房间
      */
     public void addconference_anchor(View view){
-        //防止点击太快重复进入房间
         getLatestVersion();
-
         setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
@@ -191,12 +198,9 @@ public class MainActivity extends Activity {
      */
     public void addconference_audience(View view){
         getLatestVersion();
-
-        //防止点击太快重复进入房间
         setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
-
         if(currentRoomname.length() == 0 && currentPassword.length() == 0){
             Toast.makeText(getApplicationContext(), "房间名或密码不允许为空！", Toast.LENGTH_SHORT).show();
             setBtnEnable(true);
@@ -373,6 +377,21 @@ public class MainActivity extends Activity {
         DemoHelper.getInstance().setGlobalListeners();
         EMRoomConfig roomConfig = new EMRoomConfig();
         roomConfig.setNickName(currentNickname);
+        //roomConfig.setMaxTalkerCount(4);
+        //roomConfig.setMaxVideoCount(3);
+        roomConfig.setRecord(PreferenceManager.getInstance().isRecordOnServer());
+        roomConfig.setMergeRecord(PreferenceManager.getInstance().isMergeStream());
+        if(PreferenceManager.getInstance().isPushCDN()){
+            if(PreferenceManager.getInstance().getCDNUrl() != null){
+                if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
+                    EMCDNCanvas canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth, ConferenceInfo.CanvasHeight, 0);
+                    String url = PreferenceManager.getInstance().getCDNUrl();
+                    EMLiveConfig liveConfig = new EMLiveConfig(url, canvas);
+                    roomConfig.setLiveConfig(liveConfig);
+                }
+            }
+        }
+
         try {
             JSONObject extobject = new JSONObject();
             extobject.putOpt("headImage",PreferenceManager.getInstance().getCurrentUserAvatar());

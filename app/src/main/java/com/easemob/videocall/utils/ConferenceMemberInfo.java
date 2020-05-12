@@ -17,6 +17,7 @@ public class ConferenceMemberInfo implements Parcelable {
     private int mediaType;
     private boolean videoOff;
     private boolean audioOff;
+    private boolean isDesktop;
 
     public ConferenceMemberInfo(){}
 
@@ -26,6 +27,7 @@ public class ConferenceMemberInfo implements Parcelable {
         mediaType = in.readInt();
         videoOff = in.readByte() != 0;
         audioOff = in.readByte() != 0;
+        isDesktop = in.readByte() != 0;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class ConferenceMemberInfo implements Parcelable {
         dest.writeInt(mediaType);
         dest.writeByte((byte) (videoOff ? 1 : 0));
         dest.writeByte((byte) (audioOff ? 1 : 0));
+        dest.writeByte((byte) (isDesktop ? 1 : 0));
     }
 
     @Override
@@ -93,4 +96,8 @@ public class ConferenceMemberInfo implements Parcelable {
     public void setAudioOff(boolean audioOff) {
         this.audioOff = audioOff;
     }
+
+    public boolean isDesktop() { return isDesktop; }
+
+    public void setDesktop(boolean desktop) { isDesktop = desktop; }
 }

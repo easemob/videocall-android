@@ -59,6 +59,10 @@
     <string name="picture">[图片]</string>
     <string name="video">摄像头</string>
     <string name="microphone">麦克风</string>
+    <string name="setrecord">录制</string>
+    <string name="mergerstream">录制合流</string>
+    <string name="pushcdn">推流到CDN</string>
+    <string name="set_cdn_url">CDN推流地址</string>
     <string name="video_resolution">分辨率</string>
     <string name="upload_log">上传日志</string>
     <string name="voice_prefix">[语音]</string>

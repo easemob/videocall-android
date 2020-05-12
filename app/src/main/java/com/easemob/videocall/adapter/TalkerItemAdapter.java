@@ -88,7 +88,7 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
             String username = item.getUsername();
 
             //item.getUsername() != EMClient.getInstance().getCurrentUser()
-            if(ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser()) ) {
+            if(ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser()) && !username.equals(EMClient.getInstance().getCurrentUser())){
                 btn_ItemSet.setVisibility(VISIBLE);
                 MyListener listener = new MyListener(position,username);
                 btn_ItemSet.setOnClickListener(listener);
@@ -138,7 +138,7 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
         }
 
         /**
-         * 获取网落图片资源
+         * 获取网络图片资源
          * @return
          */
         private void loadImage() {
