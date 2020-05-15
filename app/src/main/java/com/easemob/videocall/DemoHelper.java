@@ -65,10 +65,6 @@ public class DemoHelper {
 	 */
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
-
-		//options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
-		//options.setIMServer("116.85.43.118");
-		//options.setImPort(6717);
         appContext = context;
 		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
