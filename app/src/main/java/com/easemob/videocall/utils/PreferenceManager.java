@@ -73,6 +73,8 @@ public class PreferenceManager {
 
 	private static String SHARED_KEY_CALL_AUDIO= "SHARED_KEY_CALL_AUDIO";
 	private static String SHARED_KEY_CALL_VIDEO= "SHARED_KEY_CALL_VIDEO";
+	private static String SHARED_KEY_PSUH_CDN= "SHARED_KEY_PUSH_CDN";
+	private static String SHARED_KEY_CDN_URL= "SHARED_KEY_PUSH_CDN_URL";
 	private static String SHARED_KEY_PUSH_USE_FCM = "shared_key_push_use_fcm";
 
 	@SuppressLint("CommitPrefEdits")
@@ -418,6 +420,22 @@ public class PreferenceManager {
 
 	public void setCallVideo(boolean enable) {
 		editor.putBoolean(SHARED_KEY_CALL_VIDEO, enable);
+		editor.apply();
+	}
+
+	public boolean isPushCDN() { return mSharedPreferences.getBoolean(SHARED_KEY_PSUH_CDN, false); }
+
+	public void setPushCDN(boolean enable) {
+		editor.putBoolean(SHARED_KEY_PSUH_CDN, enable);
+		editor.apply();
+	}
+
+	public String getCDNUrl() {
+		return mSharedPreferences.getString(SHARED_KEY_CDN_URL, "");
+	}
+
+	public void setCDNUrl(String cdnUrl) {
+		editor.putString(SHARED_KEY_CDN_URL, cdnUrl);
 		editor.apply();
 	}
 

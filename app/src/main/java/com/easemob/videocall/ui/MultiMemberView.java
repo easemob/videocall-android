@@ -50,6 +50,7 @@ public class MultiMemberView extends RadioLayout {
 	private String headImage;
 	private String url;
 	private String nickname;
+	private boolean isDesktop = false;
 
 	public MultiMemberView(Context context) {
 		this(context, null);
@@ -75,11 +76,21 @@ public class MultiMemberView extends RadioLayout {
 	 */
 	public void setAudioOff(boolean state) {
 		isAudioOff = state;
+		if (isDesktop) {
+			return;
+		}
 		if (isAudioOff) {
 			talkingView.setVisibility(VISIBLE);
 			talkingView.setBackgroundResource(R.drawable.call_mute_small);
 		} else {
 			talkingView.setVisibility(GONE);
+		}
+	}
+
+	public void setDesktop(boolean desktop) {
+		isDesktop = desktop;
+		if (isDesktop) {
+			avatarView.setVisibility(View.GONE);
 		}
 	}
 

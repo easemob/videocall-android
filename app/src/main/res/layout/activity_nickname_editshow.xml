@@ -12,7 +12,7 @@
         android:radius="8dp">
         <TextView
             android:id="@+id/info_view"
-            android:layout_width="64dp"
+            android:layout_width="124dp"
             android:layout_height="22dp"
             android:layout_centerVertical="true"
             android:layout_gravity="center"

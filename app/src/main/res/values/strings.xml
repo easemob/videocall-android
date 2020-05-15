@@ -58,6 +58,10 @@
     <string name="picture">[Picture]</string>
     <string name="video">Video</string>
     <string name="microphone">Microphone</string>
+    <string name="setrecord">Set Record</string>
+    <string name="mergerstream">Merge Stream</string>
+    <string name="pushcdn">Push CDN</string>
+    <string name="set_cdn_url">Set CDN URL</string>
     <string name="voice_call">[Voice call]</string>
     <string name="video_call">[Video call]</string>
     <string name="voice_prefix">[语音]</string>

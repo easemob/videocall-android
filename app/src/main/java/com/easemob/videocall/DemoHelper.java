@@ -74,6 +74,7 @@ public class DemoHelper {
 		return appContext;
 	}
 
+
     private EMOptions initChatOptions(Context context){
         Log.d(TAG, "init HuanXin Options");
 

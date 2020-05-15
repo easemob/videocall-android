@@ -253,38 +253,37 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                         @Override
                         public void onError(int error, String errorMsg) {
                             EMLog.i(TAG, "requesTobeAdmin  request_tobe_Talke failed, error: " + error + " - " + errorMsg);
-                            Toast.makeText(getApplicationContext(), "发送放弃主持人请求失败 请稍后重试!", Toast.LENGTH_SHORT).show();
-                            room_admin.setClickable(true);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "发送放弃主持人请求失败 请稍后重试!", Toast.LENGTH_SHORT).show();
+                                    room_admin.setClickable(true);
+                                    room_admin.setClickable(true);
+                                }
+                            });
                         }
                     });
         }else {
             room_admin.setClickable(false);
-            EMClient.getInstance().conferenceManager().setConferenceAttribute(EMClient.getInstance().getCurrentUser()
-                    , ConferenceAttributeOption.REQUEST_TOBE_ADMIN, new EMValueCallBack<Void>() {
-                        @Override
-                        public void onSuccess(Void value) {
-                            EMLog.i(TAG, "request_tobe_admin scuessed");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "发送请求主持人成功 ,请等待审批！", Toast.LENGTH_SHORT).show();
-                                    room_admin.setClickable(true);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError(int error, String errorMsg) {
-                            EMLog.i(TAG, "request_tobe_admin failed: error=" + error + ", msg=" + errorMsg);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "发送请求主持人失败 请稍后重试!", Toast.LENGTH_SHORT).show();
-                                    room_admin.setClickable(true);
-                                }
-                            });
-                        }
-                    });
+            if(adminList.size() > 0){
+                EMConferenceMember  adminMemberInfo = ConferenceInfo.getInstance().getConferenceMemberInfo(adminList.get(0));
+                EMClient.getInstance().conferenceManager().applyTobeAdmin(adminMemberInfo.memberId);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "发送请求主持人成功 ,请等待审批！", Toast.LENGTH_SHORT).show();
+                        room_admin.setClickable(true);
+                    }
+                });
+            }else{
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "本房间还未指定主持人，不允许申请支持人!", Toast.LENGTH_SHORT).show();
+                        room_admin.setClickable(true);
+                    }
+                });
+            }
         }
     }
 

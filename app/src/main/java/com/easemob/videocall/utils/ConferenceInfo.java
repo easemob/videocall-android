@@ -23,10 +23,17 @@ public class ConferenceInfo {
 
     private static ConferenceInfo conferenceInfo = null;
     private List<EMConferenceStream> streamList = new ArrayList<>();
+    private List<EMConferenceStream> talkerList = new ArrayList<>();
     private EMConferenceStream localStream = new EMConferenceStream();
     private EMConferenceManager.EMConferenceRole conferenceRole;
     private List<EMConferenceMember> memberList;
     private List<String> adminsList;
+    static public  String localNomalStreamId = null;
+    static public  String localDeskStreamId = null;
+    static public int rzorderTop = 1;
+
+    static public int CanvasWidth = 720;
+    static public int CanvasHeight = 480;
 
     public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
@@ -47,6 +54,7 @@ public class ConferenceInfo {
     public void Init(){
         Initflag = false;
         streamList.clear();
+        rzorderTop = 1;
         if(memberList != null){
             memberList.clear();
          }
@@ -111,9 +119,27 @@ public class ConferenceInfo {
         return null;
     }
 
+    public EMConferenceStream getConferenceStreamByMemId(String memName){
+        String  memNameStr = EasyUtils.getMediaRequestUid(EMClient.getInstance().getOptions().getAppKey() ,memName);
+        if (memName == null || streamList == null || streamList.isEmpty()) {
+            return null;
+        }
+        for (EMConferenceStream streamInfo : streamList){
+            if (streamInfo.getMemberName().equals(memNameStr)){
+                return streamInfo;
+            }
+        }
+        return null;
+    }
+
     public List<EMConferenceStream> getConferenceStreamList(){
         return  streamList;
     }
+
+    public List<EMConferenceStream> getTalkerList(){
+        return  talkerList;
+    }
+
 
 
     public String getRoomname() {

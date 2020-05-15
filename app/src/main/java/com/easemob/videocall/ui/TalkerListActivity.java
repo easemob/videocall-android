@@ -58,6 +58,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     private RelativeLayout buttonLayout;
 
     private List<EMConferenceStream> streamList;
+    private List<EMConferenceStream> talkerList;
 
     DividerItemDecoration decoration;
     private TalkerItemAdapter adapter;
@@ -72,7 +73,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     private String mAction;
 
 
-    // 实例化一个广播接收器 接受成为管理员的变化
+    // 实例化一个广播接收器
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver () {
         public void onReceive (Context context, Intent intent){
             // TODO 接收到广播时的逻辑
@@ -134,22 +135,10 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      * 全体静音
      */
     private  void onMuteAll(){
-        JSONObject object = null;
-        btn_mute_all.setClickable(false);
-        try {
-                object = new JSONObject();
-                object.putOpt("status",1);
-                object.putOpt("setter",EMClient.getInstance().getCurrentUser());
-                long time = System.currentTimeMillis();
-                long t = time/1000;
-                object.putOpt("timestamp",t);
-            }catch (Exception e){
-                e.printStackTrace();
-        }
-        EMClient.getInstance().conferenceManager().setConferenceAttribute(REQUEST_TOBE_MUTE_ALL,
-                object.toString(), new  EMValueCallBack<Void>(){
+        EMClient.getInstance().conferenceManager().muteAll(ConferenceInfo.getInstance().getConference().getConferenceId(),
+                true, new  EMValueCallBack<String>(){
                     @Override
-                    public void onSuccess(Void value) {
+                    public void onSuccess(String value) {
                         EMLog.i(TAG, "request_tobe_mute_all scuessed");
                         runOnUiThread(new Runnable() {
                             @Override
@@ -162,8 +151,13 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                     @Override
                     public void onError(int error, String errorMsg) {
                         EMLog.i(TAG, "request_tobe_mute_all failed: error=" + error + ", msg=" + errorMsg);
-                        Toast.makeText(getApplicationContext(), "设置全体静音失败", Toast.LENGTH_SHORT).show();
-                        btn_mute_all.setClickable(true);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "设置全体静音失败", Toast.LENGTH_SHORT).show();
+                                btn_mute_all.setClickable(true);
+                            }
+                        });
                     }
                 });
 
@@ -174,21 +168,10 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      */
     private void onUnMuteAll(){
         btn_unmute_all.setClickable(false);
-        JSONObject object = null;
-        try {
-            object = new JSONObject();
-            object.putOpt("status",0);
-            object.putOpt("setter",EMClient.getInstance().getCurrentUser());
-            long time = System.currentTimeMillis();
-            long t = time/1000;
-            object.putOpt("timestamp",t);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        EMClient.getInstance().conferenceManager().setConferenceAttribute(REQUEST_TOBE_MUTE_ALL,
-                object.toString(), new  EMValueCallBack<Void>(){
+        EMClient.getInstance().conferenceManager().muteAll(ConferenceInfo.getInstance().getConference().getConferenceId(),
+                false, new  EMValueCallBack<String>(){
                     @Override
-                    public void onSuccess(Void value) {
+                    public void onSuccess(String value) {
                         EMLog.i(TAG, "request_tobe_unmute_all scuessed");
                         runOnUiThread(new Runnable() {
                             @Override
@@ -201,8 +184,14 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                     @Override
                     public void onError(int error, String errorMsg){
                         EMLog.i(TAG, "request_tobe_unmute_all failed: error=" + error + ", msg=" + errorMsg);
-                        Toast.makeText(getApplicationContext(), "解除全体静音失败", Toast.LENGTH_SHORT).show();
-                        btn_unmute_all.setClickable(false);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "解除全体静音失败", Toast.LENGTH_SHORT).show();
+                                btn_unmute_all.setClickable(false);
+                            }
+                        });
+
                     }
                 });
     }
@@ -222,15 +211,24 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                             public void run() {
                                 attendance_count_view.setText("当前观众人数 " +String.valueOf(ConferenceInfo.getInstance().getConference().getAudienceTotal()));
                                 streamList = ConferenceInfo.getInstance().getConferenceStreamList();
-
-                                if (ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
-                                    if(!streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
-                                        streamList.add(ConferenceInfo.getInstance().getLocalStream());
+                                talkerList = ConferenceInfo.getInstance().getTalkerList();
+                                if(talkerList.size() > 0){
+                                    talkerList.clear();
+                                }
+                                for (EMConferenceStream stream : streamList){
+                                    if (stream.getStreamType() != EMConferenceStream.StreamType.DESKTOP){
+                                        talkerList.add(stream);
                                     }
                                 }
 
-                                Collections.reverse(streamList);
-                                if(streamList.size() == 0){
+                                if (ConferenceInfo.getInstance().getConference().getConferenceRole() != EMConferenceManager.EMConferenceRole.Audience){
+                                    if(!talkerList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                                        talkerList.add(ConferenceInfo.getInstance().getLocalStream());
+                                    }
+                                }
+
+                                Collections.reverse(talkerList);
+                                if(talkerList.size() == 0){
                                     recyclerView.setVisibility(View.GONE);
                                 }else {
                                     recyclerView.setVisibility(View.VISIBLE);
@@ -240,10 +238,8 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                                 recyclerView.setLayoutManager(layoutManager);
 
                                 adapter = new TalkerItemAdapter();
-                                adapter.setData(streamList);
+                                adapter.setData(talkerList);
                                 recyclerView.setAdapter(adapter);
-                                //decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
-                                //recyclerView.addItemDecoration(decoration);
 
                                 if(!ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser())){
                                     buttonLayout.setVisibility(View.GONE);
@@ -259,9 +255,9 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     }
 
     public void onTalkerListback(View view){
-        if(streamList != null){
-            if(streamList.contains(ConferenceInfo.getInstance().getLocalStream())){
-                streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+        if(talkerList != null){
+            if(talkerList.contains(ConferenceInfo.getInstance().getLocalStream())){
+                talkerList.remove(ConferenceInfo.getInstance().getLocalStream());
             }
         }
         finish();
@@ -274,9 +270,9 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            if(streamList != null) {
-                if (streamList.contains(ConferenceInfo.getInstance().getLocalStream())) {
-                    streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+            if(talkerList != null) {
+                if (talkerList.contains(ConferenceInfo.getInstance().getLocalStream())) {
+                    talkerList.remove(ConferenceInfo.getInstance().getLocalStream());
                 }
             }
             finish();
@@ -301,9 +297,9 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
             } else if(y2 - y1 > 50) {
             } else if(x1 - x2 > 50) {
             } else if(x2 - x1 > 50) {
-                if(streamList != null) {
-                    if (streamList.contains(ConferenceInfo.getInstance().getLocalStream())) {
-                        streamList.remove(ConferenceInfo.getInstance().getLocalStream());
+                if(talkerList != null) {
+                    if (talkerList.contains(ConferenceInfo.getInstance().getLocalStream())) {
+                        talkerList.remove(ConferenceInfo.getInstance().getLocalStream());
                     }
                 }
                 finish();

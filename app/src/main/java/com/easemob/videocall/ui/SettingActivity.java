@@ -1,6 +1,7 @@
 package com.easemob.videocall.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,11 +11,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -27,7 +31,7 @@ import com.hyphenate.chat.EMClient;
 import com.easemob.videocall.ui.widget.EaseSwitchButton;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.PreferenceManager;
-
+import com.hyphenate.util.EMLog;
 
 
 import java.io.File;
@@ -92,12 +96,47 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             swOnAudio.closeSwitch();
         }
 
+        //record
+        RelativeLayout rlSwitcheRecrod= (RelativeLayout)findViewById(R.id.rl_switch_record);
+        rlSwitcheRecrod.setOnClickListener(this);
+        EaseSwitchButton swOnRecord = (EaseSwitchButton)findViewById(R.id.switch_record);
+        if (PreferenceManager.getInstance().isRecordOnServer()) {
+            swOnRecord.openSwitch();
+        } else {
+            swOnRecord.closeSwitch();
+        }
+
+
+        //merge stream
+        RelativeLayout rlSwitchMergeStream= (RelativeLayout)findViewById(R.id.rl_switch_merge_stream);
+        rlSwitchMergeStream.setOnClickListener(this);
+        EaseSwitchButton swOnMergeStream = (EaseSwitchButton)findViewById(R.id.switch_merge_stream);
+        if (PreferenceManager.getInstance().isMergeStream()) {
+            swOnMergeStream.openSwitch();
+        } else {
+            swOnMergeStream.closeSwitch();
+        }
+
+
+        // push cdn
+        RelativeLayout rlSwitchePushcdn= (RelativeLayout)findViewById(R.id.rl_switch_push_cdn);
+        rlSwitchePushcdn.setOnClickListener(this);
+        EaseSwitchButton swOnPushcdn = (EaseSwitchButton)findViewById(R.id.switch_push_cdn);
+        if (PreferenceManager.getInstance().isPushCDN()) {
+            swOnPushcdn.openSwitch();
+        } else {
+            swOnPushcdn.closeSwitch();
+        }
+
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_log);
         uploadlog.setOnClickListener(this);
 
         RelativeLayout myInfo = (RelativeLayout)findViewById(R.id.btn_myInfo);
         myInfo.setOnClickListener(this);
+
+        RelativeLayout setcdnUrl = (RelativeLayout)findViewById(R.id.btn_set_cdn_url);
+        setcdnUrl.setOnClickListener(this);
 
         //load image
         urlparm = PreferenceManager.getInstance().getCurrentUserAvatar();
@@ -202,12 +241,49 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                     swOfflineCallPush.openSwitch();
                 }
                 break;
+            case R.id.rl_switch_record:
+                EaseSwitchButton swRecord = (EaseSwitchButton)findViewById(R.id.switch_record);
+                if (swRecord.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setRecordOnServer(false);
+                    swRecord.closeSwitch();
+                } else {
+                    PreferenceManager.getInstance().setRecordOnServer(true);
+                    swRecord.openSwitch();
+                }
+                break;
+            case R.id.rl_switch_merge_stream:
+                EaseSwitchButton swMergeStream = (EaseSwitchButton)findViewById(R.id.switch_merge_stream);
+                if (swMergeStream.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setMergeStream(false);
+                    swMergeStream.closeSwitch();
+                } else {
+                    PreferenceManager.getInstance().setMergeStream(true);
+                    swMergeStream.openSwitch();
+                }
+                break;
+            case R.id.rl_switch_push_cdn:
+                EaseSwitchButton swOfflinePushcdn = (EaseSwitchButton)findViewById(R.id.switch_push_cdn);
+                if (swOfflinePushcdn.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setPushCDN(false);
+                    swOfflinePushcdn.closeSwitch();
+                } else {
+                    PreferenceManager.getInstance().setPushCDN(true);
+                    swOfflinePushcdn.openSwitch();
+                }
+                break;
             case R.id.btn_upload_log:
                  sendLogThroughMail();
                  break;
             case R.id.btn_myInfo:
                 Intent intent = new Intent(SettingActivity.this, MyInfoActivity.class);
                 startActivityForResult(intent, 1);
+                break;
+            case R.id.btn_set_cdn_url:
+                if(PreferenceManager.getInstance().isPushCDN()){
+                    show_set_cdnUrl_dialog();
+                }else{
+                    Toast.makeText(getApplicationContext(), "请先设开启推流到CDN", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;
@@ -279,9 +355,53 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    private void show_set_cdnUrl_dialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        final AlertDialog dialog = builder.create();
+        View dialogView = View.inflate(SettingActivity.this, R.layout.activity_nickname_editshow, null);
+        dialog.setView(dialogView);
+        TextView textView = dialogView.findViewById(R.id.info_view);
+        textView.setText("输入推流CDN地址");
+        EditText editText = dialogView.findViewById(R.id.nickname_text);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
+        dialog.show();
+
+        final Button btn_ok = dialogView.findViewById(R.id.btn_ok_nickname);
+        final Button btn_cancel = dialogView.findViewById(R.id.btn_cancel_nickname);
+        if(PreferenceManager.getInstance().getCDNUrl().length()>0){
+            editText.setText(PreferenceManager.getInstance().getCDNUrl());
+        }else{
+            editText.setHint("请输入推流cdn url");
+        }
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+               String cdnurl = editText.getText().toString().trim();
+                if(cdnurl.length() == 0){
+                    Toast.makeText(getApplicationContext(), "推流地址不允许为空!",
+                            Toast.LENGTH_SHORT).show();
+                }else {
+                    dialog.dismiss();
+                    PreferenceManager.getInstance().setCDNUrl(cdnurl);
+                }
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+    }
+
     /**
-     * 获取网落图片资源
-     * @return
+     * 获取网络图片资源
+     * @return图片资源
      */
     private void loadImage() {
         new AsyncTask<String, Void, Bitmap>() {
