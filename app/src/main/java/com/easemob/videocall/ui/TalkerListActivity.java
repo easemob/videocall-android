@@ -135,19 +135,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      * 全体静音
      */
     private  void onMuteAll(){
-        JSONObject object = null;
-        /*btn_mute_all.setClickable(false);
-        try {
-                object = new JSONObject();
-                object.putOpt("status",1);
-                object.putOpt("setter",EMClient.getInstance().getCurrentUser());
-                long time = System.currentTimeMillis();
-                long t = time/1000;
-                object.putOpt("timestamp",t);
-            }catch (Exception e){
-                e.printStackTrace();
-        }
-        EMClient.getInstance().conferenceManager().setConferenceAttribute(REQUEST_TOBE_MUTE_ALL,*/
         EMClient.getInstance().conferenceManager().muteAll(ConferenceInfo.getInstance().getConference().getConferenceId(),
                 true, new  EMValueCallBack<String>(){
                     @Override
@@ -181,18 +168,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
      */
     private void onUnMuteAll(){
         btn_unmute_all.setClickable(false);
-        /*JSONObject object = null;
-        try {
-            object = new JSONObject();
-            object.putOpt("status",0);
-            object.putOpt("setter",EMClient.getInstance().getCurrentUser());
-            long time = System.currentTimeMillis();
-            long t = time/1000;
-            object.putOpt("timestamp",t);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        EMClient.getInstance().conferenceManager().setConferenceAttribute(REQUEST_TOBE_MUTE_ALL,*/
         EMClient.getInstance().conferenceManager().muteAll(ConferenceInfo.getInstance().getConference().getConferenceId(),
                 false, new  EMValueCallBack<String>(){
                     @Override
@@ -265,8 +240,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                                 adapter = new TalkerItemAdapter();
                                 adapter.setData(talkerList);
                                 recyclerView.setAdapter(adapter);
-                                //decoration.setDrawable(getResources().getDrawable(R.drawable.divider));
-                                //recyclerView.addItemDecoration(decoration);
 
                                 if(!ConferenceInfo.getInstance().getAdmins().contains(EMClient.getInstance().getCurrentUser())){
                                     buttonLayout.setVisibility(View.GONE);

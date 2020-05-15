@@ -377,8 +377,6 @@ public class MainActivity extends Activity {
         DemoHelper.getInstance().setGlobalListeners();
         EMRoomConfig roomConfig = new EMRoomConfig();
         roomConfig.setNickName(currentNickname);
-        //roomConfig.setMaxTalkerCount(4);
-        //roomConfig.setMaxVideoCount(3);
         roomConfig.setRecord(PreferenceManager.getInstance().isRecordOnServer());
         roomConfig.setMergeRecord(PreferenceManager.getInstance().isMergeStream());
         if(PreferenceManager.getInstance().isPushCDN()){

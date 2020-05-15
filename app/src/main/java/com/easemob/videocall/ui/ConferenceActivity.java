@@ -235,7 +235,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
         registerBluetoothBroadCast();
-        //EMClient.getInstance().conferenceManager().enableStatistics(true);
     }
 
     /*
@@ -278,11 +277,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         timeHandler = new TimeHandler();
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        //btn_mic.setOnClickListener(listener);
-        //btn_video.setOnClickListener(listener);
-        //btn_hangup.setOnClickListener(listener);
-        //btn_talker_list.setOnClickListener(listener);
-        //btn_even_wheat.setOnClickListener(listener);
         btn_switch_camera.setOnClickListener(listener);
         rootContainer.setOnClickListener(listener);
         btn_speaker_setting.setOnClickListener(listener);
@@ -334,8 +328,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             btn_video.setBackgroundResource(R.drawable.em_call_video_off);
         }
 
-        //btn_mic.setActivated(normalParam.isAudioOff());
-        //btn_video.setActivated(normalParam.isVideoOff());
         btn_mic_layout.setActivated(normalParam.isAudioOff());
         btn_video_layout.setActivated(normalParam.isVideoOff());
 
@@ -499,7 +491,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             memberContainer.addView(memberView, params);
             EMCallSurfaceView videoView = info.getVideoView();
-            //imMembers.add(info.getUserId());
             imMembers.add(info.getStreamId());
             if(info.isAudioOff()){
                 speak_show_view.setVisibility(View.VISIBLE);
@@ -520,7 +511,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 largeSurfacePreview.setVisibility(View.VISIBLE);
             }
             lastSelectedId = getViewIdByStreamId(info.getStreamId());
-            //imMembers.add(info.getUserId());
             imMembers.add(info.getStreamId());
 
             videoView.setZOrderOnTop(false);
@@ -553,7 +543,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             videoView.setZOrderMediaOverlay(true);
             memberView.getSurfaceViewContainer().addView(videoView);
             EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(info.getStreamId(), videoView);
-            //imMembers.add(info.getUserId());
             imMembers.add(info.getStreamId());
         }
 
@@ -618,7 +607,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
      * @param info
      */
     private void updateConferenceMemberView(ConferenceMemberInfo info) {
-        //int viewId = getViewIdByStreamId(info.getUserId());
         int viewId = getViewIdByStreamId(info.getStreamId());
         MultiMemberView memberView = findViewById(viewId);
         memberView.setAudioOff(info.isAudioOff());
@@ -799,8 +787,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 EMClient.getInstance().conferenceManager().updateRemoteSurfaceView(lastCheckedMemberView.getStreamId(), lastSurfaceView);
             }
         }
-        //selfRadioButtonId = getViewIdByStreamId(EMClient.getInstance().getCurrentUser());
-
         //开始推流
         publish();
     }
@@ -2047,7 +2033,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //int viewId = getViewIdByStreamId(EMClient.getInstance().getCurrentUser());
                     int viewId = getViewIdByStreamId(localStream.getStreamId());
                     MultiMemberView memberView = findViewById(viewId);
                     if(memberView != null){
@@ -2088,7 +2073,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                     if(!adminList.contains(EMClient.getInstance().getCurrentUser())){
                         adminList.add(EMClient.getInstance().getCurrentUser());
                     }
-                    //int viewId = getViewIdByStreamId(EMClient.getInstance().getCurrentUser());
                     int viewId = getViewIdByStreamId(localStream.getStreamId());
                     MultiMemberView memberView = findViewById(viewId);
                     if(memberView != null){
