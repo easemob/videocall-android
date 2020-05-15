@@ -384,7 +384,7 @@ public class MainActivity extends Activity {
         if(PreferenceManager.getInstance().isPushCDN()){
             if(PreferenceManager.getInstance().getCDNUrl() != null){
                 if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
-                    EMCDNCanvas canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth, ConferenceInfo.CanvasHeight, 0);
+                    EMCDNCanvas canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth, ConferenceInfo.CanvasHeight, 0,30,900,"H264");
                     String url = PreferenceManager.getInstance().getCDNUrl();
                     EMLiveConfig liveConfig = new EMLiveConfig(url, canvas);
                     roomConfig.setLiveConfig(liveConfig);

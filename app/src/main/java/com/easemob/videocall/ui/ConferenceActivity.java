@@ -235,8 +235,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         EMClient.getInstance().conferenceManager().addConferenceListener(conferenceListener);
 
         registerBluetoothBroadCast();
-
-        EMClient.getInstance().conferenceManager().enableStatistics(true);
+        //EMClient.getInstance().conferenceManager().enableStatistics(true);
     }
 
     /*
@@ -255,13 +254,17 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         btn_talker_list = (Button) findViewById(R.id.btn_talker_list);
         btn_even_wheat = (Button) findViewById(R.id.btn_even_wheat);
         btn_screenShare = (Button)findViewById(R.id.btn_screenShare);
+        btn_mic.setClickable(false);
+        btn_video.setClickable(false);
+        btn_hangup.setClickable(false);
+        btn_talker_list.setClickable(false);
+        btn_even_wheat.setClickable(false);
 
-
-        /*btn_mic_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);
-        btn_video_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);
-        btn_hangup_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);
-        btn_talker_list_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);
-        btn_even_wheat_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);*/
+        btn_mic_layout = (RelativeLayout)findViewById(R.id.btn_call_mic_layout);
+        btn_video_layout = (RelativeLayout)findViewById(R.id.btn_call_video_layout);
+        btn_hangup_layout = (RelativeLayout)findViewById(R.id.btn_call_hangup_layout);
+        btn_talker_list_layout = (RelativeLayout)findViewById(R.id.btn_talker_list_layout);
+        btn_even_wheat_layout = (RelativeLayout)findViewById(R.id.btn_even_wheat_layout);
 
         btn_switch_camera = (Button)findViewById(R.id.btn_switch_camera);
 
@@ -275,16 +278,22 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         timeHandler = new TimeHandler();
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        btn_mic.setOnClickListener(listener);
-        btn_video.setOnClickListener(listener);
-        btn_hangup.setOnClickListener(listener);
+        //btn_mic.setOnClickListener(listener);
+        //btn_video.setOnClickListener(listener);
+        //btn_hangup.setOnClickListener(listener);
+        //btn_talker_list.setOnClickListener(listener);
+        //btn_even_wheat.setOnClickListener(listener);
         btn_switch_camera.setOnClickListener(listener);
-        btn_talker_list.setOnClickListener(listener);
-        btn_even_wheat.setOnClickListener(listener);
         rootContainer.setOnClickListener(listener);
         btn_speaker_setting.setOnClickListener(listener);
         btn_expansion.setOnClickListener(listener);
         btn_screenShare.setOnClickListener(listener);
+
+        btn_mic_layout.setOnClickListener(listener);
+        btn_video_layout .setOnClickListener(listener);
+        btn_hangup_layout.setOnClickListener(listener);
+        btn_talker_list_layout.setOnClickListener(listener);
+        btn_even_wheat_layout.setOnClickListener(listener);
 
         normalParam = new EMStreamParam();
         normalParam.setStreamType(EMConferenceStream.StreamType.NORMAL);
@@ -298,8 +307,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         conferenceSession = DemoHelper.getInstance().getConferenceSession();
 
         //根据设置配置是否开关
-        btn_mic.setEnabled(true);
-        btn_video.setEnabled(true);
+        btn_mic_layout.setEnabled(true);
+        btn_video_layout.setEnabled(true);
         avatarView.setVisibility(View.GONE);
 
         if (PreferenceManager.getInstance().isCallAudio()) {
@@ -325,8 +334,10 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             btn_video.setBackgroundResource(R.drawable.em_call_video_off);
         }
 
-        btn_mic.setActivated(normalParam.isAudioOff());
-        btn_video.setActivated(normalParam.isVideoOff());
+        //btn_mic.setActivated(normalParam.isAudioOff());
+        //btn_video.setActivated(normalParam.isVideoOff());
+        btn_mic_layout.setActivated(normalParam.isAudioOff());
+        btn_video_layout.setActivated(normalParam.isVideoOff());
 
         openSpeaker();
         startAudioTalkingMonitor();
@@ -709,8 +720,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             btn_screenShare.setClickable(false);
             btn_screenShare.setVisibility(View.GONE);
 
-            btn_mic.setActivated(false);
-            btn_video.setActivated(false);
+            btn_mic_layout.setActivated(false);
+            btn_video_layout.setActivated(false);
 
             avatarView.setVisibility(View.VISIBLE);
 
@@ -718,11 +729,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             headImageurl = headImageurl + PreferenceManager.getInstance().getCurrentUserAvatar();
             loadImage();
 
-            btn_mic.setEnabled(false);
-            btn_video.setEnabled(false);
+            btn_mic_layout.setEnabled(false);
+            btn_video_layout.setEnabled(false);
         } else {
-            btn_mic.setEnabled(true);
-            btn_video.setEnabled(true);
+            btn_mic_layout.setEnabled(true);
+            btn_video_layout.setEnabled(true);
 
             btn_screenShare.setClickable(true);
             btn_screenShare.setVisibility(View.VISIBLE);
@@ -762,8 +773,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 headImageurl = headImageurl + PreferenceManager.getInstance().getCurrentUserAvatar();
                 loadImage();
             }
-            btn_mic.setActivated(normalParam.isAudioOff());
-            btn_video.setActivated(normalParam.isVideoOff());
+            btn_mic_layout.setActivated(normalParam.isAudioOff());
+            btn_video_layout.setActivated(normalParam.isVideoOff());
         }
     }
 
@@ -861,19 +872,19 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 case R.id.btn_speak_setting:
                       voiceDeviceSwitch();
                       break;
-                case R.id.btn_call_mic:
+                case R.id.btn_call_mic_layout:
                     voiceSwitch();
                     break;
-                case R.id.btn_call_video:
+                case R.id.btn_call_video_layout:
                     videoSwitch();
                     break;
                 case R.id.btn_switch_camera:
                     changeCamera();
                     break;
-                case R.id.btn_call_hangup:
+                case R.id.btn_call_hangup_layout:
                     hangup();
                     break;
-                case R.id.btn_talker_list:
+                case R.id.btn_talker_list_layout:
                     opentalkerlist();
                     break;
                 case R.id.btn_screenShare:
@@ -882,7 +893,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 case R.id.btn_expansion:
                     setbtnexpansion();
                     break;
-                case R.id.btn_even_wheat:
+                case R.id.btn_even_wheat_layout:
                     requesteven_wheat();
                     break;
                 case R.id.root_layout:
@@ -962,17 +973,16 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         if (CameraResolution.equals("360P")) {
             normalParam.setVideoWidth(480);
             normalParam.setVideoHeight(360);
+            normalParam.setMinVideoKbps(400);
         } else if (CameraResolution.equals("(Auto)480P")) {
             normalParam.setVideoWidth(720);
             normalParam.setVideoHeight(480);
+            normalParam.setMinVideoKbps(600);
         } else if (CameraResolution.equals("720P")) {
             normalParam.setVideoWidth(1280);
             normalParam.setVideoHeight(720);
+            normalParam.setMinVideoKbps(1000);
         }
-
-        //normalParam.setClarityFirst(true);
-        //EMLog.i(TAG ,"fqefqe "+  normalParam.getMinVideoKbps());
-        normalParam.setMinVideoKbps(1000);
         EMClient.getInstance().conferenceManager().publish(normalParam, new EMValueCallBack<String>() {
             @Override
             public void onSuccess(String value) {
@@ -1028,7 +1038,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                         }else{
                             localViewContainer.setNickname("");
                         }
-
 
                         if (conferenceSession.getConferenceProfiles() == null) {
                             List<ConferenceMemberInfo> conferenceUserProfiles = new ArrayList<>();
@@ -1783,12 +1792,6 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
     @Override
     public void onStreamStatistics(EMStreamStatistics statistics) {
-        //EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalAudioBps());
-        //EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalCaptureWidth());
-        //EMLog.i(TAG, "onStreamStatistics getLocalAudioBps:" + statistics.getLocalCaptureWidth());
-
-        EMLog.i(TAG,  "LocalCapture Resolution: " + statistics.getLocalCaptureWidth() + "  " + statistics.getLocalCaptureHeight()+ " bps: " +statistics.getLocalVideoActualBps());
-        EMLog.i(TAG,  "Encode Resolution: " + statistics.getLocalEncodedWidth() + "  " + statistics.getLocalEncodedHeight() + " bps: " +statistics.getLocalVideoActualBps());
     }
 
     @Override
