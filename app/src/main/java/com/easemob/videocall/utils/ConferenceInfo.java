@@ -6,6 +6,7 @@ import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
+import com.hyphenate.chat.EMWhiteboard;
 import com.hyphenate.util.EasyUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,11 @@ public class ConferenceInfo {
     static public  String localNomalStreamId = null;
     static public  String localDeskStreamId = null;
     static public int rzorderTop = 1;
+
+    private WhiteBoardRoomInfo whiteboardRoomInfo = null;
+
+    static public boolean whiteboardCreator = false;
+    private EMWhiteboard whiteboard;
 
     static public int CanvasWidth = 720;
     static public int CanvasHeight = 480;
@@ -61,6 +67,9 @@ public class ConferenceInfo {
         if(adminsList != null){
            adminsList.clear();
         }
+        whiteboardRoomInfo = null;
+        whiteboardCreator = false;
+        whiteboard = null;
     }
 
     public EMConferenceManager.EMConferenceRole getCurrentrole(){
@@ -192,4 +201,19 @@ public class ConferenceInfo {
         }
         return adminsList;
     }
+
+    public EMWhiteboard getWhiteboard() {
+        return whiteboard;
+    }
+
+    public void setWhiteboard(EMWhiteboard whiteboard) {
+        this.whiteboard = whiteboard;
+    }
+
+    public WhiteBoardRoomInfo getWhiteboardRoomInfo() { return whiteboardRoomInfo; }
+
+    public void setWhiteboardRoomInfo(WhiteBoardRoomInfo whiteboardRoomInfo) {
+        this.whiteboardRoomInfo = whiteboardRoomInfo;
+    }
+
 }

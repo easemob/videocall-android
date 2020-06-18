@@ -74,6 +74,18 @@ public class ConferenceSession implements Parcelable {
         return null;
     }
 
+    public ConferenceMemberInfo getConferenceMemberByStreamId(String streamId){
+        if (streamId == null || memberInfoList == null || memberInfoList.isEmpty()) {
+            return null;
+        }
+        for (ConferenceMemberInfo userProfile : memberInfoList){
+            if (userProfile.getStreamId().equals(streamId)){
+                return userProfile;
+            }
+        }
+        return null;
+    }
+
     public void setConferenceProfiles(List<ConferenceMemberInfo> callUserProfiles) {
         memberInfoList = callUserProfiles;
     }

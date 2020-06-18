@@ -3,9 +3,15 @@ package com.easemob.videocall;
 import android.content.Context;
 import android.util.Log;
 
+import com.easemob.videocall.ui.ConferenceActivity;
+import com.easemob.videocall.utils.ConferenceAttributeOption;
+import com.easemob.videocall.utils.ConferenceMemberInfo;
 import com.easemob.videocall.utils.ConferenceSession;
+import com.easemob.videocall.utils.ConfigManager;
+import com.easemob.videocall.utils.WhiteBoardRoomInfo;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
@@ -13,15 +19,23 @@ import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMStreamStatistics;
+import com.hyphenate.chat.EMWhiteboard;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.utils.ConferenceInfo;
 import com.easemob.videocall.utils.PreferenceManager;
+import com.hyphenate.util.EasyUtils;
 import com.superrtc.mediamanager.EMediaEntities;
 import com.superrtc.mediamanager.EMediaSession;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.easemob.videocall.utils.ConferenceAttributeOption.REQUEST_TOBE_MUTE_ALL;
+import static com.easemob.videocall.utils.ConferenceAttributeOption.WHITE_BOARD;
 
 /**
  * author lijian
@@ -66,6 +80,10 @@ public class DemoHelper {
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
         appContext = context;
+        options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
+        options.setIMServer("116.85.43.118");
+        options.setImPort(6717);
+
 		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
 	}
@@ -212,8 +230,31 @@ public class DemoHelper {
 
 			@Override
 			public void onAttributesUpdated(EMConferenceAttribute[] attributes) {
-
+				EMLog.i(TAG, " onAttributesUpdated started ");
+				EMConferenceAttribute conferenceAttribute;
+				int size = attributes.length;
+				for (int i = 0; i < size; i++) {
+					conferenceAttribute = attributes[i];
+					String usreId = conferenceAttribute.key;
+					String option = conferenceAttribute.value;
+					EMLog.i(TAG, " onAttributesUpdated： usreId: " + usreId + ", option: " + option);
+					if (usreId.equals(WHITE_BOARD)) { //白板
+						if (!option.equals("")) {
+							try {
+								JSONObject object = new JSONObject(option);
+								WhiteBoardRoomInfo roomInfo = new WhiteBoardRoomInfo();
+								roomInfo.setCreator(object.optString("creator"));
+								roomInfo.setRoomName(object.optString("roomName"));
+								roomInfo.setRoomPswd(object.optString("roomPswd"));
+								ConferenceInfo.getInstance().setWhiteboardRoomInfo(roomInfo);
+							} catch (Exception e) {
+								e.getStackTrace();
+							}
+						}
+					}
+				}
 			}
+
 			@Override
 			public void onAdminAdded(String memName){
 
