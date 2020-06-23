@@ -48,8 +48,8 @@ configurations.all {
 
 dependencies {
     //内部直接依赖项目，用户可以使用远程依赖或者本地依赖
-    //api 'com.hyphenate:hyphenate-sdk:3.6.7'
-    api project(':hyphenatechatsdk')
+    api 'com.hyphenate:hyphenate-sdk:3.6.9'
+    //api project(':hyphenatechatsdk')
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation 'com.parse:parse-android:1.13.1'
     implementation 'com.android.support:multidex:1.0.0'
