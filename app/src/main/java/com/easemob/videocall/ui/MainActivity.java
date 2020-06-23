@@ -386,7 +386,7 @@ public class MainActivity extends Activity {
         roomConfig.setMergeRecord(PreferenceManager.getInstance().isMergeStream());
 //        roomConfig.setMaxVideoCount(2);
 //        roomConfig.setMaxTalkerCount(3);
-        roomConfig.setMaxPubDesktopCount(1);
+//        roomConfig.setMaxPubDesktopCount(1);
         if(PreferenceManager.getInstance().isPushCDN()){
             if(PreferenceManager.getInstance().getCDNUrl() != null){
                 if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
