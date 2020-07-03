@@ -8,14 +8,17 @@
         android:id="@+id/surface_view_listItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
     <ImageView
         android:id="@+id/call_avatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/surface_view_listItem"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="0dp"
         android:scaleType="centerCrop"
-        android:visibility="visible"
-        android:src="@drawable/em_default_avatar" />
+        android:src="@drawable/em_default_avatar"
+        android:visibility="visible" />
     <RelativeLayout
         android:id="@+id/show_layout"
         android:layout_width="match_parent"

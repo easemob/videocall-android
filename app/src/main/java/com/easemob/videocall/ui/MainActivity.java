@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -62,7 +63,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
-import static com.hyphenate.EMError.GENERAL_ERROR;
 
 
 /**
@@ -87,6 +87,7 @@ public class MainActivity extends Activity {
     private TextView version_view;
     private ConferenceSession conferenceSession;
     private String url = "http://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/RtcDemo/version.conf";
+    private boolean showNickNameFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,9 @@ public class MainActivity extends Activity {
     主播加入会议房间
      */
     public void addconference_anchor(View view){
+        if(showNickNameFlag){
+            return;
+        }
         getLatestVersion();
         setBtnEnable(false);
         currentRoomname = roomnameEditText.getText().toString().trim();
@@ -189,6 +193,7 @@ public class MainActivity extends Activity {
                 login();
             }
         }else{
+            showNickNameFlag = true;
             setNickNameDialogDisplay();
         }
     }
@@ -379,6 +384,9 @@ public class MainActivity extends Activity {
         roomConfig.setNickName(currentNickname);
         roomConfig.setRecord(PreferenceManager.getInstance().isRecordOnServer());
         roomConfig.setMergeRecord(PreferenceManager.getInstance().isMergeStream());
+//        roomConfig.setMaxVideoCount(2);
+//        roomConfig.setMaxTalkerCount(3);
+//        roomConfig.setMaxPubDesktopCount(1);
         if(PreferenceManager.getInstance().isPushCDN()){
             if(PreferenceManager.getInstance().getCDNUrl() != null){
                 if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
@@ -407,6 +415,7 @@ public class MainActivity extends Activity {
                         ConferenceInfo.getInstance().setPassword(currentPassword);
                         ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
                         ConferenceInfo.getInstance().setConference(value);
+
                         EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
                         conferenceSession.setConfrId(value.getConferenceId());
                         conferenceSession.setConfrPwd(value.getPassword());
@@ -525,6 +534,8 @@ public class MainActivity extends Activity {
                                 public void run() {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                     final AlertDialog dialog = builder.create();
+                                    dialog.setCanceledOnTouchOutside(false);
+                                    dialog.setCancelable(false);
                                     View dialogView = View.inflate(MainActivity.this, R.layout.activity_updata_version, null);
                                     TextView infoView = dialogView.findViewById(R.id.current_info_view);
                                     infoView.setText("检测到当前不是最新版本"+ "\n" + "为了不影响您正常使用" + "\n" + "请更新到最新版");
@@ -582,7 +593,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     /**
      * 设置昵称提示
      */
@@ -595,6 +605,8 @@ public class MainActivity extends Activity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
         wmlp.gravity = Gravity.CENTER | Gravity.CENTER;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         dialog.show();
 
         final Button btn_ok = dialogView.findViewById(R.id.btn_ok_nickname);
@@ -611,32 +623,45 @@ public class MainActivity extends Activity {
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                currentNickname = editText.getText().toString().trim();
-                if(currentNickname.length() == 0){
-                    Toast.makeText(getApplicationContext(), "昵称不允许为空!",
-                            Toast.LENGTH_SHORT).show();
-                }else {
-                    dialog.dismiss();
-                    EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + currentNickname);
-                    PreferenceManager.getInstance().setCurrentUserNick(currentNickname);
-                    if(username == null){
-                        register();
-                    }else{
-                        password = PreferenceManager.getInstance().getCurrentUserPassWord();
-                        login();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        currentNickname = editText.getText().toString().trim();
+                        if(currentNickname.length() == 0){
+                            setBtnEnable(true);
+                            Toast.makeText(getApplicationContext(), "昵称不允许为空!",
+                                    Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            showNickNameFlag = false;
+                        }else {
+                            dialog.dismiss();
+                            showNickNameFlag = false;
+                            EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + currentNickname);
+                            PreferenceManager.getInstance().setCurrentUserNick(currentNickname);
+                            if(username == null){
+                                register();
+                            }else{
+                                password = PreferenceManager.getInstance().getCurrentUserPassWord();
+                                login();
+                            }
+                        }
                     }
-                }
+                });
             }
         });
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
-                //主播已满不加入会议
-                EMLog.e(TAG, "cancel setting nickename");
-                currentNickname = null;
-                setBtnEnable(true);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        setBtnEnable(true);
+                        dialog.dismiss();
+                        //主播已满不加入会议
+                        EMLog.e(TAG, "cancel setting nickename");
+                        currentNickname = null;
+                        showNickNameFlag = false;
+                    }
+                });
             }
         });
     }

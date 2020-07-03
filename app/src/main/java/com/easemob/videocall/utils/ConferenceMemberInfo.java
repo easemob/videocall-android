@@ -19,25 +19,33 @@ public class ConferenceMemberInfo implements Parcelable {
     private boolean audioOff;
     private boolean isDesktop;
 
+    private boolean isWhiteboard = false;
+    private String whiteboardPwd;
+    private String whiteboardRoomName;
+
     public ConferenceMemberInfo(){}
 
     protected ConferenceMemberInfo(Parcel in) {
         userId = in.readString();
         streamId = in.readString();
+        whiteboardPwd = in.readString();
         mediaType = in.readInt();
         videoOff = in.readByte() != 0;
         audioOff = in.readByte() != 0;
         isDesktop = in.readByte() != 0;
+        isWhiteboard = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userId);
         dest.writeString(streamId);
+        dest.writeString(whiteboardPwd);
         dest.writeInt(mediaType);
         dest.writeByte((byte) (videoOff ? 1 : 0));
         dest.writeByte((byte) (audioOff ? 1 : 0));
         dest.writeByte((byte) (isDesktop ? 1 : 0));
+        dest.writeByte((byte) (isWhiteboard ? 1 : 0));
     }
 
     @Override
@@ -100,4 +108,12 @@ public class ConferenceMemberInfo implements Parcelable {
     public boolean isDesktop() { return isDesktop; }
 
     public void setDesktop(boolean desktop) { isDesktop = desktop; }
+
+    public boolean isWhiteboard() { return isWhiteboard; }
+
+    public void setWhiteboard(boolean whiteboard) { isWhiteboard = whiteboard; }
+
+    public String getWhiteboardPwd() { return whiteboardPwd;}
+
+    public void setWhiteboardPwd(String whiteboardUrl) { this.whiteboardPwd = whiteboardUrl; }
 }
