@@ -26,4 +26,4 @@ MultiMemberView  会议视频小窗口类
 ConferenceSession 会议管理类
 
 集成文档
-多人音视频集成文档参见官方文档：http://docs-im.easemob.com/im/android/basics/multiuserconference
+多人音视频集成文档参见官方文档：http://docs-im.easemob.com/rtc/conference/android
