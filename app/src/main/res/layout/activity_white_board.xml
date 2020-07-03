@@ -4,14 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="3dp">
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/whiteboard_view_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <WebView
-            android:id="@+id/whiteboard_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
+        android:layout_height="match_parent" >
+    </FrameLayout>
     <TextView
         android:id="@+id/btn_whiteboard_destory"
         android:layout_width="40dp"

@@ -333,7 +333,8 @@ public class MultiMemberView extends RadioLayout {
 											ConferenceActivity.mId = Math.abs(new Random
 													(System.currentTimeMillis()).nextInt());
 												Intent intent = new Intent(getContext(),
-														 WhiteBoardActivity.class);
+														 WhiteBoardTbsActivity.class);
+												EMLog.e(TAG,"WhiteBoardTbsActivity 222 go");
 												Bundle bundle = new Bundle();
 												bundle.putString("roomId", value.getRoomId());
 												bundle.putString("roomUrl", value.getRoomUrl());

@@ -1454,7 +1454,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                         "WhiteboardRoom success, roomId: " + value.getRoomId());
                                 mId = Math.abs(new Random(System.currentTimeMillis()).nextInt());
                                 Intent intent = new Intent(ConferenceActivity.
-                                                            this, WhiteBoardActivity.class);
+                                                            this, WhiteBoardTbsActivity.class);
+                                EMLog.e(TAG,"WhiteBoardTbsActivity 111 go");
                                 Bundle bundle = new Bundle();
                                 bundle.putString("roomId",value.getRoomId());
                                 bundle.putString("roomUrl",value.getRoomUrl());
@@ -1606,11 +1607,32 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
      * 退出会议
      */
     public void exitConference() {
+        if(ConferenceInfo.whiteboardCreator && ConferenceInfo.getInstance().getWhiteboard() != null)
+        {
+            EMClient.getInstance().conferenceManager().
+                    deleteConferenceAttribute(WHITE_BOARD, new EMValueCallBack<Void>() {
+                        @Override
+                        public void onSuccess(Void value) {
+                            EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD success");
+                            exit_confrence();
+                        }
+                        @Override
+                        public void onError(int error, String errorMsg) {
+                            EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD failed: "
+                                    + error + ""  + errorMsg);
+                            exit_confrence();
+                        }
+                    });
+        }else{
+            exit_confrence();
+        }
+    }
+
+    private void exit_confrence(){
         ScreenCaptureManager.getInstance().stop();
         stopAudioTalkingMonitor();
         timeHandler.stopTime();
 
-        // Stop to watch the phone call state.
         PhoneStateManager.get(ConferenceActivity.this).removeStateCallback(phoneStateCallback);
         EMClient.getInstance().conferenceManager().exitConference(new EMValueCallBack() {
             @Override
@@ -1625,7 +1647,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 Intent intent = new Intent(ConferenceActivity.this, MainActivity.class);
                 startActivity(intent);
                 EMLog.i(TAG, "finish ConferenceActivity");
-                finish();
+                destoryWhiteboard();
             }
 
             @Override
@@ -1633,7 +1655,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                 EMLog.i(TAG, "exit conference failed " + error + ", " + errorMsg);
                 Intent intent = new Intent(ConferenceActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
+                destoryWhiteboard();
             }
         });
     }
@@ -1678,37 +1700,39 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
     private void destoryWhiteboard(){
         if(ConferenceInfo.whiteboardCreator && ConferenceInfo.getInstance().getWhiteboard() != null){
+                String roomId = ConferenceInfo.getInstance().getWhiteboard().getRoomId();
+                ConferenceInfo.getInstance().setWhiteboard(null);
                 EMClient.getInstance().conferenceManager().destroyWhiteboardRoom(
-                        EMClient.getInstance().getCurrentUser(), EMClient.getInstance().getAccessToken(),
-                        ConferenceInfo.getInstance().getWhiteboard().getRoomId(), new EMCallBack() {
+                        EMClient.getInstance().getCurrentUser(),
+                        EMClient.getInstance().getAccessToken(),roomId, new EMCallBack(){
                             @Override
                             public void onSuccess() {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        EMLog.i(TAG, "createWhiteboardRoom success, roomId: " +
-                                                ConferenceInfo.getInstance().getWhiteboard().getRoomId());
+                                        EMLog.i(TAG, "createWhiteboardRoom success, roomId: " + roomId);
                                         Toast.makeText(getApplicationContext(), "销毁白板  " +
                                                 ConferenceInfo.getInstance().getRoomname() + "成功!",
                                                 Toast.LENGTH_SHORT).show();
                                         //销毁以后重置
                                         ConferenceInfo.whiteboardCreator = false;
                                         ConferenceInfo.getInstance().setWhiteboard(null);
+                                        finish();
 
-                                        EMClient.getInstance().conferenceManager().
-                                                deleteConferenceAttribute(WHITE_BOARD, new EMValueCallBack<Void>() {
-                                            @Override
-                                            public void onSuccess(Void value) {
-                                                EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD success");
-                                                finish();
-                                            }
-                                            @Override
-                                            public void onError(int error, String errorMsg) {
-                                                EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD failed: "
-                                                        + error + ""  + errorMsg);
-                                                finish();
-                                            }
-                                        });
+//                                        EMClient.getInstance().conferenceManager().
+//                                                deleteConferenceAttribute(WHITE_BOARD, new EMValueCallBack<Void>() {
+//                                            @Override
+//                                            public void onSuccess(Void value) {
+//                                                EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD success");
+//                                                finish();
+//                                            }
+//                                            @Override
+//                                            public void onError(int error, String errorMsg) {
+//                                                EMLog.i(TAG, "deleteConferenceAttribute WHITE_BOARD failed: "
+//                                                        + error + ""  + errorMsg);
+//                                                finish();
+//                                            }
+//                                        });
                                     }
                                 });
                             }
@@ -1718,14 +1742,15 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        EMLog.i(TAG, "createWhiteboardRoom success, roomId: " + ConferenceInfo.getInstance().getWhiteboard().getRoomId());
-                                        Toast.makeText(getApplicationContext(), "销毁白板  " + ConferenceInfo.getInstance().getRoomname() + "失败:" + error + " !",
+                                        EMLog.i(TAG, "destroyWhiteboardRoom error, roomId: "
+                                                + roomId);
+                                        Toast.makeText(getApplicationContext(), "销毁白板  " +
+                                                        ConferenceInfo.getInstance().getRoomname() + "失败:" + error + " !",
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
                                 });
                             }
-
                             @Override
                             public void onProgress(int progress, String status) {
 

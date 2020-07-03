@@ -54,8 +54,6 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
     private String roomId;
     private TextView btn_back;
     private TextView btn_destory;
-    private TextView btn_interact;
-    private WebView webview;
     private boolean creator;
 
     public ValueCallback<Uri[]> mUploadMessage;
@@ -115,7 +113,7 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
             btn_destory.setVisibility(View.GONE);
         }
 
-        WebView webview = findViewById(R.id.whiteboard_view);
+        WebView webview = findViewById(R.id.whiteboard_view_layout);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setAppCacheEnabled(false);
         webview.getSettings().setDomStorageEnabled(true);

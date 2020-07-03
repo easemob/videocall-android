@@ -103,9 +103,10 @@
             android:theme="@style/AppTheme" />
         //白板
         <activity
-            android:name=".ui.WhiteBoardActivity"
+            android:name=".ui.WhiteBoardTbsActivity"
             android:label="@string/title_activity_setting"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
 
         <!-- 设置环信应用的appkey -->
