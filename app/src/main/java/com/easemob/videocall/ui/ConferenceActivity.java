@@ -1038,7 +1038,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             normalParam.setVideoHeight(480);
             normalParam.setMinVideoKbps(600);
         } else if (CameraResolution.equals("720P")) {
-            normalParam.setVideoWidth(960);
+            normalParam.setVideoWidth(1280);
             normalParam.setVideoHeight(720);
             normalParam.setMinVideoKbps(1000);
         }
@@ -3304,7 +3304,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         }
     }
 
-    //身份是管理管理员时候 申请管理员列表
+    //观众身份是管理管理员时候 申请管理员列表(主要是第一个观众进入创建房间情况)
     private void getAdminsToBeSpeaker() {
         EMClient.getInstance().conferenceManager().getConferenceInfo(ConferenceInfo.getInstance().getConference().getConferenceId(),
                 ConferenceInfo.getInstance().getPassword(), new EMValueCallBack<EMConference>() {
