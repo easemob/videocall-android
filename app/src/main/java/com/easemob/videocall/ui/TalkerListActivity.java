@@ -27,8 +27,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.chat.EMMediaFormat;
-import com.hyphenate.chat.EMRecordMediaFormat;
 import com.hyphenate.util.EMLog;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;

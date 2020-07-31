@@ -42,8 +42,6 @@ import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMLiveConfig;
 import com.hyphenate.chat.EMLiveLayoutStyle;
-import com.hyphenate.chat.EMMediaFormat;
-import com.hyphenate.chat.EMRecordMediaFormat;
 import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
