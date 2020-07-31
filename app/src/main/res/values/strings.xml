@@ -61,6 +61,8 @@
     <string name="setrecord">Set Record</string>
     <string name="mergerstream">Merge Stream</string>
     <string name="pushcdn">Push CDN</string>
+    <string name="push_audio_stream">Push Audio Stream</string>
+    <string name="stream_record_format">Record Format</string>
     <string name="set_cdn_url">Set CDN URL</string>
     <string name="voice_call">[Voice call]</string>
     <string name="video_call">[Video call]</string>

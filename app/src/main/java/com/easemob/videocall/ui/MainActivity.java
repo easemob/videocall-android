@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.InputFilter;
@@ -34,12 +35,15 @@ import com.easemob.videocall.utils.ConferenceSession;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMAudioConfig;
 import com.hyphenate.chat.EMCDNCanvas;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMLiveConfig;
 import com.hyphenate.chat.EMLiveLayoutStyle;
+import com.hyphenate.chat.EMMediaFormat;
+import com.hyphenate.chat.EMRecordMediaFormat;
 import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -63,6 +67,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.hyphenate.EMError.CALL_TALKER_ISFULL;
+import static com.hyphenate.EMError.GENERAL_ERROR;
 
 
 /**
@@ -390,12 +395,21 @@ public class MainActivity extends Activity {
         if(PreferenceManager.getInstance().isPushCDN()){
             if(PreferenceManager.getInstance().getCDNUrl() != null){
                 if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
-                    EMCDNCanvas canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth, ConferenceInfo.CanvasHeight, 0,30,900,"H264");
                     String url = PreferenceManager.getInstance().getCDNUrl();
-                    EMLiveConfig liveConfig = new EMLiveConfig(url, canvas);
+                    EMLiveConfig liveConfig = null;
+                    EMCDNCanvas canvas = null;
+                    if(PreferenceManager.getInstance().isPushAudioStream()){ //开启纯音频推流
+                        canvas = new EMCDNCanvas(0,0, 0,30,900,"H264");
+                        liveConfig = new EMLiveConfig(url, canvas);
+                        EMAudioConfig audioConfig = new EMAudioConfig();
+                        liveConfig.setAudioConfig(audioConfig);
+                    }else{
+                        canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth,ConferenceInfo.CanvasHeight, 0,30,900,"H264");
+                        liveConfig = new EMLiveConfig(url, canvas);
+                    }
                     roomConfig.setLiveConfig(liveConfig);
-                }
-            }
+               }
+           }
         }
 
         try {
@@ -682,6 +696,8 @@ public class MainActivity extends Activity {
         btn_anchor.setEnabled(enable);
         btn_audience.setEnabled(enable);
     }
+
+
 
     @TargetApi(23)
     private void requestPermissions() {

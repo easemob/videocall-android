@@ -1,5 +1,5 @@
 include ':app'
 
 //内部开发使用，用户需要注释掉
-include ':hyphenatechatsdk'
-project(':hyphenatechatsdk').projectDir = new File('../emclient-android/hyphenatechatsdk')
+//include ':hyphenatechatsdk'
+//project(':hyphenatechatsdk').projectDir = new File('../emclient-android/hyphenatechatsdk')

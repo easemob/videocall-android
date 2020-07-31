@@ -114,6 +114,11 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                     public void onSuccess(EMConference value) {
                         ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
                         ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
+                        if(ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+                            if(adminList.contains(EMClient.getInstance().getCurrentUser())){
+                                adminList.clear();
+                            }
+                        }
                         ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
@@ -130,6 +135,7 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
                                             room_admin.setText("申请成为主持人");
                                             room_admin.setClickable(true);
                                         }else{
+                                            room_admin.setText("");
                                             room_admin.setClickable(false);
                                         }
                                     }

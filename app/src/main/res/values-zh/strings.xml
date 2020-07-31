@@ -62,6 +62,8 @@
     <string name="setrecord">录制</string>
     <string name="mergerstream">录制合流</string>
     <string name="pushcdn">推流到CDN</string>
+    <string name="push_audio_stream">音频推流</string>
+    <string name="stream_record_format">录制推流格式</string>
     <string name="set_cdn_url">CDN推流地址</string>
     <string name="video_resolution">分辨率</string>
     <string name="upload_log">上传日志</string>

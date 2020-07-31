@@ -76,6 +76,8 @@ public class PreferenceManager {
 	private static String SHARED_KEY_PSUH_CDN= "SHARED_KEY_PUSH_CDN";
 	private static String SHARED_KEY_CDN_URL= "SHARED_KEY_PUSH_CDN_URL";
 	private static String SHARED_KEY_PUSH_USE_FCM = "shared_key_push_use_fcm";
+	private static String SHARED_KEY_PUSH_AUDIO_STREAM = "shared_key_push_audio_stream";
+	private static String SHARED_KEY_PUSH_STREAM_RRCORD_FORMAT = "shared_key_push_stream_record_format";
 
 	@SuppressLint("CommitPrefEdits")
 	private PreferenceManager(Context cxt) {
@@ -413,6 +415,31 @@ public class PreferenceManager {
 		editor.apply();
 	}
 
+	/***
+	 * 设置是否纯音频推流
+	 * @return
+	 */
+	public boolean isPushAudioStream() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_PUSH_AUDIO_STREAM, false);
+	}
+
+	public void setPushAudioStream(boolean enable) {
+		editor.putBoolean(SHARED_KEY_PUSH_AUDIO_STREAM, enable);
+		editor.apply();
+	}
+
+	/**
+	 * 设置推流录制文件格式
+	 * @return
+	 */
+	public String getPushStreamRecordFormat(){
+		return mSharedPreferences.getString(SHARED_KEY_PUSH_STREAM_RRCORD_FORMAT, null);
+	}
+
+	public void setPushStreamRecordFormat(String format){
+		editor.putString(SHARED_KEY_PUSH_STREAM_RRCORD_FORMAT, format);
+		editor.apply();
+	}
 
 	public boolean isCallVideo() {
 		return mSharedPreferences.getBoolean(SHARED_KEY_CALL_VIDEO, true);
