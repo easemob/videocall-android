@@ -108,8 +108,8 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
         btn_start_record.setOnClickListener(this);
         btn_stop_record.setOnClickListener(this);
 
-//        btn_start_record.setVisibility(View.GONE);
-//        btn_stop_record.setVisibility(View.GONE);
+        btn_start_record.setVisibility(View.GONE);
+        btn_stop_record.setVisibility(View.GONE);
 
         mId = getIntent().getIntExtra(ConferenceActivity.KEY_ID, -1);
         mAction = Config.ACTION_CONFIG_CHANGE + mId;
