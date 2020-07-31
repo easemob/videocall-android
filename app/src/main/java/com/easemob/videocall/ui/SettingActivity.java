@@ -67,6 +67,8 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         IDView = (TextView)findViewById(R.id.nickname_edit);
         initCameraResolutionSpinner(R.id.spinner_video_resolution);
 
+        initRecordFormatSpinner(R.id.spinner_record_format);
+
         imageView = (ImageView)findViewById(R.id.headImage);
 
         String nickName = PreferenceManager.getInstance().getCurrentUserNick();
@@ -128,6 +130,16 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             swOnPushcdn.closeSwitch();
         }
 
+        //push audio stream
+        RelativeLayout rlSwitchePushAudio= (RelativeLayout)findViewById(R.id.rl_switch_push_audio_stream);
+        rlSwitchePushAudio.setOnClickListener(this);
+        EaseSwitchButton swOnPushAudioStream = (EaseSwitchButton)findViewById(R.id.switch_push_audio_stream);
+        if (PreferenceManager.getInstance().isPushAudioStream()) {
+            swOnPushAudioStream.openSwitch();
+        } else {
+            swOnPushAudioStream.closeSwitch();
+        }
+
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_log);
         uploadlog.setOnClickListener(this);
@@ -151,7 +163,6 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
     void initCameraResolutionSpinner(final int spinnerId) {
         // for simulator which doesn't has camera, open will fail
-        Camera mCameraDevice = null;
         try {
             List<String> strSizes = new ArrayList<String>();
             String str = "360P";
@@ -211,9 +222,72 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (mCameraDevice != null) {
-                mCameraDevice.release();
+        }
+    }
+
+    void initRecordFormatSpinner(final int formatSpinner){
+        try {
+            List<String> strSizes = new ArrayList<String>();
+            String str = "(Auto)MP4";
+            strSizes.add(str);
+            str = "MP3";
+            strSizes.add(str);
+            str = "M4A";
+            strSizes.add(str);
+            str = "WAV";
+            strSizes.add(str);
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strSizes);
+            adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+            final Spinner spinnerVideoResolution = (Spinner) findViewById(formatSpinner);
+            spinnerVideoResolution.setAdapter(adapter);
+
+            // update selection
+            int selection = 0;
+            String resolution = PreferenceManager.getInstance().getPushStreamRecordFormat();
+            if (resolution == null) {
+                selection = 0;
+                PreferenceManager.getInstance().setPushStreamRecordFormat(strSizes.get(0));
+            } else {
+                for (int i = 0; i < strSizes.size(); i++) {
+                    if (resolution.equals(strSizes.get(i))) {
+                        selection = i;
+                        break;
+                    }
+                }
             }
+            if (selection < strSizes.size()) {
+                spinnerVideoResolution.setSelection(selection);
+            }
+
+            AtomicBoolean disableOnce = new AtomicBoolean(false);
+            spinnerVideoResolution.setTag(disableOnce);
+            spinnerVideoResolution.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    AtomicBoolean disable = (AtomicBoolean)spinnerVideoResolution.getTag();
+                    if (disable.get() == true) {
+                        disable.set(false);
+                        return;
+                    }
+                    if (position == 0) {
+                        PreferenceManager.getInstance().setPushStreamRecordFormat(strSizes.get(0));
+                        return;
+                    }
+                    String size = strSizes.get(position);
+                    if (size != null) {
+                        PreferenceManager.getInstance().setPushStreamRecordFormat(size);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
         }
     }
 
@@ -266,9 +340,29 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                 if (swOfflinePushcdn.isSwitchOpen()) {
                     PreferenceManager.getInstance().setPushCDN(false);
                     swOfflinePushcdn.closeSwitch();
+
+                    //关闭纯音频推流
+                    EaseSwitchButton swOnPushAudioStream = (EaseSwitchButton)findViewById(R.id.switch_push_audio_stream);
+                    PreferenceManager.getInstance().setPushAudioStream(false);
+                    swOnPushAudioStream.closeSwitch();
                 } else {
                     PreferenceManager.getInstance().setPushCDN(true);
                     swOfflinePushcdn.openSwitch();
+                }
+                break;
+            case R.id.rl_switch_push_audio_stream:
+                if(!PreferenceManager.getInstance().isPushCDN()){
+                    Toast.makeText(getApplicationContext(), "请先开启CDN推流!",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+                EaseSwitchButton swOnPushAudioStream = (EaseSwitchButton)findViewById(R.id.switch_push_audio_stream);
+                if (swOnPushAudioStream.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setPushAudioStream(false);
+                    swOnPushAudioStream.closeSwitch();
+                } else {
+                    PreferenceManager.getInstance().setPushAudioStream(true);
+                    swOnPushAudioStream.openSwitch();
                 }
                 break;
             case R.id.btn_upload_log:

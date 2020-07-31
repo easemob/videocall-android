@@ -96,6 +96,29 @@
                 android:text="解除全体静音"
                 android:gravity="center"
                 android:textColor="#FF00AFEF"
+                android:textSize="14sp">
+            </Button>
+            <Button
+                android:id="@+id/btn_start_record"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="240dp"
+                android:background="@color/color_transparent"
+                android:text="开启"
+                android:gravity="center"
+                android:textColor="#FF00AFEF"
+                android:textSize="14sp" />
+            <Button
+                android:id="@+id/btn_stop_record"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="300dp"
+                android:background="@color/color_transparent"
+                android:text="停止"
+                android:gravity="center"
+                android:textColor="#FF00AFEF"
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>

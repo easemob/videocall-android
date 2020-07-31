@@ -45,8 +45,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppStartLoadTranslucent"
         android:usesCleartextTraffic="true"
-        android:versionCode="4"
-        android:versionName="1.4.0">
+        android:versionCode="5"
+        android:versionName="1.4.1">
         //Target 28 ,默认会报 NoClassDefFoundError,因为此库被禁止使用，要继续使用 Apache HTTP 客户端，
         //以 Android 9 及更高版本为目标的应用应该添加以下
         <uses-library
