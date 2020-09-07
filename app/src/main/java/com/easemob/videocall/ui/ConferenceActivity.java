@@ -7,12 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -20,12 +21,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -49,20 +49,18 @@ import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.utils.ConferenceMemberInfo;
 import com.easemob.videocall.utils.ConferenceSession;
 import com.easemob.videocall.utils.ConfigManager;
+import com.easemob.videocall.utils.OrientationListener;
 import com.easemob.videocall.utils.WhiteBoardRoomInfo;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
 import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMCDNCanvas;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
-import com.hyphenate.chat.EMLiveConfig;
 import com.hyphenate.chat.EMLiveRegion;
-import com.hyphenate.chat.EMRoomConfig;
 import com.hyphenate.chat.EMStreamParam;
 import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.chat.EMWhiteboard;
@@ -202,6 +200,8 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
     public static int mId;
     private String mAction;
     private TelephonyManager telephonyManager;
+    private SensorManager mSensorManager;
+    private OrientationListener mOrientationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +252,10 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         registerBluetoothBroadCast();
 
         EMClient.getInstance().conferenceManager().enableStatistics(true);
+
+        OrientationInit();
     }
+
 
     /*
      初始化
@@ -368,6 +371,23 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
             setRequestBtnState(STATE_AUDIENCE);
         }
         timeHandler.startTime();
+    }
+
+    /**
+     * 注册重力横屏感应事件
+     */
+    private void OrientationInit(){
+        mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mOrientationListener = new OrientationListener(newOrientation -> {
+            //判断是否开启自动旋转
+            boolean autoRotateOn  = (android.provider.Settings.System.getInt(getContentResolver(),Settings.System.ACCELEROMETER_ROTATION, 0) == 1) ;
+            if(autoRotateOn){
+                //设置屏幕方向
+                setRequestedOrientation(newOrientation);
+            }
+
+        });
+        mSensorManager.registerListener(mOrientationListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private int selfRadioButtonId;
@@ -1032,19 +1052,19 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         if (CameraResolution.equals("360P")) {
             normalParam.setVideoWidth(480);
             normalParam.setVideoHeight(360);
-            normalParam.setMinVideoKbps(400);
         } else if (CameraResolution.equals("(Auto)480P")) {
             normalParam.setVideoWidth(720);
             normalParam.setVideoHeight(480);
-            normalParam.setMinVideoKbps(600);
         } else if (CameraResolution.equals("720P")) {
             normalParam.setVideoWidth(1280);
             normalParam.setVideoHeight(720);
-            normalParam.setMinVideoKbps(1000);
+            normalParam.setMinVideoKbps(200);
+            normalParam.setMaxVideoKbps(300);
+            normalParam.setMaxAudioKbps(300);
         }
-//        normalParam.setVideoWidth(1920);
-//        normalParam.setVideoHeight(1080);
-//        normalParam.setMinVideoKbps(3000);
+        normalParam.setVideoWidth(1920);
+        normalParam.setVideoHeight(1080);
+        EMClient.getInstance().callManager().getCallOptions().setClarityFirst(true);
 
         EMClient.getInstance().conferenceManager().publish(normalParam, new EMValueCallBack<String>() {
             @Override
@@ -1678,7 +1698,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         ScreenCaptureManager.getInstance().stop();
         stopAudioTalkingMonitor();
         timeHandler.stopTime();
-
+        //unpublish(conference.getPubStreamId(EMConferenceStream.StreamType.NORMAL));
         PhoneStateManager.get(ConferenceActivity.this).removeStateCallback(phoneStateCallback);
         EMClient.getInstance().conferenceManager().exitConference(new EMValueCallBack() {
             @Override
@@ -1882,6 +1902,11 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         }
         // 设置声音模式为通讯模式
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+
+        //停止蓝牙连接
+        audioManager.stopBluetoothSco();
+        audioManager.setBluetoothScoOn(false);
+        audioManager.setSpeakerphoneOn(false);
 
         if (isBluetoothHeadsetConnected()) {
             EMLog.i("zxg", "need start BluetoothSco");
@@ -2087,7 +2112,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
 
     @Override
     public void onStreamStatistics(EMStreamStatistics statistics) {
-//        EMLog.e(TAG,  "Encode Resolution: " + statistics.getLocalEncodedWidth() + "  " + statistics.getLocalEncodedHeight() + " bps: " +statistics.getLocalVideoActualBps() + "  FPS: " + statistics.getLocalEncodedFps());
+        EMLog.e(TAG,  "Encode Resolution: " + statistics.getLocalEncodedWidth() + "  " + statistics.getLocalEncodedHeight() + " bps: " +statistics.getLocalVideoActualBps() + "  FPS: " + statistics.getLocalEncodedFps());
 //
 //        EMLog.e(TAG,  "akps:" +  statistics.getLocalAudioBps() + " vkps:" + statistics.getLocalVideoActualBps());
     }
@@ -3433,10 +3458,17 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         if(bluetoothReceiver != null){
             unregisterReceiver(bluetoothReceiver);
         }
+
+       mSensorManager.unregisterListener(mOrientationListener);
+
         EMLog.i(TAG,"onDestroy over   ConferenceActivity  Main threadID: " + Thread.currentThread().getName());
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
 
     @Override

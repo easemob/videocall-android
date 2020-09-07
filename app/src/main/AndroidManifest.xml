@@ -78,8 +78,8 @@
         <activity
             android:name=".ui.ConferenceActivity"
             android:label="@string/title_activity_conference"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustPan" />
         //系统设置
         <activity
@@ -147,3 +147,5 @@
             android:theme="@style/AppTheme" />
     </application>
 </manifest>
+
+

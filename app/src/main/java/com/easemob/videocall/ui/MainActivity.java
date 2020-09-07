@@ -377,7 +377,6 @@ public class MainActivity extends Activity {
      加入会议室
      */
     private void joinRoom() {
-        EMClient.getInstance().setDebugMode(true);
         ConferenceInfo.getInstance().Init();
         if(conferenceSession.getConferenceProfiles() != null){
             conferenceSession.getConferenceProfiles().clear();

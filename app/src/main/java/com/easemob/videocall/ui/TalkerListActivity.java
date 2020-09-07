@@ -124,19 +124,19 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     }
 
 
-//    EMMediaFormat getStreamRecordFormat(){
-//        String format = PreferenceManager.getInstance().getPushStreamRecordFormat();
-//        if(format.equals("(Auto)MP4")){
-//            return  EMMediaFormat.MP4;
-//        }else if(format.equals("MP3")){
-//            return  EMMediaFormat.MP3;
-//        }else if(format.equals("M4A")){
-//            return  EMMediaFormat.M4A;
-//        }else if(format.equals("WAV")){
-//            return  EMMediaFormat.WAV;
-//        }
-//        return EMMediaFormat.MP4;
-//    }
+    EMConferenceManager.EMRecordMediaFormat getStreamRecordFormat(){
+        String format = PreferenceManager.getInstance().getPushStreamRecordFormat();
+        if(format.equals("(Auto)MP4")){
+            return EMConferenceManager.EMRecordMediaFormat.MP4;
+        }else if(format.equals("MP3")){
+            return  EMConferenceManager.EMRecordMediaFormat.MP3;
+        }else if(format.equals("M4A")){
+            return  EMConferenceManager.EMRecordMediaFormat.M4A;
+        }else if(format.equals("WAV")){
+            return  EMConferenceManager.EMRecordMediaFormat.WAV;
+        }
+        return  EMConferenceManager.EMRecordMediaFormat.MP4;
+    }
 
     @Override
     public void onClick(View view) {
@@ -168,8 +168,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                 liveId=iter.next();
                 break;
             }
-            //EMRecordMediaFormat mediaFormat = new EMRecordMediaFormat(getStreamRecordFormat());
-            EMClient.getInstance().conferenceManager().enableRecordLivestream(liveId,true, new EMValueCallBack<String>() {
+            EMClient.getInstance().conferenceManager().enableRecordLivestream(liveId,getStreamRecordFormat(),true, new EMValueCallBack<String>() {
                 @Override
                 public void onSuccess(String value) {
                     btn_start_record.setClickable(true);
