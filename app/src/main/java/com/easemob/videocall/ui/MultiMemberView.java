@@ -1,53 +1,34 @@
 package com.easemob.videocall.ui;
 
-import android.annotation.TargetApi;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.PermissionRequest;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
-import com.hyphenate.EMValueCallBack;
+import com.easemob.videocall.utils.PreferenceManager;
+import com.easemob.videocall.utils.StringUtils;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConferenceManager;
-import com.hyphenate.chat.EMWhiteboard;
-import com.hyphenate.util.EMLog;
 import com.jaouan.compoundlayout.RadioLayout;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Random;
 
-import javax.security.auth.login.LoginException;
 
 
 /**
@@ -62,10 +43,12 @@ public class MultiMemberView extends RadioLayout {
 
 	private Context context;
 	private ImageView avatarView;
-	private ImageView talkingView;
+	private ImageView admin_show_view;
 	private TextView nameView;
-	private ImageView adminshowView;
+	private ImageView speak_show_view;
 	private ImageView whiteboardView;
+	private LinearLayout loading_dialog;
+
 
 	private FrameLayout smallerVideoPreview;
 	private boolean isVideoOff = true;
@@ -82,6 +65,7 @@ public class MultiMemberView extends RadioLayout {
 	private String whiteboardRoomName;
 	private String whiteboardPwd;
 	private boolean iswhiteboardCreator;
+	ValueAnimator animator;
 
 	public MultiMemberView(Context context) {
 		this(context, null);
@@ -97,11 +81,21 @@ public class MultiMemberView extends RadioLayout {
 	private void init() {
 		smallerVideoPreview = findViewById(R.id.small_preview);
 		avatarView  =   findViewById(R.id.call_avatar);
-		talkingView =  findViewById(R.id.icon_speaking);
+		admin_show_view =  findViewById(R.id.admin_show_view);
 		nameView =  findViewById(R.id.icon_text);
-		adminshowView = findViewById(R.id.admin_show_image);
-		whiteboardView = findViewById(R.id.whiteboard_view);
-		whiteboardView.setVisibility(GONE);
+		speak_show_view = findViewById(R.id.speaking_show_view);
+		loading_dialog = findViewById(R.id.member_loading);
+
+		animator = ValueAnimator.ofInt(1, 8);
+		animator.setDuration(1000);
+		animator.setInterpolator(new LinearInterpolator());
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				int value = (int) animation.getAnimatedValue();
+				speak_show_view.getDrawable().setLevel(value);
+			}
+		});
 	}
 
     /**
@@ -109,14 +103,14 @@ public class MultiMemberView extends RadioLayout {
 	 */
 	public void setAudioOff(boolean state) {
 		isAudioOff = state;
+		animator.cancel();
 		if (isDesktop) {
 			return;
 		}
 		if (isAudioOff) {
-			talkingView.setVisibility(VISIBLE);
-			talkingView.setBackgroundResource(R.drawable.call_mute_small);
+			speak_show_view.setImageResource(R.drawable.em_speak_off);
 		} else {
-			talkingView.setVisibility(GONE);
+			speak_show_view.setImageResource(R.drawable.em_speak_on);
 		}
 	}
 
@@ -128,16 +122,17 @@ public class MultiMemberView extends RadioLayout {
 	}
 
 	public void setAudioSpeak(){
-		talkingView.setVisibility(VISIBLE);
-		talkingView.setBackgroundResource(R.drawable.call_unmute_smal);
+		animator.cancel();
+		speak_show_view.setImageResource(R.drawable.em_voice_change);
+		animator.start();
 	}
 
 	public void setAudioNoSpeak(){
+		animator.cancel();
 		if (isAudioOff) {
-			talkingView.setVisibility(VISIBLE);
-			talkingView.setBackgroundResource(R.drawable.call_mute_small);
+			speak_show_view.setImageResource(R.drawable.em_call_mic_off);
 		}else {
-			talkingView.setVisibility(GONE);
+			speak_show_view.setImageResource(R.drawable.em_call_mic_on);
 		}
 	}
 
@@ -146,14 +141,16 @@ public class MultiMemberView extends RadioLayout {
 		super.setChecked(checked);
 		if (checked) {
 			avatarView.setVisibility(VISIBLE);
+			this.setBackgroundColor(Color.rgb(102,102,103));
 			smallerVideoPreview.setVisibility(View.GONE);
 		}else{
-			avatarView.setVisibility(GONE);
 			if (isVideoOff()){
-				smallerVideoPreview.setVisibility(View.GONE);
 				avatarView.setVisibility(VISIBLE);
+				smallerVideoPreview.setVisibility(View.GONE);
+				this.setBackgroundColor(Color.rgb(102,102,103));
 			}else{
 				smallerVideoPreview.setVisibility(View.VISIBLE);
+				avatarView.setVisibility(GONE);
 			}
 		}
 	}
@@ -169,8 +166,10 @@ public class MultiMemberView extends RadioLayout {
 		isVideoOff = state;
 		if (isVideoOff) {
 			avatarView.setVisibility(VISIBLE);
+			smallerVideoPreview.setVisibility(View.GONE);
 		} else{
 			avatarView.setVisibility(View.GONE);
+			smallerVideoPreview.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -181,12 +180,16 @@ public class MultiMemberView extends RadioLayout {
 	/**
 	 * 设置当前 view 对应的 stream 的用户，主要用来语音通话时显示对方头像
 	 */
-	public void setUsername(String username) {
+	public void setUsername(String username,boolean showloading) {
 		this.username = username;
+		if(showloading && !username.equals(EMClient.getInstance().getCurrentUser())){
+                loading_dialog.setVisibility(VISIBLE);
+        }
+
 		if(ConferenceInfo.getInstance().getAdmins().contains(username)){
-				adminshowView.setVisibility(VISIBLE);
+			admin_show_view.setVisibility(VISIBLE);
 		}else{
-				adminshowView.setVisibility(GONE);
+			admin_show_view.setVisibility(GONE);
 		}
 	}
 
@@ -197,10 +200,10 @@ public class MultiMemberView extends RadioLayout {
 	public void setNickname(String nickname){
 		if(nickname != null){
 			this.nickname = nickname;
-			if(username == EMClient.getInstance().getCurrentUser()){
-				nameView.setText(nickname);
+			if(username.equals(EMClient.getInstance().getCurrentUser())){
+				nameView.setText(StringUtils.tolongNickName(PreferenceManager.getInstance().getCurrentUserNick(),6));
 			}else{
-				nameView.setText(nickname);
+				nameView.setText(StringUtils.tolongNickName(nickname,6));
 			}
 		}else{
 			nameView.setText(null);
@@ -290,6 +293,14 @@ public class MultiMemberView extends RadioLayout {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
 	}
 
+
+	/**
+	 * 设置动态loading
+	 */
+	public void cancelLoadingDialog(){
+		loading_dialog.setVisibility(INVISIBLE);
+	}
+
 	public boolean isWhiteboard() {
 		return isWhiteboard;
 	}
@@ -308,56 +319,5 @@ public class MultiMemberView extends RadioLayout {
 
 	public void setWhiteboardPassword(String whiteboardPwd){
       	this.whiteboardPwd = whiteboardPwd;
-		whiteboardView.setVisibility(VISIBLE);
-		whiteboardView.setBackgroundResource(R.drawable.em_whiteborad_icon);
-		avatarView.setBackgroundResource(R.color.gray_normal);
-		//avatarView.setVisibility(GONE);
-		nameView.setVisibility(GONE);
-		adminshowView.setVisibility(GONE);
-//		nameView.setText("白板缩略图");
-//		nameView.setTextColor(Color.rgb(0, 0, 0));
-
-		avatarView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				EMClient.getInstance().conferenceManager().createWhiteboardRoom
-						(EMClient.getInstance().getCurrentUser(),
-								EMClient.getInstance().getAccessToken(),
-								whiteboardRoomName,whiteboardPwd, true,
-								new EMValueCallBack<EMWhiteboard>() {
-									@Override
-									public void onSuccess(EMWhiteboard value) {
-										avatarView.post(new Runnable() {
-											@Override
-											public void run() {
-											ConferenceActivity.mId = Math.abs(new Random
-													(System.currentTimeMillis()).nextInt());
-												Intent intent = new Intent(getContext(),
-														 WhiteBoardTbsActivity.class);
-												EMLog.e(TAG,"WhiteBoardTbsActivity 222 go");
-												Bundle bundle = new Bundle();
-												bundle.putString("roomId", value.getRoomId());
-												bundle.putString("roomUrl", value.getRoomUrl());
-												if(value.getRoomUrl().contains("isCreater=true")){
-													bundle.putBoolean("creator", true);
-												}else{
-													bundle.putBoolean("creator", false);
-												}
-												bundle.putInt(ConferenceActivity.
-														KEY_ID, ConferenceActivity.mId);
-												intent.putExtras(bundle);
-												getContext().startActivity(intent);
-											}
-										});
-									}
-									@Override
-									public void onError(int error, String errorMsg) {
-										EMLog.i(TAG, "joinWhiteboardRoom failed, error: " + error +
-												" - " + errorMsg);
-									}
-								}
-						);
-			}
-		});
 	}
 }

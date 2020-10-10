@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.easemob.videocall.DemoApplication;
 import com.easemob.videocall.model.EaseCompat;
+import com.easemob.videocall.utils.PermissionsManager;
 import com.hyphenate.chat.EMClient;
 import com.easemob.videocall.ui.widget.EaseSwitchButton;
 import com.easemob.videocall.R;
@@ -98,6 +99,16 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             swOnAudio.closeSwitch();
         }
 
+        //audience
+        RelativeLayout rlSwitchAudience = (RelativeLayout)findViewById(R.id.rl_switch_audience);
+        rlSwitchAudience.setOnClickListener(this);
+        EaseSwitchButton swOnAudience = (EaseSwitchButton)findViewById(R.id.switch_audience);
+        if (PreferenceManager.getInstance().isAudience()) {
+            swOnAudience.openSwitch();
+        } else {
+            swOnAudience.closeSwitch();
+        }
+
         //record
         RelativeLayout rlSwitcheRecrod= (RelativeLayout)findViewById(R.id.rl_switch_record);
         rlSwitcheRecrod.setOnClickListener(this);
@@ -139,6 +150,17 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         } else {
             swOnPushAudioStream.closeSwitch();
         }
+
+        //是否使用沙箱环境
+        RelativeLayout rlSwitcheShaxiang= (RelativeLayout)findViewById(R.id.rl_switch_use_shaxiang);
+        rlSwitcheShaxiang.setOnClickListener(this);
+        EaseSwitchButton swOnUseShaXiang = (EaseSwitchButton)findViewById(R.id.switch_use_shaxiang);
+        if (PreferenceManager.getInstance().isCustomizeServer()) {
+            swOnUseShaXiang.openSwitch();
+        } else {
+            swOnUseShaXiang.closeSwitch();
+        }
+
 
         //upload button
         Button uploadlog = (Button)findViewById(R.id.btn_upload_log);
@@ -315,6 +337,16 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                     swOfflineCallPush.openSwitch();
                 }
                 break;
+            case R.id.rl_switch_audience:
+                 EaseSwitchButton swOnAudience = (EaseSwitchButton)findViewById(R.id.switch_audience);
+                 if (swOnAudience.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setAudience(false);
+                    swOnAudience.closeSwitch();
+                 } else {
+                    PreferenceManager.getInstance().setAudience(true);
+                    swOnAudience.openSwitch();
+                 }
+                 break;
             case R.id.rl_switch_record:
                 EaseSwitchButton swRecord = (EaseSwitchButton)findViewById(R.id.switch_record);
                 if (swRecord.isSwitchOpen()) {
@@ -363,6 +395,17 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                 } else {
                     PreferenceManager.getInstance().setPushAudioStream(true);
                     swOnPushAudioStream.openSwitch();
+                }
+                break;
+            case R.id.rl_switch_use_shaxiang:
+                PreferenceManager.getInstance().setCurrentUserName(null);
+                EaseSwitchButton use_shaxiang = (EaseSwitchButton)findViewById(R.id.switch_use_shaxiang);
+                if (use_shaxiang.isSwitchOpen()) {
+                    PreferenceManager.getInstance().setCustomizeServer(false);
+                    use_shaxiang.closeSwitch();
+                } else {
+                    PreferenceManager.getInstance().setCustomizeServer(true);
+                    use_shaxiang.openSwitch();
                 }
                 break;
             case R.id.btn_upload_log:

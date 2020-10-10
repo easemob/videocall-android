@@ -12,6 +12,7 @@ import com.easemob.videocall.utils.WhiteBoardRoomInfo;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConferenceListener;
 import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceAttribute;
 import com.hyphenate.chat.EMConferenceManager;
@@ -48,13 +49,12 @@ public class DemoHelper {
     protected static final String TAG = "DemoHelper";
 
 	private static DemoHelper instance = null;
-    private ExecutorService executor;
 	private Context appContext;
 	private ConferenceSession conferenceSession;
     private EMConferenceListener conferenceListener;
 
 	private DemoHelper() {
-        executor = Executors.newCachedThreadPool();
+
 	}
 
 	public synchronized static DemoHelper getInstance() {
@@ -75,17 +75,18 @@ public class DemoHelper {
 	 * init helper
 	 * 
 	 * @param context
-	 *            application context
+	 *  application context
 	 */
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
         appContext = context;
-//        options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
-//        options.setIMServer("116.85.43.118");
-//        options.setImPort(6717);
-
-		EMClient.getInstance().init(context, options);
 		PreferenceManager.init(context);
+        if(PreferenceManager.getInstance().isCustomizeServer()){
+
+		}
+		EMClient.getInstance().init(context, options);
+		EMCallManager manager = EMClient.getInstance().callManager();
+		EMClient.getInstance().setDebugMode(true);
 	}
 
 	public Context getContext(){
@@ -219,7 +220,8 @@ public class DemoHelper {
 			@Override
 			public void onSpeakers(List<String> speakers) {}
 
-			@Override public void onReceiveInvite(String confId, String password, String extension) {
+			@Override
+			public void onReceiveInvite(String confId, String password, String extension) {
 				EMLog.i(TAG, String.format("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension));
 				//goConference(confId, password, extension);
 			}

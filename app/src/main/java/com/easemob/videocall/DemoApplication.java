@@ -34,6 +34,7 @@ public class DemoApplication extends Application implements Thread.UncaughtExcep
 	private static DemoApplication instance;
 	static public ConferenceInfo conferenceInstance;
 	static public String baseurl = "https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/RtcDemo/headImage/";
+	static public String meeting_share_baseurl = "http://rtc-turn4-hsb.easemob.com/rtc-ws/meeting-share-loading-page/index.html?";
 
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs

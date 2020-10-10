@@ -48,11 +48,13 @@ public class SetTalkerItemDialog extends BaseLiveDialogFragment implements View.
     private int position;
     private EMConferenceStream conferenceStream;
     private TalkerItemAdapter adapter;
+    SetTalkerItemDialog dialog;
 
-    public static SetTalkerItemDialog getNewInstance(String username) {
+    public static SetTalkerItemDialog getNewInstance(String username ,int position) {
         SetTalkerItemDialog dialog = new SetTalkerItemDialog();
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
+        bundle.putInt("position",position);
         dialog.setArguments(bundle);
         return dialog;
     }

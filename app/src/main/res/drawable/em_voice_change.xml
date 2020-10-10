@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ease_record_animate_01" android:maxLevel="1"/>
+    <item android:drawable="@drawable/ease_record_animate_02" android:maxLevel="2"/>
+    <item android:drawable="@drawable/ease_record_animate_03" android:maxLevel="3"/>
+    <item android:drawable="@drawable/ease_record_animate_04" android:maxLevel="4"/>
+    <item android:drawable="@drawable/ease_record_animate_05" android:maxLevel="5"/>
+    <item android:drawable="@drawable/ease_record_animate_06" android:maxLevel="6"/>
+    <item android:drawable="@drawable/ease_record_animate_07" android:maxLevel="7"/>
+    <item android:drawable="@drawable/ease_record_animate_08" android:maxLevel="8"/>
+    <item android:drawable="@drawable/ease_record_animate_09" android:maxLevel="9"/>
+    <item android:drawable="@drawable/ease_record_animate_10" android:maxLevel="10"/>
+    <item android:drawable="@drawable/ease_record_animate_11" android:maxLevel="11"/>
+    <item android:drawable="@drawable/ease_record_animate_12" android:maxLevel="12"/>
+    <item android:drawable="@drawable/ease_record_animate_13" android:maxLevel="13"/>
+    <item android:drawable="@drawable/ease_record_animate_14" android:maxLevel="14"/>
+</level-list>

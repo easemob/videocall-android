@@ -88,7 +88,7 @@ public class RequestTalkerDialog extends BaseLiveDialogFragment implements View.
      * 音频外放
      */
     private void onLoudspeaker() {
-        activity.speakSwitch(0);
+        //activity.speakSwitch(0);
         dismiss();
     }
 
@@ -96,7 +96,7 @@ public class RequestTalkerDialog extends BaseLiveDialogFragment implements View.
      * 音频内置播放
      */
     private void onBuiltIn() {
-        activity.speakSwitch(1);
+        //activity.speakSwitch(1);
         dismiss();
     }
 
@@ -104,7 +104,7 @@ public class RequestTalkerDialog extends BaseLiveDialogFragment implements View.
      * 蓝牙耳机
      */
     private void onBluetooth() {
-        activity.speakSwitch(2);
+        //activity.speakSwitch(2);
         dismiss();
     }
 }

@@ -64,8 +64,10 @@
     <string name="pushcdn">推流到CDN</string>
     <string name="push_audio_stream">音频推流</string>
     <string name="stream_record_format">录制推流格式</string>
+    <string name="use_customize_server">使用沙箱环境</string>
     <string name="set_cdn_url">CDN推流地址</string>
     <string name="video_resolution">分辨率</string>
+    <string name="switch_audience">以观众身份进入</string>
     <string name="upload_log">上传日志</string>
     <string name="voice_prefix">[语音]</string>
     <string name="voice_call">[语音通话]</string>
@@ -148,7 +150,7 @@
     <string name="Group_of_Lord">群主</string>
     <string name="Introduction">简介</string>
     <string name="To_join_the_chat">加入群聊</string>
-    <string name="add_room_anchor">以主播身份加入</string>
+    <string name="add_room_anchor">加入会议</string>
     <string name="add_room_audience">以观众身份加入</string>
     <string name="room_name">请输入房间名</string>
     <string name="room_password">请输入房间密码</string>

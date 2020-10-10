@@ -304,6 +304,6 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
      * @return
      */
     public int getEmptyLayoutId() {
-        return R.layout.activity_conference_member_view;
+        return R.layout.activity_empty_adapter_view;
     }
 }
