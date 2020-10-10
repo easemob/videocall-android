@@ -45,8 +45,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppStartLoadTranslucent"
         android:usesCleartextTraffic="true"
-        android:versionCode="5"
-        android:versionName="1.4.1">
+        android:versionCode="6"
+        android:versionName="2.0.0">
         //Target 28 ,默认会报 NoClassDefFoundError,因为此库被禁止使用，要继续使用 Apache HTTP 客户端，
         //以 Android 9 及更高版本为目标的应用应该添加以下
         <uses-library
@@ -62,16 +62,24 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <category android:name="android.intent.category.BROWSABLE"></category>
+                <!--协议部分-->
+                <data
+                    android:host="conference"
+                    android:scheme="easemobvideo" />
             </intent-filter>
         </activity>
         //进入会议activity

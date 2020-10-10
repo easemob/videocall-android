@@ -26,7 +26,7 @@ public class OrientationListener implements SensorEventListener {
         float y = values[1];
 
         int newOrientation;
-        if (x < 4.5 && x >= -4.5 && y >= 4.5) {
+        if (x < 4.5 && x >= -4.5 && y >= -4.5) {
             newOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         } else if (x >= 4.5 && y < 4.5 && y >= -4.5) {
             newOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;

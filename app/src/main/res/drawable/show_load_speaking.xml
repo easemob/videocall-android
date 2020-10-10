@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+    <item android:duration="83" android:drawable="@drawable/em_speak_on" />
+    <item android:duration="83" android:drawable="@drawable/em_speaking" />
+</animation-list>

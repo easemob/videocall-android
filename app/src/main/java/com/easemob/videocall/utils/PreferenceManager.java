@@ -72,12 +72,14 @@ public class PreferenceManager {
 
 
 	private static String SHARED_KEY_CALL_AUDIO= "SHARED_KEY_CALL_AUDIO";
+	private static String SHARED_KEY_AUDIENCE= "SHARED_KEY_AUDIENCE";
 	private static String SHARED_KEY_CALL_VIDEO= "SHARED_KEY_CALL_VIDEO";
 	private static String SHARED_KEY_PSUH_CDN= "SHARED_KEY_PUSH_CDN";
 	private static String SHARED_KEY_CDN_URL= "SHARED_KEY_PUSH_CDN_URL";
 	private static String SHARED_KEY_PUSH_USE_FCM = "shared_key_push_use_fcm";
 	private static String SHARED_KEY_PUSH_AUDIO_STREAM = "shared_key_push_audio_stream";
 	private static String SHARED_KEY_PUSH_STREAM_RRCORD_FORMAT = "shared_key_push_stream_record_format";
+	private static String SHARED_KEY_PUSH_USE_SHAXIANG = "shared_key_use_shaxiang";
 
 	@SuppressLint("CommitPrefEdits")
 	private PreferenceManager(Context cxt) {
@@ -415,6 +417,19 @@ public class PreferenceManager {
 		editor.apply();
 	}
 
+
+	/**
+	 * 设置是否以观众身份进入
+	 */
+	public boolean isAudience(){
+		return mSharedPreferences.getBoolean(SHARED_KEY_AUDIENCE, false);
+	}
+
+	public void setAudience(boolean enable){
+		editor.putBoolean(SHARED_KEY_AUDIENCE, enable);
+		editor.apply();
+	}
+
 	/***
 	 * 设置是否纯音频推流
 	 * @return
@@ -427,6 +442,19 @@ public class PreferenceManager {
 		editor.putBoolean(SHARED_KEY_PUSH_AUDIO_STREAM, enable);
 		editor.apply();
 	}
+
+	/**
+	 * 设置是否使用测试沙箱环境
+	 */
+	public boolean  isCustomizeServer(){
+		return mSharedPreferences.getBoolean(SHARED_KEY_PUSH_USE_SHAXIANG, false);
+	}
+
+	public void setCustomizeServer(boolean enable) {
+		editor.putBoolean(SHARED_KEY_PUSH_USE_SHAXIANG, enable);
+		editor.apply();
+	}
+
 
 	/**
 	 * 设置推流录制文件格式

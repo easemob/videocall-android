@@ -41,6 +41,8 @@ public class ConferenceInfo {
     static public int CanvasWidth = 720;
     static public int CanvasHeight = 480;
 
+    private List<String> talkersList = new ArrayList<>();
+
     public static boolean Initflag = false;
     static public ConferenceInfo getInstance(){
         if(conferenceInfo == null){
@@ -66,6 +68,9 @@ public class ConferenceInfo {
          }
         if(adminsList != null){
            adminsList.clear();
+        }
+        if(talkersList != null){
+            talkersList.clear();
         }
         whiteboardRoomInfo = null;
         whiteboardCreator = false;
@@ -216,4 +221,48 @@ public class ConferenceInfo {
         this.whiteboardRoomInfo = whiteboardRoomInfo;
     }
 
+    public void setTalkersList(String[] talkers){
+        talkersList.clear();
+        if(talkers != null){
+            for(int i = 0 ; i < talkers.length;i++){
+                talkersList.add(talkers[i]);
+            }
+        }
+    }
+
+    public int getTalkersList() {
+      if(talkersList == null){
+          return 0;
+      }
+      return talkersList.size();
+    }
+
+    public int removeTalkersList(String memberName) {
+        if (talkersList != null) {
+            if (talkersList.contains(memberName)) {
+                talkersList.remove(memberName);
+            }
+            return talkersList.size();
+        }
+        return  0;
+    }
+
+    public int addTalkersList(String memberName) {
+        if (talkersList != null) {
+            if (!talkersList.contains(memberName)) {
+                talkersList.add(memberName);
+            }
+            return talkersList.size();
+        }
+        return  0;
+    }
+
+    public boolean containsTalkersList(String memberName) {
+        if (talkersList != null) {
+            if(talkersList.contains(memberName)) {
+                return  true;
+            }
+        }
+        return  false;
+    }
 }

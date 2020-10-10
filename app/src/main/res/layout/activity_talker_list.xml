@@ -25,7 +25,7 @@
             android:gravity="center"
             android:layout_centerVertical="true"
             android:textColor="#424242"
-            android:text="主播列表" />
+            android:text="成员列表" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:layout_centerVertical="true"
                 android:textColor="#FF666666"
                 android:gravity="center"
-                android:text="当前观众人数 0"
+                android:text="参会人数 "
                 android:textSize="12sp" />
             <ImageView
                 android:id="@+id/attendance_hot"
@@ -61,12 +61,14 @@
             android:layout_weight="1"
             android:background="@color/btn_white_normal"
             android:orientation="vertical">
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/talker_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true">
-            </android.support.v7.widget.RecyclerView>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"></android.support.v7.widget.RecyclerView>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/btn_mute_layout"

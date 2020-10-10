@@ -32,6 +32,8 @@ import com.easemob.videocall.R;
 import com.easemob.videocall.utils.ConferenceInfo;
 
 import com.easemob.videocall.adapter.TalkerItemAdapter;
+import com.hyphenate.util.EasyUtils;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -55,6 +57,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
     private Button btn_start_record;
     private Button btn_stop_record;
     private RelativeLayout buttonLayout;
+    public static boolean isActivte = false;
 
     private List<EMConferenceStream> streamList;
     private List<EMConferenceStream> talkerList;
@@ -108,8 +111,16 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
         btn_start_record.setOnClickListener(this);
         btn_stop_record.setOnClickListener(this);
 
-//        btn_start_record.setVisibility(View.GONE);
-//        btn_stop_record.setVisibility(View.GONE);
+        btn_start_record.setVisibility(View.GONE);
+        btn_stop_record.setVisibility(View.GONE);
+
+        if(ConferenceInfo.getInstance().getConference().getConferenceRole() == EMConferenceManager.EMConferenceRole.Audience){
+            btn_mute_all.setVisibility(View.GONE);
+            btn_unmute_all.setVisibility(View.GONE);
+        }else{
+            btn_mute_all.setVisibility(View.VISIBLE);
+            btn_unmute_all.setVisibility(View.VISIBLE);
+        }
 
         mId = getIntent().getIntExtra(ConferenceActivity.KEY_ID, -1);
         mAction = Config.ACTION_CONFIG_CHANGE + mId;
@@ -304,13 +315,14 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                     public void onSuccess(EMConference value) {
                         ConferenceInfo.getInstance().getConference().setTalkers(value.getTalkers());
                         ConferenceInfo.getInstance().getConference().setAudienceTotal(value.getAudienceTotal());
+                        ConferenceInfo.getInstance().setTalkersList(value.getTalkers());
                         ConferenceInfo.getInstance().getConference().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().setAdmins(value.getAdmins());
                         ConferenceInfo.getInstance().getConference().setMemberNum(value.getMemberNum());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                attendance_count_view.setText("当前观众人数 " +String.valueOf(ConferenceInfo.getInstance().getConference().getAudienceTotal()));
+                                attendance_count_view.setText("参会人数 " + ConferenceInfo.getInstance().getTalkersList());
                                 streamList = ConferenceInfo.getInstance().getConferenceStreamList();
                                 talkerList = ConferenceInfo.getInstance().getTalkerList();
                                 if(talkerList != null){
@@ -331,11 +343,6 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
                                     }
 
                                     Collections.reverse(talkerList);
-                                    if(talkerList.size() == 0){
-                                        recyclerView.setVisibility(View.GONE);
-                                    }else {
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
                                     LinearLayoutManager layoutManager = new LinearLayoutManager(TalkerListActivity.this);
                                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                                     recyclerView.setLayoutManager(layoutManager);
@@ -369,7 +376,54 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
 
     private void upDateTalkerList(String key ,String value){
         if(adapter != null){
-            adapter.notifyDataSetChanged();
+            String memName = EasyUtils.useridFromJid(value);
+            EMConferenceStream stream = ConferenceInfo.getInstance().getConferenceStreamByMemId(memName);
+            if(key.equals("member_add")){
+                attendance_count_view.setText("参会人数 " +String.valueOf(ConferenceInfo.getInstance().addTalkersList(value)));
+                if(stream != null){
+                    if(stream.getStreamType() != EMConferenceStream.StreamType.DESKTOP){
+                        if(!talkerList.contains(stream)){
+                            talkerList.add(stream);
+                        }
+                    }
+                }
+            }else if(key.equals("member_remove")){
+                attendance_count_view.setText("参会人数 " +String.valueOf(ConferenceInfo.getInstance().removeTalkersList(value)));
+                if(stream != null){
+                    if(talkerList.contains(stream)){
+                        talkerList.remove(stream);
+                    }
+                }
+            }else if(key.equals("stream_add")){
+               if(ConferenceInfo.getInstance().containsTalkersList(value)){
+                   if(stream != null){
+                       if(stream.getStreamType() != EMConferenceStream.StreamType.DESKTOP){
+                           if(!talkerList.contains(stream)){
+                               talkerList.add(stream);
+                               adapter.notifyDataSetChanged();
+                           }
+                       }
+                   }
+                }
+            }else if(key.equals("stream_remove")){
+                if(ConferenceInfo.getInstance().containsTalkersList(value)){
+                    if(stream != null){
+                        if(talkerList.contains(stream)){
+                            talkerList.remove(stream);
+                            adapter.notifyDataSetChanged();
+                        }
+                        streamList.remove(stream);
+                    }
+                }
+            }else if(key.equals("stream_update")){
+                if(ConferenceInfo.getInstance().containsTalkersList(value)){
+                    if(stream != null){
+                        if(talkerList.contains(stream)){
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -412,5 +466,17 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
             }
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActivte = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivte = false;
     }
 }

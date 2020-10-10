@@ -61,6 +61,11 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
         return new AvatarViewHolder(view);
     }
 
+    @Override
+    public int getEmptyLayoutId() {
+        return R.layout.activity_empty_adapter_view;
+    }
+
     private class AvatarViewHolder extends ViewHolder<EMConferenceStream> {
         private TextView userIdView;
         private ImageView mic_image;
@@ -103,18 +108,20 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
                 headImage = PreferenceManager.getInstance().getCurrentUserAvatar();
                 url =  DemoApplication.baseurl + headImage;
             }else {
-                if(ConferenceInfo.getInstance().getAdmins().contains(item.getUsername())){
-                    userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6) +" (主持人)");
-                }else {
-                    userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6));
-                }
-                try {
-                    JSONObject object = new JSONObject(memberInfo.extension);
-                    this.headImage = object.optString("headImage");
-                    url = DemoApplication.baseurl;
-                    url = url + this.headImage;
-                }catch (Exception e){
-                    e.printStackTrace();
+                if(memberInfo != null){
+                    if(ConferenceInfo.getInstance().getAdmins().contains(item.getUsername())){
+                        userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6) +" (主持人)");
+                    }else {
+                        userIdView.setText(StringUtils.tolongNickName(memberInfo.nickName,6));
+                    }
+                    try {
+                        JSONObject object = new JSONObject(memberInfo.extension);
+                        this.headImage = object.optString("headImage");
+                        url = DemoApplication.baseurl;
+                        url = url + this.headImage;
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -177,7 +184,7 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
     private class MyListener implements View.OnClickListener {
         private int position;
         private String username;
-
+        SetTalkerItemDialog dialog;
         public MyListener(int position,String username) {
             this.position = position;
             this.username = username;
@@ -189,12 +196,14 @@ public class TalkerItemAdapter extends EaseBaseRecyclerViewAdapter<EMConferenceS
         }
 
         private void setItemShow(){
-            SetTalkerItemDialog dialog = new SetTalkerItemDialog();
-            Bundle bundle = new Bundle();
-            bundle.putString("username",username);
-            bundle.putInt("position",position);
-            dialog.setArguments(bundle);
-            dialog.setAdapter(adapter);
+            SetTalkerItemDialog dialog = (SetTalkerItemDialog)((AppCompatActivity)mContext).getSupportFragmentManager().findFragmentByTag("SetTalkerItemDialog");
+            if(dialog == null) {
+                dialog = SetTalkerItemDialog.getNewInstance(username,position);
+                dialog.setAdapter(adapter);
+            }
+            if(dialog.isAdded()) {
+                return;
+            }
             dialog .show(((AppCompatActivity)mContext).getSupportFragmentManager(), "SetTalkerItemDialog");
         }
     }

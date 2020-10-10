@@ -152,6 +152,29 @@
                             android:layout_marginRight="20dp"
                             android:layout_centerVertical="true" />
                     </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_switch_audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:background="@drawable/em_btn_bottom_selector">
+                    <TextView
+                        android:layout_width="102dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/switch_audience" />
+                    <com.easemob.videocall.ui.widget.EaseSwitchButton
+                        android:id="@+id/switch_audience"
+                        android:layout_width="48dp"
+                        android:layout_height="26dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp" />
+                </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/rl_switch_record"
                         android:layout_width="match_parent"
@@ -305,6 +328,29 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="20dp"
                             android:layout_centerVertical="true" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/rl_switch_use_shaxiang"
+                        android:layout_width="match_parent"
+                        android:layout_height="66dp"
+                        android:background="@drawable/em_btn_bottom_selector">
+                        <TextView
+                            android:layout_width="102dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:gravity="left|center_vertical"
+                            android:text="@string/use_customize_server"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+                        <com.easemob.videocall.ui.widget.EaseSwitchButton
+                            android:id="@+id/switch_use_shaxiang"
+                            android:layout_width="48dp"
+                            android:layout_height="26dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20dp" />
                     </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/rl_push_settings"

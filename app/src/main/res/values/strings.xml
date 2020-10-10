@@ -63,6 +63,7 @@
     <string name="pushcdn">Push CDN</string>
     <string name="push_audio_stream">Push Audio Stream</string>
     <string name="stream_record_format">Record Format</string>
+    <string name="use_customize_server">Use Customize Server</string>
     <string name="set_cdn_url">Set CDN URL</string>
     <string name="voice_call">[Voice call]</string>
     <string name="video_call">[Video call]</string>
@@ -97,6 +98,7 @@
     <string name="newnotify">Receiving a new message</string>
     <string name="voice">Sounds</string>
     <string name="video_resolution">Video resolution</string>
+    <string name="switch_audience">Switch audience</string>
     <string name="chatset">Chat settings</string>
     <string name="yangshengqi">Use speaker</string>
     <string name="upload_log">Upload log</string>

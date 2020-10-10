@@ -69,12 +69,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
                     <RelativeLayout
                         android:id="@+id/rl_switch_video"
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
-                        android:background="@color/color_transparent">
+                        android:background="@color/color_transparent"
+                        android:visibility="gone">
                         <TextView
                             android:layout_width="76dp"
                             android:layout_height="20dp"

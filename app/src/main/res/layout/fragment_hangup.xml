@@ -7,16 +7,15 @@
     <LinearLayout
         android:id="@+id/card_view_layout_hangup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="172dp"
         android:orientation="vertical"
+        android:background="@color/gray_pressed"
         app:layout_constraintBottom_toTopOf="@id/card_view_two">
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         app:cardCornerRadius="5dp">
         <TextView
@@ -30,10 +29,17 @@
             android:textSize="12sp"
             android:text="如果您不想结束会议 请在离开会议前指定新的主持人" />
         <TextView
+            android:id="@+id/btn_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="50dp"
+            android:background="@color/gray_pressed"
+            android:textSize="16sp" />
+        <TextView
             android:id="@+id/btn_leave_meeting"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="51dp"
             android:layout_below="@id/cancel_mute"
             android:background="#fff"
             android:foreground="@drawable/em_ripple_click_gray"
@@ -42,10 +48,17 @@
             android:textColor="@color/black_deep"
             android:textSize="16sp" />
         <TextView
+            android:id="@+id/btn_line_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="101dp"
+            android:background="@color/gray_pressed"
+            android:textSize="16sp" />
+        <TextView
             android:id="@+id/btn_destory_meeting"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="102dp"
             android:text="结束会议"
             android:gravity="center"
             android:textColor="@color/black_deep"
@@ -59,9 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

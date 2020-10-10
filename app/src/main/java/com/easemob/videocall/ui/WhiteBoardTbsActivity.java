@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.ConsoleMessage;
 import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.widget.Button;
@@ -202,6 +203,14 @@ public class WhiteBoardTbsActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
+            public boolean onConsoleMessage(com.tencent.smtt.export.external.interfaces.ConsoleMessage consoleMessage) {
+//                EMLog.d("MyApplication", consoleMessage.message() + " -- From line "
+//                        + consoleMessage.lineNumber() + " of "
+//                        + consoleMessage.sourceId());
+                return true;
+            }
+
+            @Override
             public boolean onJsAlert(com.tencent.smtt.sdk.WebView arg0, String arg1, String arg2,
                                      com.tencent.smtt.export.external.interfaces.JsResult arg3) {
                 return super.onJsAlert(null, arg1, arg2, arg3);
@@ -359,7 +368,7 @@ public class WhiteBoardTbsActivity extends AppCompatActivity implements View.OnC
     private void openFileChooseProcess() {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
+        i.setType("video/*;image/*");
         startActivityForResult(i,FIREHOUSE_RESULT_CODE);
     }
 

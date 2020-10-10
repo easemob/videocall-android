@@ -78,7 +78,6 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_room_setting);
 
         room_name = (TextView)findViewById(R.id.room_name_edit);
-        room_password = (TextView)findViewById(R.id.room_password_edit);
         room_admin = (TextView)findViewById(R.id.btn_request_admin);
         adminList = ConferenceInfo.getInstance().getAdmins();
 
@@ -96,7 +95,6 @@ public class RoomSettingActivity extends Activity implements View.OnClickListene
         listView.setAdapter(adapter);
 
         room_name.setText(ConferenceInfo.getInstance().getRoomname());
-        room_password.setText(ConferenceInfo.getInstance().getPassword());
 
         InitRoomInfo();
 

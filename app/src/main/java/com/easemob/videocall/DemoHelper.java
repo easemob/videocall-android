@@ -80,13 +80,13 @@ public class DemoHelper {
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
         appContext = context;
-        options.setRestServer("a1-hsb.easemob.com"); //沙箱地址
-        options.setIMServer("116.85.43.118");
-        options.setImPort(6717);
+		PreferenceManager.init(context);
+        if(PreferenceManager.getInstance().isCustomizeServer()){
+
+		}
 		EMClient.getInstance().init(context, options);
 		EMCallManager manager = EMClient.getInstance().callManager();
 		EMClient.getInstance().setDebugMode(true);
-		PreferenceManager.init(context);
 	}
 
 	public Context getContext(){
