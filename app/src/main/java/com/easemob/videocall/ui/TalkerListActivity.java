@@ -121,7 +121,7 @@ public class TalkerListActivity extends AppCompatActivity  implements View.OnCli
             btn_mute_all.setVisibility(View.VISIBLE);
             btn_unmute_all.setVisibility(View.VISIBLE);
         }
-
+      
         mId = getIntent().getIntExtra(ConferenceActivity.KEY_ID, -1);
         mAction = Config.ACTION_CONFIG_CHANGE + mId;
         if (-1 == mId) {
